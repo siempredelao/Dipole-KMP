@@ -1,5 +1,6 @@
 package dev.siempredelao.dipole.game
 
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -140,4 +141,24 @@ class DipoleTest {
         assertFailsWith<IllegalArgumentException> { s.play(Move(GameState.BLACK_START, Direction.South, 2)) }
         assertFailsWith<IllegalArgumentException> { s.play(Move(GameState.WHITE_START, Direction.North, 13)) }
     }
+
+    @Test
+    fun computerTakesAFreeCapture() {
+        val s = state(Player.White, "c3" to white(2), "e5" to black(1), "a7" to black(4))
+        val move = ComputerPlayer(depth = 2, random = Random(1)).chooseMove(s)
+        assertEquals(sq("e5"), move?.to)
+    }
+
+    @Test
+    fun computerVersusComputerAlwaysFinishes() {
+        var s = GameState.initial()
+        val ai = ComputerPlayer(depth = 1, random = Random(7))
+        repeat(500) {
+            if (s.isOver) return@repeat
+            s = s.play(assertNotNullMove(ai.chooseMove(s)))
+        }
+        assertTrue(s.isOver, "Game did not finish")
+    }
+
+    private fun assertNotNullMove(move: Move?): Move = requireNotNull(move) { "No move while game is running" }
 }

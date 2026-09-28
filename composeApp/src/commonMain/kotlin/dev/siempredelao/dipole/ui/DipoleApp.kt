@@ -69,18 +69,23 @@ private val HumanSide = Player.White
 
 @Composable
 fun DipoleApp() {
+    DipoleTheme {
+        DipoleScreen()
+    }
+}
+
+@Composable
+fun DipoleTheme(content: @Composable () -> Unit) {
     MaterialTheme(colorScheme = darkColorScheme()) {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF1E1A17)) {
-            DipoleScreen()
-        }
+        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF1E1A17), content = content)
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DipoleScreen() {
+fun DipoleScreen(initialState: GameState = GameState.initial()) {
     var opponent by remember { mutableStateOf(Opponent.Computer) }
-    var history by remember { mutableStateOf(listOf(GameState.initial())) }
+    var history by remember { mutableStateOf(listOf(initialState)) }
     var lastMove by remember { mutableStateOf<Move?>(null) }
     var selected by remember { mutableStateOf<Square?>(null) }
     val state = history.last()

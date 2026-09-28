@@ -43,6 +43,7 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.material3)
+            implementation(libs.compose.ui.tooling.preview)
             implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
@@ -53,6 +54,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
+}
+
+dependencies {
+    // Renders @Preview composables in Android Studio.
+    androidRuntimeClasspath(libs.compose.ui.tooling)
 }
 
 compose.desktop {

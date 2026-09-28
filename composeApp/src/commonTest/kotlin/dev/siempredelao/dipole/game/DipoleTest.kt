@@ -112,6 +112,16 @@ class DipoleTest {
     }
 
     @Test
+    fun removedCheckersCountCapturesAndBearOffs() {
+        var s = GameState.initial()
+        assertEquals(0, s.removedCheckersOf(Player.White))
+        s = state(Player.White, "g7" to white(3), "a1" to white(9), "b8" to black(1), "e5" to black(11))
+        s = s.play(Move(sq("g7"), Direction.NorthEast, 3))
+        assertEquals(3, s.removedCheckersOf(Player.White))
+        assertEquals(0, s.removedCheckersOf(Player.Black))
+    }
+
+    @Test
     fun capturingTheLastEnemyStackWins() {
         val s = state(Player.White, "c3" to white(2), "e5" to black(2))
         val after = s.play(Move(sq("c3"), Direction.NorthEast, 2))

@@ -75,6 +75,9 @@ data class GameState(
 ) {
     fun checkersOf(player: Player): Int = board.values.filter { it.owner == player }.sumOf { it.size }
 
+    /** Checkers of [player] taken out of play, whether captured or moved off the board. */
+    fun removedCheckersOf(player: Player): Int = STARTING_STACK - checkersOf(player)
+
     val winner: Player?
         get() = when {
             checkersOf(Player.White) == 0 -> Player.Black

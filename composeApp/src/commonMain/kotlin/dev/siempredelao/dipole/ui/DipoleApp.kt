@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -146,7 +148,8 @@ fun DipoleScreen() {
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
         )
-        Scores(state)
+        val trayModifier = Modifier.widthIn(max = 560.dp).fillMaxWidth()
+        PlayerTray(state, Player.Black, trayModifier)
         Board(
             state = state,
             selected = selected,
@@ -163,6 +166,7 @@ fun DipoleScreen() {
             },
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
+        PlayerTray(state, Player.White, trayModifier)
         if (bearOffs.isNotEmpty()) {
             Text("Move off the board (those checkers are removed):", color = Color.White)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -202,19 +206,54 @@ private fun statusText(history: List<GameState>, opponent: Opponent, computerTur
     }
 }
 
+/** A player's checkers on the board, next to the pile of their checkers removed from play. */
 @Composable
-private fun Scores(state: GameState) {
-    Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
-        Player.entries.forEach { player ->
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, Color.Gray, CircleShape),
-                )
-                Text("${state.checkersOf(player)} checkers", color = Color.White)
-            }
-        }
+private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Modifier) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, Color.Gray, CircleShape))
+        Text(
+            "$player: ${state.checkersOf(player)} on the board",
+            color = Color.White,
+            modifier = Modifier.padding(start = 8.dp).weight(1f),
+        )
+        Text("Off the board", color = Color.LightGray, fontSize = 13.sp, modifier = Modifier.padding(end = 8.dp))
+        RemovedPile(player, state.removedCheckersOf(player))
     }
 }
+
+/** Draws [count] removed checkers as a physical stack of discs seen from the side. */
+@Composable
+private fun RemovedPile(player: Player, count: Int) {
+    val discHeight = 8.dp
+    val step = 3.dp
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            Modifier.size(width = 36.dp, height = discHeight + step * (GameState.STARTING_STACK - 1)),
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            if (count == 0) {
+                Box(Modifier.size(width = 36.dp, height = discHeight).border(1.dp, Color.Gray, DiscShape))
+            }
+            repeat(count) { i ->
+                Box(
+                    Modifier
+                        .offset(y = -step * i)
+                        .size(width = 36.dp, height = discHeight)
+                        .background(player.color, DiscShape)
+                        .border(1.dp, Color.Gray, DiscShape),
+                )
+            }
+        }
+        Text(
+            "$count",
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 6.dp).widthIn(min = 20.dp),
+        )
+    }
+}
+
+private val DiscShape = RoundedCornerShape(50)
 
 @Composable
 private fun Board(

@@ -168,11 +168,15 @@ fun DipoleScreen() {
         )
         PlayerTray(state, Player.White, trayModifier)
         if (bearOffs.isNotEmpty()) {
-            Text("Move off the board (those checkers are removed):", color = Color.White)
+            Text(
+                "Or move checkers off the board. They leave play and go to your off-board stack:",
+                color = Color.White,
+                textAlign = TextAlign.Center,
+            )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 bearOffs.forEach { move ->
                     OutlinedButton(onClick = { play(move) }) {
-                        Text("${move.count} ${arrow(move.direction)}")
+                        Text("Move ${move.count} off ${arrow(move.direction)}")
                     }
                 }
             }
@@ -341,7 +345,8 @@ private fun Rules() {
             "exactly as many squares as checkers are moved, jumping over anything in between. Plain moves " +
             "and merges go forward or diagonally forward; straight moves need an even number of checkers. " +
             "Captures (red) go in any direction and take a whole enemy stack no bigger than the moving one. " +
-            "Stacks moved off the far edge are removed. Remove all enemy checkers to win.",
+            "A plain move that would go past the edge of the board is allowed: that stack is removed from " +
+            "play. Remove all enemy checkers to win.",
         color = Color.LightGray,
         fontSize = 13.sp,
         modifier = Modifier.widthIn(max = 560.dp),

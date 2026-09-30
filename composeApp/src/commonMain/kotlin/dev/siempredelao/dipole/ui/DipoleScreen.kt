@@ -25,7 +25,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -46,6 +48,7 @@ import dev.siempredelao.dipole.game.MoveKind
 import dev.siempredelao.dipole.game.Player
 import dev.siempredelao.dipole.game.Square
 import dev.siempredelao.dipole.game.Stack
+import kotlinx.coroutines.delay
 
 private val LightSquare = Color(0xFFEBD3A8)
 private val DarkSquare = Color(0xFF7A4E2D)
@@ -122,17 +125,42 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text("New game") }
             OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) { Text("Undo") }
         }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextButton(onClick = { onAction(DipoleAction.SaveClicked) }) { Text("Save") }
+            TextButton(onClick = { onAction(DipoleAction.LoadClicked) }, enabled = uiState.hasSavedGames) { Text("Load") }
+        }
+        uiState.message?.let { message ->
+            Text(message, color = Color.LightGray)
+            LaunchedEffect(message) {
+                delay(MESSAGE_MILLIS)
+                onAction(DipoleAction.MessageShown)
+            }
+        }
         Rules()
     }
 
-    when (uiState.dialog) {
+    val dismiss = { onAction(DipoleAction.DialogDismissed) }
+    when (val dialog = uiState.dialog) {
         DipoleDialog.NewGame -> NewGameDialog(
             onModeChosen = { onAction(DipoleAction.ModeChosen(it)) },
-            onDismiss = { onAction(DipoleAction.DialogDismissed) },
+            onDismiss = dismiss,
         )
-        else -> Unit
+        is DipoleDialog.Save -> SaveGameDialog(
+            defaultName = dialog.defaultName,
+            onSave = { onAction(DipoleAction.SaveConfirmed(it)) },
+            onDismiss = dismiss,
+        )
+        is DipoleDialog.Load -> LoadGameDialog(
+            savedGames = dialog.savedGames,
+            onLoad = { onAction(DipoleAction.SavedGameChosen(it)) },
+            onDelete = { onAction(DipoleAction.SavedGameDeleted(it)) },
+            onDismiss = dismiss,
+        )
+        null -> Unit
     }
 }
+
+private const val MESSAGE_MILLIS = 2_000L
 
 private fun statusText(session: GameSession): String {
     val state = session.state

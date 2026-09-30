@@ -26,11 +26,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,18 +35,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.siempredelao.dipole.game.BOARD_SIZE
-import dev.siempredelao.dipole.game.ComputerPlayer
 import dev.siempredelao.dipole.game.Direction
+import dev.siempredelao.dipole.game.GameMode
+import dev.siempredelao.dipole.game.GameSession
 import dev.siempredelao.dipole.game.GameState
 import dev.siempredelao.dipole.game.Move
 import dev.siempredelao.dipole.game.MoveKind
 import dev.siempredelao.dipole.game.Player
 import dev.siempredelao.dipole.game.Square
 import dev.siempredelao.dipole.game.Stack
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 
 private val LightSquare = Color(0xFFEBD3A8)
 private val DarkSquare = Color(0xFF7A4E2D)
@@ -59,56 +55,19 @@ private val Highlight = Color(0xFF7FC97F)
 private val CaptureHighlight = Color(0xFFE0605A)
 private val LastMove = Color(0x55F2D95C)
 
-enum class Opponent { Computer, Human }
-
-private val HumanSide = Player.White
+/** Connects [DipoleScreen] to its [DipoleViewModel]. */
+@Composable
+fun DipoleScreen(viewModel: DipoleViewModel = viewModel { DipoleViewModel() }) {
+    val uiState by viewModel.uiState.collectAsState()
+    DipoleScreen(uiState, viewModel::onAction)
+}
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DipoleScreen(initialState: GameState = GameState.initial()) {
-    var opponent by remember { mutableStateOf(Opponent.Computer) }
-    var history by remember { mutableStateOf(listOf(initialState)) }
-    var lastMove by remember { mutableStateOf<Move?>(null) }
-    var selected by remember { mutableStateOf<Square?>(null) }
-    var choosingMode by remember { mutableStateOf(false) }
-    val state = history.last()
-    val computerTurn = opponent == Opponent.Computer && state.toMove != HumanSide && !state.isOver
-
-    fun play(move: Move) {
-        history = history + state.play(move)
-        lastMove = move
-        selected = null
-    }
-
-    fun newGame(mode: Opponent) {
-        opponent = mode
-        choosingMode = false
-        history = listOf(GameState.initial())
-        lastMove = null
-        selected = null
-    }
-
-    fun undo() {
-        var h = history.dropLast(1)
-        if (opponent == Opponent.Computer) {
-            while (h.size > 1 && h.last().toMove != HumanSide) h = h.dropLast(1)
-        }
-        if (h.isNotEmpty()) history = h
-        lastMove = null
-        selected = null
-    }
-
-    LaunchedEffect(history, opponent) {
-        if (!computerTurn) return@LaunchedEffect
-        delay(400)
-        val move = withContext(Dispatchers.Default) { ComputerPlayer().chooseMove(state) }
-        if (move != null) play(move)
-    }
-
-    val movesFromSelected = selected?.let { state.legalMovesFrom(it) }.orEmpty()
-    val targets = movesFromSelected.filter { it.to.isOnBoard }.associateBy { it.to }
-    val bearOffs = movesFromSelected.filter { !it.to.isOnBoard }
-    val movable = if (computerTurn) emptySet() else state.legalMoves().map { it.from }.toSet()
+fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
+    val session = uiState.session
+    val state = uiState.state
+    val bearOffs = uiState.bearOffs
 
     Column(
         modifier = Modifier
@@ -121,12 +80,12 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
     ) {
         Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Text(
-            if (opponent == Opponent.Computer) "vs Computer" else "2 Players",
+            if (session.mode == GameMode.VsComputer) "vs Computer" else "2 Players",
             color = Color.LightGray,
             fontSize = 14.sp,
         )
         Text(
-            statusText(history, opponent, computerTurn),
+            statusText(session),
             color = Color.White,
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
@@ -135,18 +94,11 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
         PlayerTray(state, Player.Black, trayModifier)
         Board(
             state = state,
-            selected = selected,
-            movable = movable,
-            targets = targets,
-            lastMove = lastMove,
-            onSquareClick = { square ->
-                val target = targets[square]
-                when {
-                    target != null -> play(target)
-                    square in movable -> selected = if (selected == square) null else square
-                    else -> selected = null
-                }
-            },
+            selected = uiState.selected,
+            movable = uiState.movable,
+            targets = uiState.targets,
+            lastMove = session.lastMove,
+            onSquareClick = { onAction(DipoleAction.SquareTapped(it)) },
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
         PlayerTray(state, Player.White, trayModifier)
@@ -158,41 +110,44 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 bearOffs.forEach { move ->
-                    OutlinedButton(onClick = { play(move) }) {
+                    OutlinedButton(onClick = { onAction(DipoleAction.BearOffChosen(move)) }) {
                         Text("Move ${move.count} off ${arrow(move.direction)}")
                     }
                 }
             }
-        } else if (selected != null) {
+        } else if (uiState.selected != null) {
             Text("Tap a highlighted square. The number shows how many checkers move.", color = Color.LightGray)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { choosingMode = true }) { Text("New game") }
-            OutlinedButton(onClick = ::undo, enabled = history.size > 1 && !computerTurn) { Text("Undo") }
+            Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text("New game") }
+            OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) { Text("Undo") }
         }
         Rules()
     }
 
-    if (choosingMode) {
-        NewGameDialog(onModeChosen = ::newGame, onDismiss = { choosingMode = false })
+    when (uiState.dialog) {
+        DipoleDialog.NewGame -> NewGameDialog(
+            onModeChosen = { onAction(DipoleAction.ModeChosen(it)) },
+            onDismiss = { onAction(DipoleAction.DialogDismissed) },
+        )
+        else -> Unit
     }
 }
 
-private fun statusText(history: List<GameState>, opponent: Opponent, computerTurn: Boolean): String {
-    val state = history.last()
+private fun statusText(session: GameSession): String {
+    val state = session.state
+    val vsComputer = session.mode == GameMode.VsComputer
     state.winner?.let { winner ->
-        return if (opponent == Opponent.Computer) {
-            if (winner == HumanSide) "You win!" else "The computer wins."
+        return if (vsComputer) {
+            if (winner == GameSession.HUMAN_SIDE) "You win!" else "The computer wins."
         } else {
             "$winner wins!"
         }
     }
-    val previous = history.getOrNull(history.size - 2)
-    val sitOut = previous != null && previous.toMove == state.toMove
-    val prefix = if (sitOut) "${state.toMove.opponent} has no moves and sits out. " else ""
+    val prefix = if (session.opponentSatOut) "${state.toMove.opponent} has no moves and sits out. " else ""
     return prefix + when {
-        computerTurn -> "Computer is thinking…"
-        opponent == Opponent.Computer -> "Your move (White)"
+        session.isComputerTurn -> "Computer is thinking…"
+        vsComputer -> "Your move (White)"
         else -> "${state.toMove} to move"
     }
 }

@@ -10,11 +10,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.siempredelao.dipole.game.GameMode
 
 /** Asks which mode to play before starting a new game. Cancelling keeps the current game. */
 @Composable
 fun NewGameDialog(
-    onModeChosen: (Opponent) -> Unit,
+    onModeChosen: (GameMode) -> Unit,
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
@@ -22,10 +23,10 @@ fun NewGameDialog(
         title = { Text("New game") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { onModeChosen(Opponent.Computer) }, modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = { onModeChosen(GameMode.VsComputer) }, modifier = Modifier.fillMaxWidth()) {
                     Text("vs Computer")
                 }
-                Button(onClick = { onModeChosen(Opponent.Human) }, modifier = Modifier.fillMaxWidth()) {
+                Button(onClick = { onModeChosen(GameMode.TwoPlayers) }, modifier = Modifier.fillMaxWidth()) {
                     Text("2 Players")
                 }
             }

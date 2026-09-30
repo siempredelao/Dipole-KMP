@@ -22,7 +22,11 @@ Play against the computer or with two players on one device.
 
 - `composeApp/src/commonMain/.../game` - rules engine (`Dipole.kt`) and computer opponent
   (`ComputerPlayer.kt`), plain Kotlin with no UI dependencies.
-- `composeApp/src/commonMain/.../ui` - the shared Compose UI.
+- `composeApp/src/commonMain/.../game` also has `GameSession`, the state of a game in progress
+  (mode, moves, undo).
+- `composeApp/src/commonMain/.../saves` - saved games, stored with multiplatform-settings.
+- `composeApp/src/commonMain/.../ui` - the shared Compose UI: `DipoleViewModel` holds the state and
+  `DipoleScreen` draws it.
 - `composeApp/src/{jvmMain,wasmJsMain,iosMain}` - desktop, web and iOS entry points.
 - `androidApp` - Android application (AGP 9 keeps the app module separate from the KMP library).
 - `iosApp` - Xcode project hosting the shared UI.

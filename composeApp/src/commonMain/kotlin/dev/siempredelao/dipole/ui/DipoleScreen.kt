@@ -121,6 +121,11 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
     ) {
         Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Text(
+            if (opponent == Opponent.Computer) "vs Computer" else "2 Players",
+            color = Color.LightGray,
+            fontSize = 14.sp,
+        )
+        Text(
             statusText(history, opponent, computerTurn),
             color = Color.White,
             fontSize = 18.sp,

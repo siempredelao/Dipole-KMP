@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -71,6 +70,7 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
     var history by remember { mutableStateOf(listOf(initialState)) }
     var lastMove by remember { mutableStateOf<Move?>(null) }
     var selected by remember { mutableStateOf<Square?>(null) }
+    var choosingMode by remember { mutableStateOf(false) }
     val state = history.last()
     val computerTurn = opponent == Opponent.Computer && state.toMove != HumanSide && !state.isOver
 
@@ -80,7 +80,9 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
         selected = null
     }
 
-    fun newGame() {
+    fun newGame(mode: Opponent) {
+        opponent = mode
+        choosingMode = false
         history = listOf(GameState.initial())
         lastMove = null
         selected = null
@@ -118,18 +120,6 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(
-                selected = opponent == Opponent.Computer,
-                onClick = { opponent = Opponent.Computer; newGame() },
-                label = { Text("vs Computer") },
-            )
-            FilterChip(
-                selected = opponent == Opponent.Human,
-                onClick = { opponent = Opponent.Human; newGame() },
-                label = { Text("2 Players") },
-            )
-        }
         Text(
             statusText(history, opponent, computerTurn),
             color = Color.White,
@@ -172,10 +162,14 @@ fun DipoleScreen(initialState: GameState = GameState.initial()) {
             Text("Tap a highlighted square. The number shows how many checkers move.", color = Color.LightGray)
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = ::newGame) { Text("New game") }
+            Button(onClick = { choosingMode = true }) { Text("New game") }
             OutlinedButton(onClick = ::undo, enabled = history.size > 1 && !computerTurn) { Text("Undo") }
         }
         Rules()
+    }
+
+    if (choosingMode) {
+        NewGameDialog(onModeChosen = ::newGame, onDismiss = { choosingMode = false })
     }
 }
 

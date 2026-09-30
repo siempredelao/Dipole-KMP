@@ -45,9 +45,12 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.multiplatform.settings)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.multiplatform.settings.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)

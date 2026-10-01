@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.siempredelao.dipole.android"
+    namespace = "gc.david.dipole.android"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "dev.siempredelao.dipole"
+        applicationId = "gc.david.dipole"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

@@ -11,7 +11,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "dev.siempredelao.dipole.shared"
+        namespace = "gc.david.dipole.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions {
@@ -68,7 +68,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "dev.siempredelao.dipole.MainKt"
+        mainClass = "gc.david.dipole.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Dipole"

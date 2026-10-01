@@ -62,7 +62,7 @@ private fun SavedGameRow(game: SavedGame, onLoad: () -> Unit, onDelete: () -> Un
 }
 
 private fun details(game: SavedGame): String {
-    val mode = if (game.mode == GameMode.VsComputer) "vs Computer" else "2 Players"
+    val mode = if (game.mode == GameMode.VsComputer) "vs Computer (${game.difficulty.label})" else "2 Players"
     val moves = if (game.moves.size == 1) "1 move" else "${game.moves.size} moves"
     val date = SavedGame.defaultName(Instant.fromEpochMilliseconds(game.savedAtEpochMillis))
     return "$mode · $moves · $date"

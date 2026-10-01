@@ -1,5 +1,6 @@
 package dev.siempredelao.dipole.saves
 
+import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.Direction
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameSession
@@ -20,20 +21,26 @@ data class SavedGame(
     val savedAtEpochMillis: Long,
     val mode: GameMode,
     val moves: List<Move>,
+    /** The computer's difficulty; only meaningful in [GameMode.VsComputer]. */
+    val difficulty: Difficulty = Difficulty.Medium,
 ) {
     /** Rebuilds the game, or returns null if the stored moves aren't a legal game. */
-    fun toSession(): GameSession? = GameSession.replay(mode, moves)
+    fun toSession(): GameSession? = GameSession.replay(mode, moves, difficulty)
 
     fun encode(): String = listOf(
         HEADER,
         mode.name,
+        difficulty.name,
         savedAtEpochMillis.toString(),
         name,
         moves.joinToString(";") { "${it.from.row},${it.from.col},${it.direction.name},${it.count}" },
     ).joinToString("\n")
 
     companion object {
-        private const val HEADER = "dipole-save 1"
+        private const val HEADER = "dipole-save 2"
+
+        /** Saves made before difficulty levels existed: no difficulty line, played at Medium. */
+        private const val HEADER_V1 = "dipole-save 1"
 
         fun of(session: GameSession, name: String, savedAt: Instant): SavedGame = SavedGame(
             id = "${savedAt.toEpochMilliseconds()}-${Random.nextInt(1_000_000)}",
@@ -41,16 +48,22 @@ data class SavedGame(
             savedAtEpochMillis = savedAt.toEpochMilliseconds(),
             mode = session.mode,
             moves = session.moves,
+            difficulty = session.difficulty,
         )
 
         /** Parses what [encode] produced, or returns null if [text] isn't a valid save. */
         fun decode(id: String, text: String): SavedGame? {
-            val lines = text.split("\n")
-            if (lines.size != 5 || lines[0] != HEADER) return null
+            val lines = text.split("\n").toMutableList()
+            when {
+                lines.size == 6 && lines[0] == HEADER -> Unit
+                lines.size == 5 && lines[0] == HEADER_V1 -> lines.add(2, Difficulty.Medium.name)
+                else -> return null
+            }
             val mode = GameMode.entries.firstOrNull { it.name == lines[1] } ?: return null
-            val savedAt = lines[2].toLongOrNull() ?: return null
-            val moves = if (lines[4].isEmpty()) emptyList() else lines[4].split(";").map { decodeMove(it) ?: return null }
-            return SavedGame(id, lines[3], savedAt, mode, moves)
+            val difficulty = Difficulty.entries.firstOrNull { it.name == lines[2] } ?: return null
+            val savedAt = lines[3].toLongOrNull() ?: return null
+            val moves = if (lines[5].isEmpty()) emptyList() else lines[5].split(";").map { decodeMove(it) ?: return null }
+            return SavedGame(id, lines[4], savedAt, mode, moves, difficulty)
         }
 
         private fun decodeMove(text: String): Move? {

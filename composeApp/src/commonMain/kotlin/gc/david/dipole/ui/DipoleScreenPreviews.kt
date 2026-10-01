@@ -3,9 +3,11 @@ package gc.david.dipole.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import gc.david.dipole.game.ComputerPlayer
+import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
+import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
@@ -56,5 +58,16 @@ private fun DipoleScreenHintPreview() {
             ),
             onAction = {},
         )
+    }
+}
+
+/** Playing Black against the computer: the board is turned round so Black sits at the bottom. */
+@Preview(widthDp = 420, heightDp = 900)
+@Composable
+private fun DipoleScreenAsBlackPreview() {
+    val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
+        .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
+    DipoleTheme {
+        DipoleScreen(DipoleUiState(session, selected = GameState.BLACK_START), onAction = {})
     }
 }

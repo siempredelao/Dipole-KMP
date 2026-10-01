@@ -159,9 +159,13 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             textAlign = TextAlign.Center,
         )
         val trayModifier = Modifier.widthIn(max = 560.dp).fillMaxWidth()
-        PlayerTray(state, Player.Black, trayModifier)
+        // The human's side sits at the bottom: White, unless playing Black against the computer.
+        val bottomPlayer = if (session.mode == GameMode.VsComputer) session.humanSide else Player.White
+        val flipped = bottomPlayer == Player.Black
+        PlayerTray(state, bottomPlayer.opponent, trayModifier)
         Board(
             state = state,
+            flipped = flipped,
             selected = uiState.selected,
             movable = uiState.movable,
             targets = uiState.targets,
@@ -171,7 +175,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             onSquareClick = { onAction(DipoleAction.SquareTapped(it)) },
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
-        PlayerTray(state, Player.White, trayModifier)
+        PlayerTray(state, bottomPlayer, trayModifier)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
                 Text(stringResource(Res.string.undo))
@@ -199,7 +203,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
                         onClick = { onAction(DipoleAction.BearOffChosen(move)) },
                         border = border ?: ButtonDefaults.outlinedButtonBorder(),
                     ) {
-                        Text(stringResource(Res.string.bear_off_button, move.count, arrow(move.direction)))
+                        Text(stringResource(Res.string.bear_off_button, move.count, arrow(move.direction, flipped)))
                     }
                 }
             }
@@ -392,6 +396,7 @@ private val DiscShape = RoundedCornerShape(50)
 @Composable
 private fun Board(
     state: GameState,
+    flipped: Boolean,
     selected: Square?,
     movable: Set<Square>,
     targets: Map<Square, Move>,
@@ -404,11 +409,10 @@ private fun Board(
     BoxWithConstraints(modifier.aspectRatio(1f).border(3.dp, Color(0xFF4A2E1A))) {
         val cell = maxWidth / BOARD_SIZE
         Column {
-            // Row 8 (Black's home row) at the top, like a printed diagram.
-            for (row in BOARD_SIZE - 1 downTo 0) {
+            for (screenRow in 0 until BOARD_SIZE) {
                 Row {
-                    for (col in 0 until BOARD_SIZE) {
-                        val square = Square(row, col)
+                    for (screenCol in 0 until BOARD_SIZE) {
+                        val square = squareAt(screenRow, screenCol, flipped)
                         val target = targets[square]
                         val highlighted = square == lastMove?.from || square == lastMove?.to
                         Box(
@@ -479,6 +483,23 @@ private fun Checker(stack: Stack, isSelected: Boolean, isMovable: Boolean, modif
 }
 
 private val Player.color: Color get() = if (this == Player.White) WhiteChecker else BlackChecker
+
+/**
+ * The square drawn at [screenRow], [screenCol] (counted from the top left). Normally row 8 (Black's
+ * home row) is at the top, like a printed diagram; [flipped] turns the board round for Black.
+ */
+private fun squareAt(screenRow: Int, screenCol: Int, flipped: Boolean): Square =
+    if (flipped) {
+        Square(screenRow, BOARD_SIZE - 1 - screenCol)
+    } else {
+        Square(BOARD_SIZE - 1 - screenRow, screenCol)
+    }
+
+/** Arrow for a direction as seen on screen, which is turned round when the board is [flipped]. */
+private fun arrow(direction: Direction, flipped: Boolean): String {
+    if (!flipped) return arrow(direction)
+    return arrow(Direction.entries.first { it.dRow == -direction.dRow && it.dCol == -direction.dCol })
+}
 
 /** Arrow for a direction as seen on screen, with White at the bottom. */
 private fun arrow(direction: Direction): String = when (direction) {

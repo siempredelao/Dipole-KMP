@@ -7,6 +7,6 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 private fun RulesScreenPreview() {
     DipoleTheme {
-        RulesScreen(onBack = {})
+        RulesScreen(onBack = {}, onShowTutorial = {})
     }
 }

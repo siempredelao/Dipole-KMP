@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,13 +33,14 @@ import gc.david.dipole.resources.credits_official_rules
 import gc.david.dipole.resources.ic_arrow_back
 import gc.david.dipole.resources.rules
 import gc.david.dipole.resources.rules_title
+import gc.david.dipole.resources.tutorial_show
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-/** The rules of the game, opened from the info icon next to the title. */
+/** The rules of the game, opened from the info icon next to the title, with a way into the tutorial. */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RulesScreen(onBack: () -> Unit) {
+fun RulesScreen(onBack: () -> Unit, onShowTutorial: () -> Unit) {
     BackHandler(onBack = onBack)
     Column(
         modifier = Modifier
@@ -71,6 +73,9 @@ fun RulesScreen(onBack: () -> Unit) {
             lineHeight = 24.sp,
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
+        OutlinedButton(onClick = onShowTutorial) {
+            Text(stringResource(Res.string.tutorial_show))
+        }
         Credits(Modifier.widthIn(max = 560.dp).fillMaxWidth())
     }
 }

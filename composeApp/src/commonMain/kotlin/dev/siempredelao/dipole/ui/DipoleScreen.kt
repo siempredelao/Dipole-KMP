@@ -83,7 +83,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     ) {
         Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Text(
-            if (session.mode == GameMode.VsComputer) "vs Computer" else "2 Players",
+            if (session.mode == GameMode.VsComputer) "vs Computer · ${session.difficulty.label}" else "2 Players",
             color = Color.LightGray,
             fontSize = 14.sp,
         )

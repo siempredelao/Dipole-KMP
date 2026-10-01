@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Before Android 12 the splash icon can't animate, so it shows the whole icon still.
+     Android 12 and newer use the animated version in drawable-v31. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/splash_icon" />
+</layer-list>

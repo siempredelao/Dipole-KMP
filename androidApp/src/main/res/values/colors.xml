@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The light square colour of the launcher icon's board. -->
+    <color name="splash_background">#EBD3A8</color>
+</resources>

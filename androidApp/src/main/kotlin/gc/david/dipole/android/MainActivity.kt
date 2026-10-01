@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
     private companion object {
         /** Length of drawable-v31/splash_icon_animated.xml. */
-        const val SPLASH_ANIMATION_MILLIS = 850L
+        const val SPLASH_ANIMATION_MILLIS = 1_300L
         const val SPLASH_FADE_MILLIS = 200L
     }
 }

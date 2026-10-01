@@ -4,7 +4,9 @@ A Kotlin/Compose Multiplatform version of [Dipole](https://www.marksteeregames.c
 the stacking game by Mark Steere. It runs on Android, iOS, desktop (JVM) and the web (Wasm), all
 sharing the same rules engine and UI.
 
-Play against the computer or with two players on one device.
+Play against the computer (as White or Black) or with two players on one device. The app follows
+the device's light or dark mode and offers five boards, including a high-contrast one for
+colour-blind and low-vision players.
 
 ## Rules in short
 

@@ -2,6 +2,8 @@ package gc.david.dipole.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import gc.david.dipole.appearance.AppearanceMode
+import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
@@ -15,7 +17,7 @@ import gc.david.dipole.game.Stack
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
 private fun DipoleScreenPreview() {
-    DipoleTheme {
+    DipoleTheme(mode = AppearanceMode.Dark) {
         DipoleScreen(DipoleUiState(GameSession.new(GameMode.VsComputer)), onAction = {})
     }
 }
@@ -35,7 +37,7 @@ private val midGame = GameState(
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
 private fun DipoleScreenMidGamePreview() {
-    DipoleTheme {
+    DipoleTheme(mode = AppearanceMode.Dark) {
         DipoleScreen(
             DipoleUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5)),
             onAction = {},
@@ -48,7 +50,7 @@ private fun DipoleScreenMidGamePreview() {
 @Composable
 private fun DipoleScreenHintPreview() {
     val selected = Square(3, 5)
-    DipoleTheme {
+    DipoleTheme(mode = AppearanceMode.Dark) {
         DipoleScreen(
             DipoleUiState(
                 session = GameSession.new(GameMode.VsComputer, initial = midGame),
@@ -67,7 +69,45 @@ private fun DipoleScreenHintPreview() {
 private fun DipoleScreenAsBlackPreview() {
     val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
         .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
-    DipoleTheme {
+    DipoleTheme(mode = AppearanceMode.Dark) {
         DipoleScreen(DipoleUiState(session, selected = GameState.BLACK_START), onAction = {})
+    }
+}
+
+@Preview(widthDp = 420, heightDp = 900)
+@Composable
+private fun DipoleScreenLightPreview() = MidGameWith(AppearanceMode.Light, BoardTheme.Wood)
+
+@Preview(widthDp = 420, heightDp = 900)
+@Composable
+private fun DipoleScreenTournamentPreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.Tournament)
+
+@Preview(widthDp = 420, heightDp = 900)
+@Composable
+private fun DipoleScreenSlatePreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.Slate)
+
+@Preview(widthDp = 420, heightDp = 900)
+@Composable
+private fun DipoleScreenMarblePreview() = MidGameWith(AppearanceMode.Light, BoardTheme.Marble)
+
+@Preview(widthDp = 420, heightDp = 900)
+@Composable
+private fun DipoleScreenHighContrastPreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.HighContrast)
+
+/**
+ * The mid-game position plus a White stack on c3 that is selected, so plain targets and a capture
+ * (of e5) show in [board]'s colours.
+ */
+@Composable
+private fun MidGameWith(mode: AppearanceMode, board: BoardTheme) {
+    val position = midGame.copy(board = midGame.board + (Square(2, 2) to Stack(Player.White, 4)))
+    DipoleTheme(mode, board) {
+        DipoleScreen(
+            DipoleUiState(
+                session = GameSession.new(GameMode.TwoPlayers, initial = position),
+                selected = Square(2, 2),
+            ),
+            onAction = {},
+        )
     }
 }

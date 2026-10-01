@@ -37,8 +37,10 @@ colour-blind and low-vision players.
   shown on first launch and from the rules screen.
 - `composeApp/src/commonMain/composeResources` - UI strings: English in `values`, translations in
   `values-<language>`.
-- `composeApp/src/commonMain/.../ui` - the shared Compose UI: `DipoleViewModel` holds the state and
-  `DipoleScreen` draws it.
+- `composeApp/src/commonMain/.../ui` - the shared Compose UI. `DipoleApp` navigates between three
+  screens: the game (`GameViewModel` + `GameScreen`), the rules and the tutorial
+  (`TutorialViewModel` + `TutorialScreen`). `SettingsViewModel` holds the appearance and sound
+  settings for the whole app.
 - `androidApp/src/main/res` - Android launch splash: `drawable/splash_icon.xml` (the icon with its
   arrows grouped) animated by `drawable-v31/splash_icon_animated.xml`; older Android versions show
   the icon still. `MainActivity` keeps the splash up until the animation ends.

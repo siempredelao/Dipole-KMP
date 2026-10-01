@@ -133,6 +133,7 @@ class DipoleViewModel(
             is DipoleAction.SavedGameDeleted -> delete(action.game)
             DipoleAction.DialogDismissed -> _uiState.update { it.copy(dialog = null) }
             DipoleAction.MessageShown -> _uiState.update { it.copy(message = null) }
+            DipoleAction.CelebrationShown -> _uiState.update { it.copy(celebrating = false) }
         }
     }
 
@@ -190,7 +191,7 @@ class DipoleViewModel(
     private fun celebrateIfHumanWon(session: GameSession) {
         val winner = session.state.winner ?: return
         if (session.mode == GameMode.VsComputer && winner != session.humanSide) return
-        _uiState.update { it.copy(celebration = it.celebration + 1) }
+        _uiState.update { it.copy(celebration = it.celebration + 1, celebrating = true) }
     }
 
     private fun save(name: String) {

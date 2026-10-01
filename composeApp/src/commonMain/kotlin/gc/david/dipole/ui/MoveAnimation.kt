@@ -42,7 +42,7 @@ fun rememberFlight(session: GameSession, onLanded: (MoveAnimation) -> Unit = {})
     return animation?.takeIf { progress.value < 1f }?.let { Flight(it, progress.value) }
 }
 
-private const val MOVE_MILLIS = 300
+internal const val MOVE_MILLIS = 300
 
 /** Remembers the previous session so a newly played move can be told apart from undo or load. */
 private class SessionTracker(var session: GameSession? = null, var animation: MoveAnimation? = null)

@@ -24,6 +24,18 @@ data class AppColors(
     val outline: Color,
     /** Hint text, readable on [background]. */
     val hint: Color,
+    /** Confetti for a win, one colour per [gc.david.dipole.celebration.Confetti.COLOR_COUNT]. */
+    val confetti: List<Color> = ConfettiColors,
+)
+
+/** Bright enough for the dark background, deep enough for the light one. */
+private val ConfettiColors = listOf(
+    Color(0xFFE63946), // red
+    Color(0xFFFFB02E), // amber, as in the app icon
+    Color(0xFF2A9D8F), // teal
+    Color(0xFF457B9D), // blue
+    Color(0xFF9B5DE5), // purple
+    Color(0xFF43AA8B), // green
 )
 
 private val DarkAppColors = AppColors(

@@ -382,6 +382,11 @@ class DipoleViewModelTest {
         play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
         assertEquals(Player.White, vm.uiState.value.state.winner)
         assertEquals(1, vm.uiState.value.celebration)
+        assertTrue(vm.uiState.value.celebrating)
+        // Once the confetti has started it isn't thrown again, e.g. after visiting the rules.
+        vm.onAction(DipoleAction.CelebrationShown)
+        assertFalse(vm.uiState.value.celebrating)
+        assertEquals(1, vm.uiState.value.celebration)
     }
 
     @Test
@@ -392,6 +397,7 @@ class DipoleViewModelTest {
         advanceUntilIdle()
         assertEquals(Player.Black, vm.uiState.value.state.winner)
         assertEquals(0, vm.uiState.value.celebration)
+        assertFalse(vm.uiState.value.celebrating)
     }
 
     @Test

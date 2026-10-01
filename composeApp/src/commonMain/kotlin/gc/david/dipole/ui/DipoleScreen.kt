@@ -139,101 +139,114 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     }
     val hintedMove = uiState.hint?.move
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .safeDrawingPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        Box(Modifier.fillMaxWidth()) {
-            Row(Modifier.align(Alignment.Center), verticalAlignment = Alignment.CenterVertically) {
-                // An invisible spacer the size of the icon keeps the title centred.
-                Spacer(Modifier.size(48.dp))
-                Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = appColors.text)
-                IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
-                    Icon(
-                        painterResource(Res.drawable.ic_info),
-                        contentDescription = stringResource(Res.string.rules_title),
-                        tint = appColors.secondaryText,
-                    )
-                }
-            }
-            SettingsMenu(uiState, onAction, Modifier.align(Alignment.CenterEnd))
-        }
-        Text(
-            modeLabel(session.mode, session.difficulty),
-            color = appColors.secondaryText,
-            fontSize = 14.sp,
-        )
-        Text(
-            statusText(session),
-            color = appColors.text,
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
-        )
-        val trayModifier = Modifier.widthIn(max = 560.dp).fillMaxWidth()
-        // The human's side sits at the bottom: White, unless playing Black against the computer.
-        val bottomPlayer = if (session.mode == GameMode.VsComputer) session.humanSide else Player.White
-        val flipped = bottomPlayer == Player.Black
-        PlayerTray(state, bottomPlayer.opponent, trayModifier)
-        Board(
-            state = state,
-            flipped = flipped,
-            flight = flight,
-            selected = uiState.selected,
-            movable = uiState.movable,
-            targets = uiState.targets,
-            lastMove = session.lastMove,
-            hintedSquare = hintedMove?.to?.takeIf { it.isOnBoard },
-            hintAlpha = hintAlpha,
-            onSquareClick = { onAction(DipoleAction.SquareTapped(it)) },
-            modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
-        )
-        PlayerTray(state, bottomPlayer, trayModifier)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
-                Text(stringResource(Res.string.undo))
-            }
-            val onHint = { onAction(DipoleAction.HintClicked) }
-            if (uiState.hintsOn) {
-                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = appColors.hint)) {
-                    Text(stringResource(Res.string.hint))
-                }
-            } else {
-                OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
-            }
-        }
-        hintText(uiState)?.let { Text(stringResource(it), color = appColors.hint, textAlign = TextAlign.Center) }
-        if (bearOffs.isNotEmpty()) {
-            Text(
-                stringResource(Res.string.bear_off_explanation),
-                color = appColors.text,
-                textAlign = TextAlign.Center,
-            )
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                bearOffs.forEach { move ->
-                    val border = if (move == hintedMove) BorderStroke(3.dp, appColors.hint.copy(alpha = hintAlpha)) else null
-                    OutlinedButton(
-                        onClick = { onAction(DipoleAction.BearOffChosen(move)) },
-                        border = border ?: ButtonDefaults.outlinedButtonBorder(),
-                    ) {
-                        Text(stringResource(Res.string.bear_off_button, move.count, arrow(move.direction, flipped)))
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(Modifier.fillMaxWidth()) {
+                Row(Modifier.align(Alignment.Center), verticalAlignment = Alignment.CenterVertically) {
+                    // An invisible spacer the size of the icon keeps the title centred.
+                    Spacer(Modifier.size(48.dp))
+                    Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = appColors.text)
+                    IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
+                        Icon(
+                            painterResource(Res.drawable.ic_info),
+                            contentDescription = stringResource(Res.string.rules_title),
+                            tint = appColors.secondaryText,
+                        )
                     }
                 }
+                SettingsMenu(uiState, onAction, Modifier.align(Alignment.CenterEnd))
             }
-        } else if (uiState.selected != null) {
-            Text(stringResource(Res.string.tap_target_help), color = appColors.secondaryText)
-        }
-        uiState.message?.let { message ->
-            Text(stringResource(message.text), color = appColors.secondaryText)
-            LaunchedEffect(message) {
-                delay(MESSAGE_MILLIS)
-                onAction(DipoleAction.MessageShown)
+            Text(
+                modeLabel(session.mode, session.difficulty),
+                color = appColors.secondaryText,
+                fontSize = 14.sp,
+            )
+            Text(
+                statusText(session),
+                color = appColors.text,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+            )
+            val trayModifier = Modifier.widthIn(max = 560.dp).fillMaxWidth()
+            // The human's side sits at the bottom: White, unless playing Black against the computer.
+            val bottomPlayer = if (session.mode == GameMode.VsComputer) session.humanSide else Player.White
+            val flipped = bottomPlayer == Player.Black
+            PlayerTray(state, bottomPlayer.opponent, trayModifier)
+            Board(
+                state = state,
+                flipped = flipped,
+                flight = flight,
+                selected = uiState.selected,
+                movable = uiState.movable,
+                targets = uiState.targets,
+                lastMove = session.lastMove,
+                hintedSquare = hintedMove?.to?.takeIf { it.isOnBoard },
+                hintAlpha = hintAlpha,
+                onSquareClick = { onAction(DipoleAction.SquareTapped(it)) },
+                modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
+            )
+            PlayerTray(state, bottomPlayer, trayModifier)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
+                    Text(stringResource(Res.string.undo))
+                }
+                val onHint = { onAction(DipoleAction.HintClicked) }
+                if (uiState.hintsOn) {
+                    Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = appColors.hint)) {
+                        Text(stringResource(Res.string.hint))
+                    }
+                } else {
+                    OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
+                }
+            }
+            hintText(uiState)?.let { Text(stringResource(it), color = appColors.hint, textAlign = TextAlign.Center) }
+            if (bearOffs.isNotEmpty()) {
+                Text(
+                    stringResource(Res.string.bear_off_explanation),
+                    color = appColors.text,
+                    textAlign = TextAlign.Center,
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    bearOffs.forEach { move ->
+                        val border = if (move == hintedMove) BorderStroke(3.dp, appColors.hint.copy(alpha = hintAlpha)) else null
+                        OutlinedButton(
+                            onClick = { onAction(DipoleAction.BearOffChosen(move)) },
+                            border = border ?: ButtonDefaults.outlinedButtonBorder(),
+                        ) {
+                            Text(stringResource(Res.string.bear_off_button, move.count, arrow(move.direction, flipped)))
+                        }
+                    }
+                }
+            } else if (uiState.selected != null) {
+                Text(stringResource(Res.string.tap_target_help), color = appColors.secondaryText)
+            }
+            uiState.message?.let { message ->
+                Text(stringResource(message.text), color = appColors.secondaryText)
+                LaunchedEffect(message) {
+                    delay(MESSAGE_MILLIS)
+                    onAction(DipoleAction.MessageShown)
+                }
             }
         }
+        ConfettiOverlay(
+            celebration = uiState.celebration,
+            celebrating = uiState.celebrating,
+            onStart = {
+                onAction(DipoleAction.CelebrationShown)
+                if (uiState.soundOn) {
+                    playSound(GameSound.Win)
+                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+            },
+        )
     }
 
     val dismiss = { onAction(DipoleAction.DialogDismissed) }

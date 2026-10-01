@@ -36,6 +36,9 @@
     <string name="hint_best">Tips: Det blinkande draget är det bästa.</string>
     <string name="rules_title">Så spelar du</string>
     <string name="rules">Tryck på en av dina högar och sedan på en markerad ruta. En hög (eller en del av den) flyttar exakt lika många rutor som antalet pjäser som flyttas, och hoppar över allt däremellan. Vanliga drag och sammanslagningar går framåt eller snett framåt; raka drag kräver ett jämnt antal pjäser. Slag (röda) går åt alla håll och tar en hel motståndarhög som inte är större än den som flyttar. Ett vanligt drag förbi brädets kant är tillåtet: den högen lämnar spelet. Ta bort alla motståndarens pjäser för att vinna.</string>
+    <string name="credits_designed_by">Dipole är skapat av Mark Steere.</string>
+    <string name="credits_more_games">Fler spel av Mark Steere: %1$s</string>
+    <string name="credits_official_rules">Officiella regler (PDF)</string>
     <string name="cancel">Avbryt</string>
     <string name="back">Tillbaka</string>
     <string name="save_game_title">Spara spel</string>

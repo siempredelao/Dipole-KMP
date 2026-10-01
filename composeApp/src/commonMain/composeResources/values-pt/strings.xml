@@ -36,6 +36,9 @@
     <string name="hint_best">Dica: a jogada que pisca é a melhor.</string>
     <string name="rules_title">Como jogar</string>
     <string name="rules">Toque em uma das suas pilhas e depois em uma casa destacada. Uma pilha (ou parte dela) anda exatamente tantas casas quanto o número de peças movidas, saltando por cima do que estiver no caminho. Movimentos simples e fusões vão para a frente ou na diagonal para a frente; movimentos em linha reta precisam de um número par de peças. Capturas (em vermelho) vão em qualquer direção e tomam uma pilha inimiga inteira que não seja maior que a que se move. Um movimento simples que passaria da borda do tabuleiro é permitido: essa pilha sai do jogo. Elimine todas as peças inimigas para vencer.</string>
+    <string name="credits_designed_by">Dipole foi criado por Mark Steere.</string>
+    <string name="credits_more_games">Mais jogos de Mark Steere: %1$s</string>
+    <string name="credits_official_rules">Regras oficiais (PDF)</string>
     <string name="cancel">Cancelar</string>
     <string name="back">Voltar</string>
     <string name="save_game_title">Salvar jogo</string>

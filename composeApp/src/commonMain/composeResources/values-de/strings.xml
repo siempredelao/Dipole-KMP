@@ -36,6 +36,9 @@
     <string name="hint_best">Tipp: Der blinkende Zug ist der beste.</string>
     <string name="rules_title">So wird gespielt</string>
     <string name="rules">Tippe auf einen deiner Stapel und dann auf ein markiertes Feld. Ein Stapel (oder ein Teil davon) zieht genau so viele Felder weit, wie Steine bewegt werden, und überspringt alles dazwischen. Einfache Züge und Vereinigungen gehen nach vorn oder schräg nach vorn; gerade Züge brauchen eine gerade Anzahl Steine. Schlagzüge (rot) gehen in jede Richtung und nehmen einen ganzen gegnerischen Stapel, der nicht größer ist als der ziehende. Ein einfacher Zug über den Brettrand hinaus ist erlaubt: Dieser Stapel scheidet aus dem Spiel aus. Entferne alle gegnerischen Steine, um zu gewinnen.</string>
+    <string name="credits_designed_by">Dipole wurde von Mark Steere entworfen.</string>
+    <string name="credits_more_games">Weitere Spiele von Mark Steere: %1$s</string>
+    <string name="credits_official_rules">Offizielle Regeln (PDF)</string>
     <string name="cancel">Abbrechen</string>
     <string name="back">Zurück</string>
     <string name="save_game_title">Spiel speichern</string>

@@ -36,6 +36,9 @@
     <string name="hint_best">Podpowiedź: migający ruch jest najlepszy.</string>
     <string name="rules_title">Jak grać</string>
     <string name="rules">Dotknij jednego ze swoich stosów, a potem podświetlonego pola. Stos (lub jego część) przesuwa się dokładnie o tyle pól, ile pionków jest przesuwanych, przeskakując wszystko po drodze. Zwykłe ruchy i łączenia idą do przodu lub po skosie do przodu; ruchy w linii prostej wymagają parzystej liczby pionków. Bicia (na czerwono) idą w dowolnym kierunku i zabierają cały stos przeciwnika nie większy od poruszającego się. Zwykły ruch poza krawędź planszy jest dozwolony: ten stos wypada z gry. Usuń wszystkie pionki przeciwnika, aby wygrać.</string>
+    <string name="credits_designed_by">Grę Dipole zaprojektował Mark Steere.</string>
+    <string name="credits_more_games">Więcej gier Marka Steere’a: %1$s</string>
+    <string name="credits_official_rules">Oficjalne zasady (PDF)</string>
     <string name="cancel">Anuluj</string>
     <string name="back">Wstecz</string>
     <string name="save_game_title">Zapisz grę</string>

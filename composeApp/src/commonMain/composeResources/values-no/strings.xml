@@ -36,6 +36,9 @@
     <string name="hint_best">Hint: Det blinkende trekket er det beste.</string>
     <string name="rules_title">Slik spiller du</string>
     <string name="rules">Trykk på en av stablene dine og deretter på en markert rute. En stabel (eller en del av den) flytter nøyaktig like mange ruter som antall brikker som flyttes, og hopper over alt imellom. Vanlige trekk og sammenslåinger går fremover eller skrått fremover; rette trekk krever et partall brikker. Slag (røde) går i alle retninger og tar en hel motstanderstabel som ikke er større enn den som flytter. Et vanlig trekk forbi kanten av brettet er tillatt: den stabelen går ut av spillet. Fjern alle motstanderens brikker for å vinne.</string>
+    <string name="credits_designed_by">Dipole er laget av Mark Steere.</string>
+    <string name="credits_more_games">Flere spill av Mark Steere: %1$s</string>
+    <string name="credits_official_rules">Offisielle regler (PDF)</string>
     <string name="cancel">Avbryt</string>
     <string name="back">Tilbake</string>
     <string name="save_game_title">Lagre spill</string>

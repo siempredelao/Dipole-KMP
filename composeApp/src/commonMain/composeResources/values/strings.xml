@@ -36,6 +36,9 @@
     <string name="hint_best">Hint: the blinking move is the best one.</string>
     <string name="rules_title">How to play</string>
     <string name="rules">Tap one of your stacks, then a highlighted square. A stack (or part of it) moves exactly as many squares as checkers are moved, jumping over anything in between. Plain moves and merges go forward or diagonally forward; straight moves need an even number of checkers. Captures (red) go in any direction and take a whole enemy stack no bigger than the moving one. A plain move that would go past the edge of the board is allowed: that stack is removed from play. Remove all enemy checkers to win.</string>
+    <string name="credits_designed_by">Dipole was designed by Mark Steere.</string>
+    <string name="credits_more_games">More games by Mark Steere: %1$s</string>
+    <string name="credits_official_rules">Official rules (PDF)</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="save_game_title">Save game</string>

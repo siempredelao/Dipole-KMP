@@ -36,6 +36,9 @@
     <string name="hint_best">İpucu: Yanıp sönen hamle en iyisi.</string>
     <string name="rules_title">Nasıl oynanır</string>
     <string name="rules">Yığınlarından birine, sonra vurgulanan bir kareye dokun. Bir yığın (ya da bir kısmı), hareket eden taş sayısı kadar kare ilerler ve aradaki her şeyin üzerinden atlar. Normal hamleler ve birleştirmeler ileri ya da çapraz ileri gider; düz hamleler için çift sayıda taş gerekir. Almalar (kırmızı) her yöne gidebilir ve hareket edenden büyük olmayan bir rakip yığının tamamını alır. Tahtanın kenarını aşacak normal bir hamleye izin verilir: o yığın oyundan çıkar. Kazanmak için rakibin tüm taşlarını kaldır.</string>
+    <string name="credits_designed_by">Dipole, Mark Steere tarafından tasarlandı.</string>
+    <string name="credits_more_games">Mark Steere’in diğer oyunları: %1$s</string>
+    <string name="credits_official_rules">Resmî kurallar (PDF)</string>
     <string name="cancel">İptal</string>
     <string name="back">Geri</string>
     <string name="save_game_title">Oyunu kaydet</string>

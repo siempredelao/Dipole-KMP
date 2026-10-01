@@ -36,6 +36,9 @@
     <string name="hint_best">Indice : le coup qui clignote est le meilleur.</string>
     <string name="rules_title">Comment jouer</string>
     <string name="rules">Touchez une de vos piles, puis une case en surbrillance. Une pile (ou une partie de celle-ci) avance d’exactement autant de cases que de pions déplacés, en sautant par-dessus tout ce qui se trouve entre les deux. Les déplacements simples et les fusions vont vers l’avant ou en diagonale vers l’avant ; les déplacements en ligne droite exigent un nombre pair de pions. Les captures (en rouge) vont dans toutes les directions et prennent une pile adverse entière qui n’est pas plus grande que celle qui se déplace. Un déplacement simple qui sortirait du plateau est autorisé : cette pile quitte le jeu. Éliminez tous les pions adverses pour gagner.</string>
+    <string name="credits_designed_by">Dipole a été conçu par Mark Steere.</string>
+    <string name="credits_more_games">Autres jeux de Mark Steere : %1$s</string>
+    <string name="credits_official_rules">Règles officielles (PDF)</string>
     <string name="cancel">Annuler</string>
     <string name="back">Retour</string>
     <string name="save_game_title">Enregistrer la partie</string>

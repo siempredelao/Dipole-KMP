@@ -112,10 +112,10 @@ private val boardColors: BoardColors @Composable get() = LocalBoardColors.curren
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DipoleScreen(
-    uiState: DipoleUiState,
+fun GameScreen(
+    uiState: GameUiState,
     settings: SettingsUiState,
-    onAction: (DipoleAction) -> Unit,
+    onAction: (GameAction) -> Unit,
     onSettingsAction: (SettingsAction) -> Unit,
     onRulesClick: () -> Unit,
 ) {
@@ -185,15 +185,15 @@ fun DipoleScreen(
                 lastMove = session.lastMove,
                 hintedSquare = hintedMove?.to?.takeIf { it.isOnBoard },
                 hintAlpha = hintAlpha,
-                onSquareClick = { onAction(DipoleAction.SquareTapped(it)) },
+                onSquareClick = { onAction(GameAction.SquareTapped(it)) },
                 modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
             )
             PlayerTray(state, bottomPlayer, trayModifier)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
+                OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = session.canUndo) {
                     Text(stringResource(Res.string.undo))
                 }
-                val onHint = { onAction(DipoleAction.HintClicked) }
+                val onHint = { onAction(GameAction.HintClicked) }
                 if (uiState.hintsOn) {
                     Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = appColors.hint)) {
                         Text(stringResource(Res.string.hint))
@@ -213,7 +213,7 @@ fun DipoleScreen(
                     bearOffs.forEach { move ->
                         val border = if (move == hintedMove) BorderStroke(3.dp, appColors.hint.copy(alpha = hintAlpha)) else null
                         OutlinedButton(
-                            onClick = { onAction(DipoleAction.BearOffChosen(move)) },
+                            onClick = { onAction(GameAction.BearOffChosen(move)) },
                             border = border ?: ButtonDefaults.outlinedButtonBorder(),
                         ) {
                             Text(stringResource(Res.string.bear_off_button, move.count, arrow(move.direction, flipped)))
@@ -227,7 +227,7 @@ fun DipoleScreen(
                 Text(stringResource(message.text), color = appColors.secondaryText)
                 LaunchedEffect(message) {
                     delay(MESSAGE_MILLIS)
-                    onAction(DipoleAction.MessageShown)
+                    onAction(GameAction.MessageShown)
                 }
             }
         }
@@ -235,7 +235,7 @@ fun DipoleScreen(
             celebration = uiState.celebration,
             celebrating = uiState.celebrating,
             onStart = {
-                onAction(DipoleAction.CelebrationShown)
+                onAction(GameAction.CelebrationShown)
                 if (settings.soundOn) {
                     playSound(GameSound.Win)
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -244,32 +244,32 @@ fun DipoleScreen(
         )
     }
 
-    val dismiss = { onAction(DipoleAction.DialogDismissed) }
+    val dismiss = { onAction(GameAction.DialogDismissed) }
     when (val dialog = uiState.dialog) {
-        DipoleDialog.NewGame -> NewGameDialog(
-            onModeChosen = { onAction(DipoleAction.ModeChosen(it)) },
+        GameDialog.NewGame -> NewGameDialog(
+            onModeChosen = { onAction(GameAction.ModeChosen(it)) },
             onDismiss = dismiss,
         )
-        is DipoleDialog.ChooseDifficulty -> DifficultyDialog(
+        is GameDialog.ChooseDifficulty -> DifficultyDialog(
             suggested = dialog.suggested,
             side = dialog.side,
-            onSideChosen = { onAction(DipoleAction.SideChosen(it)) },
-            onDifficultyChosen = { onAction(DipoleAction.DifficultyChosen(it)) },
-            onBack = { onAction(DipoleAction.BackToModeClicked) },
+            onSideChosen = { onAction(GameAction.SideChosen(it)) },
+            onDifficultyChosen = { onAction(GameAction.DifficultyChosen(it)) },
+            onBack = { onAction(GameAction.BackToModeClicked) },
             onDismiss = dismiss,
         )
-        is DipoleDialog.Save -> SaveGameDialog(
+        is GameDialog.Save -> SaveGameDialog(
             savedAt = dialog.savedAt,
-            onSave = { onAction(DipoleAction.SaveConfirmed(it)) },
+            onSave = { onAction(GameAction.SaveConfirmed(it)) },
             onDismiss = dismiss,
         )
-        is DipoleDialog.Load -> LoadGameDialog(
+        is GameDialog.Load -> LoadGameDialog(
             savedGames = dialog.savedGames,
-            onLoad = { onAction(DipoleAction.SavedGameChosen(it)) },
-            onDelete = { onAction(DipoleAction.SavedGameDeleted(it)) },
+            onLoad = { onAction(GameAction.SavedGameChosen(it)) },
+            onDelete = { onAction(GameAction.SavedGameDeleted(it)) },
             onDismiss = dismiss,
         )
-        DipoleDialog.Appearance -> AppearanceDialog(
+        GameDialog.Appearance -> AppearanceDialog(
             mode = settings.appearanceMode,
             board = settings.boardTheme,
             onModeChosen = { onSettingsAction(SettingsAction.AppearanceModeChosen(it)) },
@@ -285,38 +285,38 @@ private const val MESSAGE_MILLIS = 2_000L
 /** The settings icon and its menu: New game, Save game, Load game, Appearance and the sound switch. */
 @Composable
 private fun SettingsMenu(
-    uiState: DipoleUiState,
+    uiState: GameUiState,
     settings: SettingsUiState,
-    onAction: (DipoleAction) -> Unit,
+    onAction: (GameAction) -> Unit,
     onSettingsAction: (SettingsAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
-        IconButton(onClick = { onAction(DipoleAction.MenuClicked) }) {
+        IconButton(onClick = { onAction(GameAction.MenuClicked) }) {
             Icon(
                 painterResource(Res.drawable.ic_settings),
                 contentDescription = stringResource(Res.string.settings),
                 tint = appColors.secondaryText,
             )
         }
-        DropdownMenu(expanded = uiState.menuOpen, onDismissRequest = { onAction(DipoleAction.MenuDismissed) }) {
+        DropdownMenu(expanded = uiState.menuOpen, onDismissRequest = { onAction(GameAction.MenuDismissed) }) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.new_game)) },
-                onClick = { onAction(DipoleAction.NewGameClicked) },
+                onClick = { onAction(GameAction.NewGameClicked) },
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.save_game_title)) },
-                onClick = { onAction(DipoleAction.SaveClicked) },
+                onClick = { onAction(GameAction.SaveClicked) },
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.load_game_title)) },
-                onClick = { onAction(DipoleAction.LoadClicked) },
+                onClick = { onAction(GameAction.LoadClicked) },
                 enabled = uiState.hasSavedGames,
             )
             HorizontalDivider()
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.appearance)) },
-                onClick = { onAction(DipoleAction.AppearanceClicked) },
+                onClick = { onAction(GameAction.AppearanceClicked) },
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.sound_and_vibration)) },
@@ -348,7 +348,7 @@ private fun blinkAlpha(hint: Hint?): Float {
     return alpha.value
 }
 
-private fun hintText(uiState: DipoleUiState): StringResource? {
+private fun hintText(uiState: GameUiState): StringResource? {
     if (!uiState.hintsOn) return null
     val hint = uiState.hint
     return when {

@@ -46,11 +46,11 @@ val Difficulty.description: StringResource
 val Player.label: StringResource
     get() = if (this == Player.White) Res.string.player_white else Res.string.player_black
 
-val DipoleMessage.text: StringResource
+val GameMessage.text: StringResource
     get() = when (this) {
-        DipoleMessage.GameSaved -> Res.string.message_game_saved
-        DipoleMessage.GameLoaded -> Res.string.message_game_loaded
-        DipoleMessage.SaveUnreadable -> Res.string.message_save_unreadable
+        GameMessage.GameSaved -> Res.string.message_game_saved
+        GameMessage.GameLoaded -> Res.string.message_game_loaded
+        GameMessage.SaveUnreadable -> Res.string.message_save_unreadable
     }
 
 /** "vs Computer · Easy" or "2 Players". */

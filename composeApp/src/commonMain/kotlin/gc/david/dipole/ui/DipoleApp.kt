@@ -27,9 +27,9 @@ fun DipoleApp() {
     DipoleTheme(settings.appearanceMode, settings.boardTheme) {
         NavHost(navController, startDestination = start) {
             composable<GameRoute> {
-                val viewModel = viewModel { DipoleViewModel(preferences = preferences) }
+                val viewModel = viewModel { GameViewModel(preferences = preferences) }
                 val uiState by viewModel.uiState.collectAsState()
-                DipoleScreen(
+                GameScreen(
                     uiState = uiState,
                     settings = settings,
                     onAction = viewModel::onAction,

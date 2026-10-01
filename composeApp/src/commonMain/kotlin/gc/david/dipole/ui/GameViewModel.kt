@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DipoleViewModel(
+class GameViewModel(
     private val repository: SavedGamesRepository = SettingsSavedGamesRepository(),
     private val preferences: GamePreferences = SettingsGamePreferences(),
     private val computerFor: (Difficulty) -> ComputerPlayer = { ComputerPlayer.forDifficulty(it) },
@@ -42,12 +42,12 @@ class DipoleViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        DipoleUiState(
+        GameUiState(
             session = initialSession,
             hasSavedGames = repository.list().isNotEmpty(),
         ),
     )
-    val uiState: StateFlow<DipoleUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     private var computerMove: Job? = null
     private var hintJob: Job? = null
@@ -57,53 +57,53 @@ class DipoleViewModel(
         playComputerIfItsTurn()
     }
 
-    fun onAction(action: DipoleAction) {
+    fun onAction(action: GameAction) {
         when (action) {
-            is DipoleAction.SquareTapped -> onSquareTapped(action)
-            is DipoleAction.BearOffChosen -> play(action.move)
-            DipoleAction.NewGameClicked -> _uiState.update { it.copy(menuOpen = false, dialog = DipoleDialog.NewGame) }
-            is DipoleAction.ModeChosen -> when (action.mode) {
+            is GameAction.SquareTapped -> onSquareTapped(action)
+            is GameAction.BearOffChosen -> play(action.move)
+            GameAction.NewGameClicked -> _uiState.update { it.copy(menuOpen = false, dialog = GameDialog.NewGame) }
+            is GameAction.ModeChosen -> when (action.mode) {
                 GameMode.TwoPlayers -> startSession(GameSession.new(GameMode.TwoPlayers), message = null)
                 GameMode.VsComputer -> _uiState.update {
-                    it.copy(dialog = DipoleDialog.ChooseDifficulty(preferences.lastDifficulty, preferences.lastSide))
+                    it.copy(dialog = GameDialog.ChooseDifficulty(preferences.lastDifficulty, preferences.lastSide))
                 }
             }
-            is DipoleAction.SideChosen -> _uiState.update {
-                val dialog = it.dialog as? DipoleDialog.ChooseDifficulty ?: return@update it
+            is GameAction.SideChosen -> _uiState.update {
+                val dialog = it.dialog as? GameDialog.ChooseDifficulty ?: return@update it
                 it.copy(dialog = dialog.copy(side = action.side))
             }
-            is DipoleAction.DifficultyChosen -> {
-                val side = (_uiState.value.dialog as? DipoleDialog.ChooseDifficulty)?.side ?: preferences.lastSide
+            is GameAction.DifficultyChosen -> {
+                val side = (_uiState.value.dialog as? GameDialog.ChooseDifficulty)?.side ?: preferences.lastSide
                 preferences.lastDifficulty = action.difficulty
                 preferences.lastSide = side
                 startSession(GameSession.new(GameMode.VsComputer, action.difficulty, humanSide = side), message = null)
             }
-            DipoleAction.BackToModeClicked -> _uiState.update { it.copy(dialog = DipoleDialog.NewGame) }
-            DipoleAction.UndoClicked -> {
+            GameAction.BackToModeClicked -> _uiState.update { it.copy(dialog = GameDialog.NewGame) }
+            GameAction.UndoClicked -> {
                 if (_uiState.value.session.canUndo) startSession(_uiState.value.session.undo(), message = null)
             }
-            DipoleAction.HintClicked -> toggleHints()
-            DipoleAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
-            DipoleAction.MenuDismissed -> _uiState.update { it.copy(menuOpen = false) }
-            DipoleAction.AppearanceClicked -> _uiState.update {
-                it.copy(menuOpen = false, dialog = DipoleDialog.Appearance)
+            GameAction.HintClicked -> toggleHints()
+            GameAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
+            GameAction.MenuDismissed -> _uiState.update { it.copy(menuOpen = false) }
+            GameAction.AppearanceClicked -> _uiState.update {
+                it.copy(menuOpen = false, dialog = GameDialog.Appearance)
             }
-            DipoleAction.SaveClicked -> _uiState.update {
-                it.copy(menuOpen = false, dialog = DipoleDialog.Save(clock.now()))
+            GameAction.SaveClicked -> _uiState.update {
+                it.copy(menuOpen = false, dialog = GameDialog.Save(clock.now()))
             }
-            is DipoleAction.SaveConfirmed -> save(action.name)
-            DipoleAction.LoadClicked -> _uiState.update {
-                it.copy(menuOpen = false, dialog = DipoleDialog.Load(repository.list()))
+            is GameAction.SaveConfirmed -> save(action.name)
+            GameAction.LoadClicked -> _uiState.update {
+                it.copy(menuOpen = false, dialog = GameDialog.Load(repository.list()))
             }
-            is DipoleAction.SavedGameChosen -> load(action.game)
-            is DipoleAction.SavedGameDeleted -> delete(action.game)
-            DipoleAction.DialogDismissed -> _uiState.update { it.copy(dialog = null) }
-            DipoleAction.MessageShown -> _uiState.update { it.copy(message = null) }
-            DipoleAction.CelebrationShown -> _uiState.update { it.copy(celebrating = false) }
+            is GameAction.SavedGameChosen -> load(action.game)
+            is GameAction.SavedGameDeleted -> delete(action.game)
+            GameAction.DialogDismissed -> _uiState.update { it.copy(dialog = null) }
+            GameAction.MessageShown -> _uiState.update { it.copy(message = null) }
+            GameAction.CelebrationShown -> _uiState.update { it.copy(celebrating = false) }
         }
     }
 
-    private fun onSquareTapped(action: DipoleAction.SquareTapped) {
+    private fun onSquareTapped(action: GameAction.SquareTapped) {
         val current = _uiState.value
         val target = current.targets[action.square]
         when {
@@ -157,16 +157,16 @@ class DipoleViewModel(
 
     private fun save(name: String) {
         repository.save(SavedGame.of(_uiState.value.session, name, clock.now()))
-        _uiState.update { it.copy(dialog = null, message = DipoleMessage.GameSaved, hasSavedGames = true) }
+        _uiState.update { it.copy(dialog = null, message = GameMessage.GameSaved, hasSavedGames = true) }
     }
 
     private fun load(game: SavedGame) {
         val session = game.toSession()
         if (session == null) {
-            _uiState.update { it.copy(dialog = null, message = DipoleMessage.SaveUnreadable) }
+            _uiState.update { it.copy(dialog = null, message = GameMessage.SaveUnreadable) }
             return
         }
-        startSession(session, message = DipoleMessage.GameLoaded)
+        startSession(session, message = GameMessage.GameLoaded)
     }
 
     private fun delete(game: SavedGame) {
@@ -174,14 +174,14 @@ class DipoleViewModel(
         val remaining = repository.list()
         _uiState.update {
             it.copy(
-                dialog = if (remaining.isEmpty()) null else DipoleDialog.Load(remaining),
+                dialog = if (remaining.isEmpty()) null else GameDialog.Load(remaining),
                 hasSavedGames = remaining.isNotEmpty(),
             )
         }
     }
 
     /** Switches to [session], closing any dialog and clearing the selection and hints. */
-    private fun startSession(session: GameSession, message: DipoleMessage?) {
+    private fun startSession(session: GameSession, message: GameMessage?) {
         hintJob?.cancel()
         _uiState.update {
             it.copy(session = session, selected = null, dialog = null, message = message, hintsOn = false, hint = null)

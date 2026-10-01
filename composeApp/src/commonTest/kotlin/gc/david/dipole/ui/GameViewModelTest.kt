@@ -31,7 +31,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DipoleViewModelTest {
+class GameViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
     private val repository = FakeSavedGamesRepository()
@@ -48,7 +48,7 @@ class DipoleViewModelTest {
 
     private val preferences = FakeGamePreferences()
 
-    private fun viewModel(initialSession: GameSession? = null) = DipoleViewModel(
+    private fun viewModel(initialSession: GameSession? = null) = GameViewModel(
         repository,
         preferences,
         hinter = ComputerPlayer(depth = 1),
@@ -62,9 +62,9 @@ class DipoleViewModelTest {
     private fun endgame(mode: GameMode, toMove: Player, vararg board: Pair<Square, Stack>) =
         GameSession.new(mode, initial = GameState(mapOf(*board), toMove))
 
-    private fun TestScope.play(vm: DipoleViewModel, move: Move) {
-        vm.onAction(DipoleAction.SquareTapped(move.from))
-        vm.onAction(DipoleAction.SquareTapped(move.to))
+    private fun TestScope.play(vm: GameViewModel, move: Move) {
+        vm.onAction(GameAction.SquareTapped(move.from))
+        vm.onAction(GameAction.SquareTapped(move.to))
         advanceUntilIdle()
     }
 
@@ -79,9 +79,9 @@ class DipoleViewModelTest {
     @Test
     fun tappingAStackThenATargetPlaysTheMoveAndTheComputerReplies() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.SquareTapped(opening.from))
+        vm.onAction(GameAction.SquareTapped(opening.from))
         assertEquals(opening.from, vm.uiState.value.selected)
-        vm.onAction(DipoleAction.SquareTapped(opening.to))
+        vm.onAction(GameAction.SquareTapped(opening.to))
         assertEquals(opening, vm.uiState.value.session.moves.first())
         assertNull(vm.uiState.value.selected)
         advanceUntilIdle()
@@ -93,9 +93,9 @@ class DipoleViewModelTest {
     fun newGameAsksForTheModeAndStartsIt() = runTest(dispatcher) {
         val vm = viewModel()
         play(vm, opening)
-        vm.onAction(DipoleAction.NewGameClicked)
-        assertEquals(DipoleDialog.NewGame, vm.uiState.value.dialog)
-        vm.onAction(DipoleAction.ModeChosen(GameMode.TwoPlayers))
+        vm.onAction(GameAction.NewGameClicked)
+        assertEquals(GameDialog.NewGame, vm.uiState.value.dialog)
+        vm.onAction(GameAction.ModeChosen(GameMode.TwoPlayers))
         assertNull(vm.uiState.value.dialog)
         assertEquals(GameMode.TwoPlayers, vm.uiState.value.session.mode)
         assertTrue(vm.uiState.value.session.moves.isEmpty())
@@ -106,13 +106,13 @@ class DipoleViewModelTest {
         preferences.lastDifficulty = Difficulty.Easy
         val vm = viewModel()
         assertEquals(Difficulty.Easy, vm.uiState.value.session.difficulty)
-        vm.onAction(DipoleAction.NewGameClicked)
-        vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
-        assertEquals(DipoleDialog.ChooseDifficulty(Difficulty.Easy, Player.White), vm.uiState.value.dialog)
-        vm.onAction(DipoleAction.BackToModeClicked)
-        assertEquals(DipoleDialog.NewGame, vm.uiState.value.dialog)
-        vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
-        vm.onAction(DipoleAction.DifficultyChosen(Difficulty.Hard))
+        vm.onAction(GameAction.NewGameClicked)
+        vm.onAction(GameAction.ModeChosen(GameMode.VsComputer))
+        assertEquals(GameDialog.ChooseDifficulty(Difficulty.Easy, Player.White), vm.uiState.value.dialog)
+        vm.onAction(GameAction.BackToModeClicked)
+        assertEquals(GameDialog.NewGame, vm.uiState.value.dialog)
+        vm.onAction(GameAction.ModeChosen(GameMode.VsComputer))
+        vm.onAction(GameAction.DifficultyChosen(Difficulty.Hard))
         assertNull(vm.uiState.value.dialog)
         assertEquals(GameMode.VsComputer, vm.uiState.value.session.mode)
         assertEquals(Difficulty.Hard, vm.uiState.value.session.difficulty)
@@ -122,11 +122,11 @@ class DipoleViewModelTest {
     @Test
     fun choosingBlackLetsTheComputerOpen() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.NewGameClicked)
-        vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
-        vm.onAction(DipoleAction.SideChosen(Player.Black))
-        assertEquals(Player.Black, (vm.uiState.value.dialog as DipoleDialog.ChooseDifficulty).side)
-        vm.onAction(DipoleAction.DifficultyChosen(Difficulty.Easy))
+        vm.onAction(GameAction.NewGameClicked)
+        vm.onAction(GameAction.ModeChosen(GameMode.VsComputer))
+        vm.onAction(GameAction.SideChosen(Player.Black))
+        assertEquals(Player.Black, (vm.uiState.value.dialog as GameDialog.ChooseDifficulty).side)
+        vm.onAction(GameAction.DifficultyChosen(Difficulty.Easy))
         assertEquals(Player.Black, vm.uiState.value.session.humanSide)
         assertEquals(Player.Black, preferences.lastSide)
         advanceUntilIdle()
@@ -147,7 +147,7 @@ class DipoleViewModelTest {
     fun undoTakesBackTheComputerReplyToo() = runTest(dispatcher) {
         val vm = viewModel()
         play(vm, opening)
-        vm.onAction(DipoleAction.UndoClicked)
+        vm.onAction(GameAction.UndoClicked)
         assertTrue(vm.uiState.value.session.moves.isEmpty())
     }
 
@@ -157,34 +157,34 @@ class DipoleViewModelTest {
         play(vm, opening)
         val saved = vm.uiState.value.session
 
-        vm.onAction(DipoleAction.SaveClicked)
-        val dialog = assertIs<DipoleDialog.Save>(vm.uiState.value.dialog)
+        vm.onAction(GameAction.SaveClicked)
+        val dialog = assertIs<GameDialog.Save>(vm.uiState.value.dialog)
         assertEquals(clock.now(), dialog.savedAt)
-        vm.onAction(DipoleAction.SaveConfirmed("Opening"))
-        assertEquals(DipoleMessage.GameSaved, vm.uiState.value.message)
+        vm.onAction(GameAction.SaveConfirmed("Opening"))
+        assertEquals(GameMessage.GameSaved, vm.uiState.value.message)
         assertTrue(vm.uiState.value.hasSavedGames)
 
-        vm.onAction(DipoleAction.NewGameClicked)
-        vm.onAction(DipoleAction.ModeChosen(GameMode.TwoPlayers))
-        vm.onAction(DipoleAction.LoadClicked)
-        val load = assertIs<DipoleDialog.Load>(vm.uiState.value.dialog)
+        vm.onAction(GameAction.NewGameClicked)
+        vm.onAction(GameAction.ModeChosen(GameMode.TwoPlayers))
+        vm.onAction(GameAction.LoadClicked)
+        val load = assertIs<GameDialog.Load>(vm.uiState.value.dialog)
         assertEquals(listOf("Opening"), load.savedGames.map { it.name })
 
-        vm.onAction(DipoleAction.SavedGameChosen(load.savedGames.single()))
+        vm.onAction(GameAction.SavedGameChosen(load.savedGames.single()))
         assertEquals(saved.state, vm.uiState.value.state)
         assertEquals(saved.moves, vm.uiState.value.session.moves)
         assertEquals(GameMode.VsComputer, vm.uiState.value.session.mode)
-        assertEquals(DipoleMessage.GameLoaded, vm.uiState.value.message)
+        assertEquals(GameMessage.GameLoaded, vm.uiState.value.message)
         assertNull(vm.uiState.value.dialog)
     }
 
     @Test
     fun deletingTheLastSaveClosesTheList() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.SaveConfirmed("Only"))
-        vm.onAction(DipoleAction.LoadClicked)
-        val load = assertIs<DipoleDialog.Load>(vm.uiState.value.dialog)
-        vm.onAction(DipoleAction.SavedGameDeleted(load.savedGames.single()))
+        vm.onAction(GameAction.SaveConfirmed("Only"))
+        vm.onAction(GameAction.LoadClicked)
+        val load = assertIs<GameDialog.Load>(vm.uiState.value.dialog)
+        vm.onAction(GameAction.SavedGameDeleted(load.savedGames.single()))
         assertNull(vm.uiState.value.dialog)
         assertFalse(vm.uiState.value.hasSavedGames)
     }
@@ -192,30 +192,30 @@ class DipoleViewModelTest {
     @Test
     fun appearanceOpensItsDialogFromTheMenu() {
         val vm = viewModel()
-        vm.onAction(DipoleAction.MenuClicked)
-        vm.onAction(DipoleAction.AppearanceClicked)
+        vm.onAction(GameAction.MenuClicked)
+        vm.onAction(GameAction.AppearanceClicked)
         assertFalse(vm.uiState.value.menuOpen)
-        assertEquals(DipoleDialog.Appearance, vm.uiState.value.dialog)
+        assertEquals(GameDialog.Appearance, vm.uiState.value.dialog)
     }
 
     @Test
     fun choosingAMenuItemClosesTheMenu() {
         val vm = viewModel()
-        vm.onAction(DipoleAction.MenuClicked)
+        vm.onAction(GameAction.MenuClicked)
         assertTrue(vm.uiState.value.menuOpen)
-        vm.onAction(DipoleAction.MenuDismissed)
+        vm.onAction(GameAction.MenuDismissed)
         assertFalse(vm.uiState.value.menuOpen)
 
-        vm.onAction(DipoleAction.MenuClicked)
-        vm.onAction(DipoleAction.NewGameClicked)
+        vm.onAction(GameAction.MenuClicked)
+        vm.onAction(GameAction.NewGameClicked)
         assertFalse(vm.uiState.value.menuOpen)
-        assertEquals(DipoleDialog.NewGame, vm.uiState.value.dialog)
+        assertEquals(GameDialog.NewGame, vm.uiState.value.dialog)
     }
 
     @Test
     fun noHintUntilHintIsTapped() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
         advanceUntilIdle()
         assertFalse(vm.uiState.value.hintsOn)
         assertNull(vm.uiState.value.hint)
@@ -224,8 +224,8 @@ class DipoleViewModelTest {
     @Test
     fun hintShowsTheBestMoveFromTheSelectedStack() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.HintClicked)
-        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.HintClicked)
+        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
         assertNull(vm.uiState.value.hint) // still thinking
         advanceUntilIdle()
         val hint = vm.uiState.value.hint
@@ -236,8 +236,8 @@ class DipoleViewModelTest {
     @Test
     fun tappingHintWithAStackSelectedShowsItsHint() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
-        vm.onAction(DipoleAction.HintClicked)
+        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.HintClicked)
         advanceUntilIdle()
         assertEquals(GameState.WHITE_START, vm.uiState.value.hint?.move?.from)
     }
@@ -245,7 +245,7 @@ class DipoleViewModelTest {
     @Test
     fun hintsSwitchOffWhenTheTurnPasses() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.HintClicked)
+        vm.onAction(GameAction.HintClicked)
         play(vm, opening)
         assertEquals(Player.White, vm.uiState.value.state.toMove)
         assertFalse(vm.uiState.value.hintsOn)
@@ -255,10 +255,10 @@ class DipoleViewModelTest {
     @Test
     fun hintCanBeTurnedOffAgain() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.HintClicked)
-        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.HintClicked)
+        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
         advanceUntilIdle()
-        vm.onAction(DipoleAction.HintClicked)
+        vm.onAction(GameAction.HintClicked)
         assertFalse(vm.uiState.value.hintsOn)
         assertNull(vm.uiState.value.hint)
     }
@@ -266,10 +266,10 @@ class DipoleViewModelTest {
     @Test
     fun noHintsOnTheComputersTurn() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(DipoleAction.SquareTapped(opening.from))
-        vm.onAction(DipoleAction.SquareTapped(opening.to))
+        vm.onAction(GameAction.SquareTapped(opening.from))
+        vm.onAction(GameAction.SquareTapped(opening.to))
         assertFalse(vm.uiState.value.canHint)
-        vm.onAction(DipoleAction.HintClicked)
+        vm.onAction(GameAction.HintClicked)
         assertFalse(vm.uiState.value.hintsOn)
         advanceUntilIdle()
     }
@@ -285,7 +285,7 @@ class DipoleViewModelTest {
         assertEquals(1, vm.uiState.value.celebration)
         assertTrue(vm.uiState.value.celebrating)
         // Once the confetti has started it isn't thrown again, e.g. after visiting the rules.
-        vm.onAction(DipoleAction.CelebrationShown)
+        vm.onAction(GameAction.CelebrationShown)
         assertFalse(vm.uiState.value.celebrating)
         assertEquals(1, vm.uiState.value.celebration)
     }
@@ -329,7 +329,7 @@ class DipoleViewModelTest {
             endgame(GameMode.TwoPlayers, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
         )
         play(vm, win)
-        vm.onAction(DipoleAction.UndoClicked)
+        vm.onAction(GameAction.UndoClicked)
         assertEquals(null, vm.uiState.value.state.winner)
         assertEquals(1, vm.uiState.value.celebration)
         play(vm, win)

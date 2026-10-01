@@ -16,9 +16,9 @@ import gc.david.dipole.game.Stack
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenPreview() {
+private fun GameScreenPreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
-        PreviewScreen(DipoleUiState(GameSession.new(GameMode.VsComputer)))
+        PreviewScreen(GameUiState(GameSession.new(GameMode.VsComputer)))
     }
 }
 
@@ -36,10 +36,10 @@ private val midGame = GameState(
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenMidGamePreview() {
+private fun GameScreenMidGamePreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
         PreviewScreen(
-            DipoleUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5))
+            GameUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5))
         )
     }
 }
@@ -47,11 +47,11 @@ private fun DipoleScreenMidGamePreview() {
 /** Hints switched on with the f4 stack selected, showing its recommended move. */
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenHintPreview() {
+private fun GameScreenHintPreview() {
     val selected = Square(3, 5)
     DipoleTheme(mode = AppearanceMode.Dark) {
         PreviewScreen(
-            DipoleUiState(
+            GameUiState(
                 session = GameSession.new(GameMode.VsComputer, initial = midGame),
                 selected = selected,
                 hintsOn = true,
@@ -64,33 +64,33 @@ private fun DipoleScreenHintPreview() {
 /** Playing Black against the computer: the board is turned round so Black sits at the bottom. */
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenAsBlackPreview() {
+private fun GameScreenAsBlackPreview() {
     val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
         .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
     DipoleTheme(mode = AppearanceMode.Dark) {
-        PreviewScreen(DipoleUiState(session, selected = GameState.BLACK_START))
+        PreviewScreen(GameUiState(session, selected = GameState.BLACK_START))
     }
 }
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenLightPreview() = MidGameWith(AppearanceMode.Light, BoardTheme.Wood)
+private fun GameScreenLightPreview() = MidGameWith(AppearanceMode.Light, BoardTheme.Wood)
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenTournamentPreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.Tournament)
+private fun GameScreenTournamentPreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.Tournament)
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenSlatePreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.Slate)
+private fun GameScreenSlatePreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.Slate)
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenMarblePreview() = MidGameWith(AppearanceMode.Light, BoardTheme.Marble)
+private fun GameScreenMarblePreview() = MidGameWith(AppearanceMode.Light, BoardTheme.Marble)
 
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
-private fun DipoleScreenHighContrastPreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.HighContrast)
+private fun GameScreenHighContrastPreview() = MidGameWith(AppearanceMode.Dark, BoardTheme.HighContrast)
 
 /**
  * The mid-game position plus a White stack on c3 that is selected, so plain targets and a capture
@@ -101,7 +101,7 @@ private fun MidGameWith(mode: AppearanceMode, board: BoardTheme) {
     val position = midGame.copy(board = midGame.board + (Square(2, 2) to Stack(Player.White, 4)))
     DipoleTheme(mode, board) {
         PreviewScreen(
-            DipoleUiState(
+            GameUiState(
                 session = GameSession.new(GameMode.TwoPlayers, initial = position),
                 selected = Square(2, 2),
             )
@@ -111,6 +111,6 @@ private fun MidGameWith(mode: AppearanceMode, board: BoardTheme) {
 
 /** The game screen with default settings and no actions, for previews. */
 @Composable
-internal fun PreviewScreen(uiState: DipoleUiState) {
-    DipoleScreen(uiState, SettingsUiState(), onAction = {}, onSettingsAction = {}, onRulesClick = {})
+internal fun PreviewScreen(uiState: GameUiState) {
+    GameScreen(uiState, SettingsUiState(), onAction = {}, onSettingsAction = {}, onRulesClick = {})
 }

@@ -14,7 +14,7 @@ import gc.david.dipole.game.GameSession
 private fun CelebrationPreview(mode: AppearanceMode, seconds: Float) {
     DipoleTheme(mode = mode) {
         Box(Modifier.fillMaxSize()) {
-            PreviewScreen(DipoleUiState(GameSession.new(GameMode.VsComputer)))
+            PreviewScreen(GameUiState(GameSession.new(GameMode.VsComputer)))
             ConfettiOverlay(celebration = 1, celebrating = false, onStart = {}, previewSeconds = seconds)
         }
     }

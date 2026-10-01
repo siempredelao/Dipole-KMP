@@ -11,13 +11,13 @@ import gc.david.dipole.game.Square
 import gc.david.dipole.saves.SavedGame
 import kotlin.time.Instant
 
-/** Everything [DipoleScreen] shows. */
-data class DipoleUiState(
+/** Everything [GameScreen] shows. */
+data class GameUiState(
     val session: GameSession,
     val selected: Square? = null,
-    val dialog: DipoleDialog? = null,
+    val dialog: GameDialog? = null,
     /** A short confirmation such as "Game saved", cleared once shown. */
-    val message: DipoleMessage? = null,
+    val message: GameMessage? = null,
     val hasSavedGames: Boolean = false,
     /** True once the player tapped Hint this turn; switched off when the turn passes. */
     val hintsOn: Boolean = false,
@@ -48,42 +48,42 @@ data class DipoleUiState(
     val canHint: Boolean get() = !session.isComputerTurn && !state.isOver
 }
 
-sealed interface DipoleDialog {
-    data object NewGame : DipoleDialog
+sealed interface GameDialog {
+    data object NewGame : GameDialog
 
     /**
      * Second step of New game against the computer: the human picks a [side] (initially the one
      * picked last time) and a difficulty, with [suggested] picked last time.
      */
-    data class ChooseDifficulty(val suggested: Difficulty, val side: Player) : DipoleDialog
+    data class ChooseDifficulty(val suggested: Difficulty, val side: Player) : GameDialog
 
     /** Asks for a save name; the default name comes from [savedAt], formatted for the user's language. */
-    data class Save(val savedAt: Instant) : DipoleDialog
-    data class Load(val savedGames: List<SavedGame>) : DipoleDialog
-    data object Appearance : DipoleDialog
+    data class Save(val savedAt: Instant) : GameDialog
+    data class Load(val savedGames: List<SavedGame>) : GameDialog
+    data object Appearance : GameDialog
 }
 
-enum class DipoleMessage { GameSaved, GameLoaded, SaveUnreadable }
+enum class GameMessage { GameSaved, GameLoaded, SaveUnreadable }
 
-sealed interface DipoleAction {
-    data class SquareTapped(val square: Square) : DipoleAction
-    data class BearOffChosen(val move: Move) : DipoleAction
-    data object NewGameClicked : DipoleAction
-    data class ModeChosen(val mode: GameMode) : DipoleAction
-    data class SideChosen(val side: Player) : DipoleAction
-    data class DifficultyChosen(val difficulty: Difficulty) : DipoleAction
-    data object BackToModeClicked : DipoleAction
-    data object UndoClicked : DipoleAction
-    data object HintClicked : DipoleAction
-    data object MenuClicked : DipoleAction
-    data object MenuDismissed : DipoleAction
-    data object AppearanceClicked : DipoleAction
-    data object SaveClicked : DipoleAction
-    data class SaveConfirmed(val name: String) : DipoleAction
-    data object LoadClicked : DipoleAction
-    data class SavedGameChosen(val game: SavedGame) : DipoleAction
-    data class SavedGameDeleted(val game: SavedGame) : DipoleAction
-    data object DialogDismissed : DipoleAction
-    data object MessageShown : DipoleAction
-    data object CelebrationShown : DipoleAction
+sealed interface GameAction {
+    data class SquareTapped(val square: Square) : GameAction
+    data class BearOffChosen(val move: Move) : GameAction
+    data object NewGameClicked : GameAction
+    data class ModeChosen(val mode: GameMode) : GameAction
+    data class SideChosen(val side: Player) : GameAction
+    data class DifficultyChosen(val difficulty: Difficulty) : GameAction
+    data object BackToModeClicked : GameAction
+    data object UndoClicked : GameAction
+    data object HintClicked : GameAction
+    data object MenuClicked : GameAction
+    data object MenuDismissed : GameAction
+    data object AppearanceClicked : GameAction
+    data object SaveClicked : GameAction
+    data class SaveConfirmed(val name: String) : GameAction
+    data object LoadClicked : GameAction
+    data class SavedGameChosen(val game: SavedGame) : GameAction
+    data class SavedGameDeleted(val game: SavedGame) : GameAction
+    data object DialogDismissed : GameAction
+    data object MessageShown : GameAction
+    data object CelebrationShown : GameAction
 }

@@ -1,5 +1,8 @@
 package dev.siempredelao.dipole.ui
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +48,7 @@ import dev.siempredelao.dipole.game.Direction
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameSession
 import dev.siempredelao.dipole.game.GameState
+import dev.siempredelao.dipole.game.Hint
 import dev.siempredelao.dipole.game.Move
 import dev.siempredelao.dipole.game.MoveKind
 import dev.siempredelao.dipole.game.Player
@@ -57,6 +63,7 @@ private val BlackChecker = Color(0xFF26211E)
 private val Highlight = Color(0xFF7FC97F)
 private val CaptureHighlight = Color(0xFFE0605A)
 private val LastMove = Color(0x55F2D95C)
+private val HintColor = Color(0xFF5CC8F2)
 
 /** Connects [DipoleScreen] to its [DipoleViewModel]. */
 @Composable
@@ -71,6 +78,8 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     val session = uiState.session
     val state = uiState.state
     val bearOffs = uiState.bearOffs
+    val hintAlpha = blinkAlpha(uiState.hint)
+    val hintedMove = uiState.hint?.move
 
     Column(
         modifier = Modifier
@@ -101,6 +110,8 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             movable = uiState.movable,
             targets = uiState.targets,
             lastMove = session.lastMove,
+            hintedSquare = hintedMove?.to?.takeIf { it.isOnBoard },
+            hintAlpha = hintAlpha,
             onSquareClick = { onAction(DipoleAction.SquareTapped(it)) },
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
@@ -113,7 +124,11 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 bearOffs.forEach { move ->
-                    OutlinedButton(onClick = { onAction(DipoleAction.BearOffChosen(move)) }) {
+                    val border = if (move == hintedMove) BorderStroke(3.dp, HintColor.copy(alpha = hintAlpha)) else null
+                    OutlinedButton(
+                        onClick = { onAction(DipoleAction.BearOffChosen(move)) },
+                        border = border ?: ButtonDefaults.outlinedButtonBorder(),
+                    ) {
                         Text("Move ${move.count} off ${arrow(move.direction)}")
                     }
                 }
@@ -121,6 +136,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         } else if (uiState.selected != null) {
             Text("Tap a highlighted square. The number shows how many checkers move.", color = Color.LightGray)
         }
+        hintText(uiState)?.let { Text(it, color = HintColor, textAlign = TextAlign.Center) }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text("New game") }
             OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) { Text("Undo") }
@@ -167,6 +183,34 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
 }
 
 private const val MESSAGE_MILLIS = 2_000L
+private const val BLINKS = 3
+private const val BLINK_HALF_MILLIS = 200
+
+/** Fades in and out [BLINKS] times whenever a new [hint] arrives, then stays at 0. */
+@Composable
+private fun blinkAlpha(hint: Hint?): Float {
+    val alpha = remember { Animatable(0f) }
+    LaunchedEffect(hint) {
+        alpha.snapTo(0f)
+        if (hint == null) return@LaunchedEffect
+        repeat(BLINKS) {
+            alpha.animateTo(1f, tween(BLINK_HALF_MILLIS))
+            alpha.animateTo(0f, tween(BLINK_HALF_MILLIS))
+        }
+    }
+    return alpha.value
+}
+
+private fun hintText(uiState: DipoleUiState): String? {
+    if (!uiState.hintsOn) return null
+    val hint = uiState.hint
+    return when {
+        uiState.selected == null -> "Hint: tap one of your stacks to see its best move."
+        hint == null -> "Thinking about a hint…"
+        hint.betterMoveElsewhere -> "Hint: the blinking move is this stack's best, but a better move exists elsewhere."
+        else -> "Hint: the blinking move is the best one."
+    }
+}
 
 private fun statusText(session: GameSession): String {
     val state = session.state
@@ -243,6 +287,8 @@ private fun Board(
     targets: Map<Square, Move>,
     lastMove: Move?,
     onSquareClick: (Square) -> Unit,
+    hintedSquare: Square? = null,
+    hintAlpha: Float = 0f,
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(modifier.aspectRatio(1f).border(3.dp, Color(0xFF4A2E1A))) {
@@ -283,6 +329,14 @@ private fun Board(
                                 ) {
                                     Text("${target.count}", color = Color.White, fontWeight = FontWeight.Bold)
                                 }
+                            }
+                            if (square == hintedSquare) {
+                                Box(
+                                    Modifier
+                                        .fillMaxSize()
+                                        .background(HintColor.copy(alpha = 0.45f * hintAlpha))
+                                        .border(4.dp, HintColor.copy(alpha = hintAlpha)),
+                                )
                             }
                         }
                     }

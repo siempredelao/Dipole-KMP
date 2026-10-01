@@ -34,7 +34,8 @@
     <string name="hint_thinking">Procurando uma dica…</string>
     <string name="hint_better_elsewhere">Dica: a jogada que pisca é a melhor desta pilha, mas existe uma jogada melhor em outra.</string>
     <string name="hint_best">Dica: a jogada que pisca é a melhor.</string>
-    <string name="rules">Como jogar: toque em uma das suas pilhas e depois em uma casa destacada. Uma pilha (ou parte dela) anda exatamente tantas casas quanto o número de peças movidas, saltando por cima do que estiver no caminho. Movimentos simples e fusões vão para a frente ou na diagonal para a frente; movimentos em linha reta precisam de um número par de peças. Capturas (em vermelho) vão em qualquer direção e tomam uma pilha inimiga inteira que não seja maior que a que se move. Um movimento simples que passaria da borda do tabuleiro é permitido: essa pilha sai do jogo. Elimine todas as peças inimigas para vencer.</string>
+    <string name="rules_title">Como jogar</string>
+    <string name="rules">Toque em uma das suas pilhas e depois em uma casa destacada. Uma pilha (ou parte dela) anda exatamente tantas casas quanto o número de peças movidas, saltando por cima do que estiver no caminho. Movimentos simples e fusões vão para a frente ou na diagonal para a frente; movimentos em linha reta precisam de um número par de peças. Capturas (em vermelho) vão em qualquer direção e tomam uma pilha inimiga inteira que não seja maior que a que se move. Um movimento simples que passaria da borda do tabuleiro é permitido: essa pilha sai do jogo. Elimine todas as peças inimigas para vencer.</string>
     <string name="cancel">Cancelar</string>
     <string name="back">Voltar</string>
     <string name="save_game_title">Salvar jogo</string>

@@ -34,7 +34,8 @@
     <string name="hint_thinking">Cerco un suggerimento…</string>
     <string name="hint_better_elsewhere">Suggerimento: la mossa che lampeggia è la migliore di questa pila, ma ce n’è una migliore altrove.</string>
     <string name="hint_best">Suggerimento: la mossa che lampeggia è la migliore.</string>
-    <string name="rules">Come si gioca: tocca una delle tue pile, poi una casella evidenziata. Una pila (o parte di essa) si sposta di tante caselle quante sono le pedine mosse, scavalcando tutto ciò che si trova in mezzo. Le mosse semplici e le fusioni vanno in avanti o in diagonale in avanti; le mosse in linea retta richiedono un numero pari di pedine. Le catture (in rosso) vanno in qualsiasi direzione e prendono un’intera pila avversaria non più grande di quella che si muove. È consentita una mossa semplice che uscirebbe dalla scacchiera: quella pila esce dal gioco. Elimina tutte le pedine avversarie per vincere.</string>
+    <string name="rules_title">Come si gioca</string>
+    <string name="rules">Tocca una delle tue pile, poi una casella evidenziata. Una pila (o parte di essa) si sposta di tante caselle quante sono le pedine mosse, scavalcando tutto ciò che si trova in mezzo. Le mosse semplici e le fusioni vanno in avanti o in diagonale in avanti; le mosse in linea retta richiedono un numero pari di pedine. Le catture (in rosso) vanno in qualsiasi direzione e prendono un’intera pila avversaria non più grande di quella che si muove. È consentita una mossa semplice che uscirebbe dalla scacchiera: quella pila esce dal gioco. Elimina tutte le pedine avversarie per vincere.</string>
     <string name="cancel">Annulla</string>
     <string name="back">Indietro</string>
     <string name="save_game_title">Salva partita</string>

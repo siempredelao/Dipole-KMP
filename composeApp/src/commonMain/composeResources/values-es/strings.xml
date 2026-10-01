@@ -34,7 +34,8 @@
     <string name="hint_thinking">Buscando una pista…</string>
     <string name="hint_better_elsewhere">Pista: el movimiento que parpadea es el mejor de esta pila, pero hay uno mejor en otra.</string>
     <string name="hint_best">Pista: el movimiento que parpadea es el mejor.</string>
-    <string name="rules">Cómo se juega: toca una de tus pilas y luego una casilla resaltada. Una pila (o parte de ella) avanza exactamente tantas casillas como fichas se mueven, saltando por encima de lo que haya en medio. Los movimientos simples y las fusiones van hacia delante o en diagonal hacia delante; los movimientos rectos necesitan un número par de fichas. Las capturas (en rojo) van en cualquier dirección y se llevan una pila enemiga entera que no sea mayor que la que se mueve. Se permite un movimiento simple que se salga del tablero: esa pila queda fuera del juego. Elimina todas las fichas enemigas para ganar.</string>
+    <string name="rules_title">Cómo se juega</string>
+    <string name="rules">Toca una de tus pilas y luego una casilla resaltada. Una pila (o parte de ella) avanza exactamente tantas casillas como fichas se mueven, saltando por encima de lo que haya en medio. Los movimientos simples y las fusiones van hacia delante o en diagonal hacia delante; los movimientos rectos necesitan un número par de fichas. Las capturas (en rojo) van en cualquier dirección y se llevan una pila enemiga entera que no sea mayor que la que se mueve. Se permite un movimiento simple que se salga del tablero: esa pila queda fuera del juego. Elimina todas las fichas enemigas para ganar.</string>
     <string name="cancel">Cancelar</string>
     <string name="back">Atrás</string>
     <string name="save_game_title">Guardar partida</string>

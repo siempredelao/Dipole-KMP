@@ -12,6 +12,7 @@ import gc.david.dipole.game.Player
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGame
 import gc.david.dipole.saves.SavedGamesRepository
+import gc.david.dipole.tutorial.TutorialPage
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -53,6 +54,7 @@ class DipoleViewModelTest {
         override var soundOn = true
         override var appearanceMode = AppearanceMode.System
         override var boardTheme = BoardTheme.Wood
+        override var tutorialSeen = false
     }
 
     private fun viewModel() = DipoleViewModel(
@@ -302,6 +304,64 @@ class DipoleViewModelTest {
         vm.onAction(DipoleAction.HintClicked)
         assertFalse(vm.uiState.value.hintsOn)
         advanceUntilIdle()
+    }
+
+    @Test
+    fun theTutorialOpensOnTheFirstLaunchOnly() {
+        assertEquals(TutorialPage.Goal, viewModel().uiState.value.tutorialPage)
+        preferences.tutorialSeen = true
+        assertNull(viewModel().uiState.value.tutorialPage)
+    }
+
+    @Test
+    fun nextAndBackMoveThroughThePages() {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.TutorialBackClicked)
+        assertEquals(TutorialPage.Goal, vm.uiState.value.tutorialPage)
+        vm.onAction(DipoleAction.TutorialNextClicked)
+        vm.onAction(DipoleAction.TutorialNextClicked)
+        assertEquals(TutorialPage.PlainMoves, vm.uiState.value.tutorialPage)
+        vm.onAction(DipoleAction.TutorialBackClicked)
+        assertEquals(TutorialPage.Moving, vm.uiState.value.tutorialPage)
+        vm.onAction(DipoleAction.TutorialPageShown(TutorialPage.Captures))
+        assertEquals(TutorialPage.Captures, vm.uiState.value.tutorialPage)
+    }
+
+    @Test
+    fun nextOnTheLastPageFinishesTheTutorial() {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.TutorialPageShown(TutorialPage.entries.last()))
+        vm.onAction(DipoleAction.TutorialNextClicked)
+        assertNull(vm.uiState.value.tutorialPage)
+        assertTrue(preferences.tutorialSeen)
+    }
+
+    @Test
+    fun skippingMarksTheTutorialSeen() {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.TutorialClosed)
+        assertNull(vm.uiState.value.tutorialPage)
+        assertTrue(preferences.tutorialSeen)
+    }
+
+    @Test
+    fun theTutorialReopensFromTheRulesScreenAtTheFirstPage() {
+        preferences.tutorialSeen = true
+        val vm = viewModel()
+        vm.onAction(DipoleAction.RulesClicked)
+        vm.onAction(DipoleAction.TutorialClicked)
+        assertEquals(TutorialPage.Goal, vm.uiState.value.tutorialPage)
+        vm.onAction(DipoleAction.TutorialClosed)
+        // Closing it goes back to the rules.
+        assertTrue(vm.uiState.value.showRules)
+    }
+
+    @Test
+    fun aLateSwipeDoesNotReopenTheTutorial() {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.TutorialClosed)
+        vm.onAction(DipoleAction.TutorialPageShown(TutorialPage.Moving))
+        assertNull(vm.uiState.value.tutorialPage)
     }
 }
 

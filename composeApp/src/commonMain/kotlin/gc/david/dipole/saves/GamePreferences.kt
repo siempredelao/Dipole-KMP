@@ -20,6 +20,9 @@ interface GamePreferences {
     var appearanceMode: AppearanceMode
 
     var boardTheme: BoardTheme
+
+    /** Whether the tutorial has been finished or skipped, so it no longer opens on launch. */
+    var tutorialSeen: Boolean
 }
 
 class SettingsGamePreferences(
@@ -54,11 +57,16 @@ class SettingsGamePreferences(
             ?: BoardTheme.Wood
         set(value) = settings.putString(BOARD_THEME_KEY, value.name)
 
+    override var tutorialSeen: Boolean
+        get() = settings.getBoolean(TUTORIAL_SEEN_KEY, false)
+        set(value) = settings.putBoolean(TUTORIAL_SEEN_KEY, value)
+
     private companion object {
         const val LAST_DIFFICULTY_KEY = "last_difficulty"
         const val LAST_SIDE_KEY = "last_side"
         const val SOUND_ON_KEY = "sound_on"
         const val APPEARANCE_MODE_KEY = "appearance_mode"
         const val BOARD_THEME_KEY = "board_theme"
+        const val TUTORIAL_SEEN_KEY = "tutorial_seen"
     }
 }

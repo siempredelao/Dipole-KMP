@@ -48,6 +48,13 @@ class SettingsGamePreferencesTest {
     }
 
     @Test
+    fun tutorialIsUnseenUntilMarkedSeen() {
+        assertEquals(false, SettingsGamePreferences(settings).tutorialSeen)
+        SettingsGamePreferences(settings).tutorialSeen = true
+        assertEquals(true, SettingsGamePreferences(settings).tutorialSeen)
+    }
+
+    @Test
     fun unknownStoredValueFallsBackToMedium() {
         settings.putString("last_difficulty", "Impossible")
         assertEquals(Difficulty.Medium, SettingsGamePreferences(settings).lastDifficulty)

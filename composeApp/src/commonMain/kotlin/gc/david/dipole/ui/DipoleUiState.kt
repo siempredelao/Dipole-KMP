@@ -11,6 +11,7 @@ import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.saves.SavedGame
+import gc.david.dipole.tutorial.TutorialPage
 import kotlin.time.Instant
 
 /** Everything [DipoleScreen] shows. */
@@ -27,6 +28,8 @@ data class DipoleUiState(
     val hint: Hint? = null,
     /** True while the rules screen is open on top of the game. */
     val showRules: Boolean = false,
+    /** The tutorial page shown on top of everything else, or null when the tutorial is closed. */
+    val tutorialPage: TutorialPage? = null,
     /** True while the settings menu (New game, Save, Load) is open. */
     val menuOpen: Boolean = false,
     /** Whether moves make a sound and vibrate. */
@@ -87,6 +90,13 @@ sealed interface DipoleAction {
     data class AppearanceModeChosen(val mode: AppearanceMode) : DipoleAction
     data class BoardThemeChosen(val theme: BoardTheme) : DipoleAction
     data object RulesClosed : DipoleAction
+    data object TutorialClicked : DipoleAction
+    /** The player swiped to [page]. */
+    data class TutorialPageShown(val page: TutorialPage) : DipoleAction
+    data object TutorialNextClicked : DipoleAction
+    data object TutorialBackClicked : DipoleAction
+    /** Skip, Start playing or system back: closes the tutorial for good. */
+    data object TutorialClosed : DipoleAction
     data object SaveClicked : DipoleAction
     data class SaveConfirmed(val name: String) : DipoleAction
     data object LoadClicked : DipoleAction

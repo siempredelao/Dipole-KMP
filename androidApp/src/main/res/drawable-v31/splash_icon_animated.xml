@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Splash animation: the checker alone, then the arrows grow out of it from left to right.
+     Keep the total (850 ms) in sync with SPLASH_ANIMATION_MILLIS in MainActivity. -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/splash_icon">
+    <target android:name="arrow_left">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <!-- Hidden from the start, until its turn comes. -->
+                <objectAnimator android:duration="0">
+                    <propertyValuesHolder
+                        android:propertyName="scaleX"
+                        android:valueFrom="0"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                    <propertyValuesHolder
+                        android:propertyName="scaleY"
+                        android:valueFrom="0"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                </objectAnimator>
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:interpolator/overshoot"
+                    android:startOffset="200">
+                    <propertyValuesHolder
+                        android:propertyName="scaleX"
+                        android:valueFrom="0"
+                        android:valueTo="1"
+                        android:valueType="floatType" />
+                    <propertyValuesHolder
+                        android:propertyName="scaleY"
+                        android:valueFrom="0"
+                        android:valueTo="1"
+                        android:valueType="floatType" />
+                </objectAnimator>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="arrow_front">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <!-- Hidden from the start, until its turn comes. -->
+                <objectAnimator android:duration="0">
+                    <propertyValuesHolder
+                        android:propertyName="scaleX"
+                        android:valueFrom="0"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                    <propertyValuesHolder
+                        android:propertyName="scaleY"
+                        android:valueFrom="0"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                </objectAnimator>
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:interpolator/overshoot"
+                    android:startOffset="400">
+                    <propertyValuesHolder
+                        android:propertyName="scaleX"
+                        android:valueFrom="0"
+                        android:valueTo="1"
+                        android:valueType="floatType" />
+                    <propertyValuesHolder
+                        android:propertyName="scaleY"
+                        android:valueFrom="0"
+                        android:valueTo="1"
+                        android:valueType="floatType" />
+                </objectAnimator>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="arrow_right">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <!-- Hidden from the start, until its turn comes. -->
+                <objectAnimator android:duration="0">
+                    <propertyValuesHolder
+                        android:propertyName="scaleX"
+                        android:valueFrom="0"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                    <propertyValuesHolder
+                        android:propertyName="scaleY"
+                        android:valueFrom="0"
+                        android:valueTo="0"
+                        android:valueType="floatType" />
+                </objectAnimator>
+                <objectAnimator
+                    android:duration="250"
+                    android:interpolator="@android:interpolator/overshoot"
+                    android:startOffset="600">
+                    <propertyValuesHolder
+                        android:propertyName="scaleX"
+                        android:valueFrom="0"
+                        android:valueTo="1"
+                        android:valueType="floatType" />
+                    <propertyValuesHolder
+                        android:propertyName="scaleY"
+                        android:valueFrom="0"
+                        android:valueTo="1"
+                        android:valueType="floatType" />
+                </objectAnimator>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

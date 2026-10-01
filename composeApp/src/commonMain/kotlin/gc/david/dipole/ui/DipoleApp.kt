@@ -5,21 +5,32 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import gc.david.dipole.saves.SettingsGamePreferences
+import gc.david.dipole.di.appModules
+import gc.david.dipole.saves.GamePreferences
+import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.dsl.koinConfiguration
 
 /**
- * The app: the theme from the settings, and navigation between the game, the rules and the
- * tutorial. Each screen gets its own ViewModel, all sharing the same preferences.
+ * The app: starts Koin with [appModules], then the theme from the settings and navigation between
+ * the game, the rules and the tutorial. Each screen gets its own ViewModel from Koin.
  */
 @Composable
 fun DipoleApp() {
-    val preferences = remember { SettingsGamePreferences() }
-    val settingsViewModel = viewModel { SettingsViewModel(preferences) }
+    KoinApplication(configuration = koinConfiguration { modules(appModules) }) {
+        DipoleNavigation()
+    }
+}
+
+@Composable
+private fun DipoleNavigation() {
+    val preferences = koinInject<GamePreferences>()
+    val settingsViewModel = koinViewModel<SettingsViewModel>()
     val settings by settingsViewModel.uiState.collectAsState()
     val navController = rememberNavController()
     val start: Any = remember { if (TutorialViewModel.opensOnLaunch(preferences)) TutorialRoute else GameRoute }
@@ -27,7 +38,7 @@ fun DipoleApp() {
     DipoleTheme(settings.appearanceMode, settings.boardTheme) {
         NavHost(navController, startDestination = start) {
             composable<GameRoute> {
-                val viewModel = viewModel { GameViewModel(preferences = preferences) }
+                val viewModel = koinViewModel<GameViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 GameScreen(
                     uiState = uiState,
@@ -44,7 +55,7 @@ fun DipoleApp() {
                 )
             }
             composable<TutorialRoute> {
-                val viewModel = viewModel { TutorialViewModel(preferences) }
+                val viewModel = koinViewModel<TutorialViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 LaunchedEffect(uiState.finished) {
                     if (uiState.finished) navController.leaveTutorial()

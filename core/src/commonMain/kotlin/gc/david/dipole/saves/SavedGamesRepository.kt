@@ -17,7 +17,7 @@ interface SavedGamesRepository {
  * NSUserDefaults on iOS, java.util.prefs on desktop and localStorage on the web.
  */
 class SettingsSavedGamesRepository(
-    private val settings: Settings = Settings(),
+    private val settings: Settings,
 ) : SavedGamesRepository {
 
     override fun list(): List<SavedGame> =

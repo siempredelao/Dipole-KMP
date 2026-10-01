@@ -51,6 +51,7 @@ class GameViewModelTest {
     private fun viewModel(initialSession: GameSession? = null) = GameViewModel(
         repository,
         preferences,
+        computerPlayers = { ComputerPlayer.forDifficulty(it) },
         hinter = ComputerPlayer(depth = 1),
         clock = clock,
         computeDispatcher = dispatcher,

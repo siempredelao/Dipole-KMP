@@ -26,7 +26,7 @@ interface GamePreferences {
 }
 
 class SettingsGamePreferences(
-    private val settings: Settings = Settings(),
+    private val settings: Settings,
 ) : GamePreferences {
 
     override var lastDifficulty: Difficulty

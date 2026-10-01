@@ -3,6 +3,7 @@ package gc.david.dipole.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import gc.david.dipole.game.ComputerPlayer
+import gc.david.dipole.game.ComputerPlayerFactory
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
@@ -11,11 +12,8 @@ import gc.david.dipole.game.Square
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGame
 import gc.david.dipole.saves.SavedGamesRepository
-import gc.david.dipole.saves.SettingsGamePreferences
-import gc.david.dipole.saves.SettingsSavedGamesRepository
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,13 +24,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class GameViewModel(
-    private val repository: SavedGamesRepository = SettingsSavedGamesRepository(),
-    private val preferences: GamePreferences = SettingsGamePreferences(),
-    private val computerFor: (Difficulty) -> ComputerPlayer = { ComputerPlayer.forDifficulty(it) },
+    private val repository: SavedGamesRepository,
+    private val preferences: GamePreferences,
+    private val computerPlayers: ComputerPlayerFactory,
     /** Works out hints; always the strongest player, whatever the game's difficulty. */
-    private val hinter: ComputerPlayer = ComputerPlayer.forDifficulty(Difficulty.Hard),
-    private val clock: Clock = Clock.System,
-    private val computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val hinter: ComputerPlayer,
+    private val clock: Clock,
+    private val computeDispatcher: CoroutineDispatcher,
     /** The game to open with; by default a new one against the computer with the last choices. */
     initialSession: GameSession = GameSession.new(
         GameMode.VsComputer,
@@ -195,7 +193,7 @@ class GameViewModel(
         if (!session.isComputerTurn) return
         computerMove = viewModelScope.launch {
             delay(COMPUTER_DELAY_MILLIS)
-            val move = withContext(computeDispatcher) { computerFor(session.difficulty).chooseMove(session.state) } ?: return@launch
+            val move = withContext(computeDispatcher) { computerPlayers.forDifficulty(session.difficulty).chooseMove(session.state) } ?: return@launch
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
             val next = session.play(move)

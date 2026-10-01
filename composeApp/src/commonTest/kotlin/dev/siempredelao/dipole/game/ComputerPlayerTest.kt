@@ -1,0 +1,55 @@
+package dev.siempredelao.dipole.game
+
+import kotlin.random.Random
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Duration
+
+class ComputerPlayerTest {
+
+    private val freeCapture = GameState(
+        board = mapOf(
+            Square(2, 2) to Stack(Player.White, 2), // c3
+            Square(4, 4) to Stack(Player.Black, 1), // e5
+            Square(6, 0) to Stack(Player.Black, 4), // a7
+        ),
+        toMove = Player.White,
+    )
+
+    @Test
+    fun everyDifficultyPlaysLegalMoves() {
+        Difficulty.entries.forEach { difficulty ->
+            val computer = ComputerPlayer.forDifficulty(difficulty, Random(3))
+            var state = GameState.initial()
+            repeat(4) {
+                val move = computer.chooseMove(state)!!
+                assertTrue(state.isLegal(move), "$difficulty played illegal $move")
+                state = state.play(move)
+            }
+        }
+    }
+
+    @Test
+    fun mediumAndHardTakeAFreeCapture() {
+        listOf(Difficulty.Medium, Difficulty.Hard).forEach {
+            assertEquals(Square(4, 4), ComputerPlayer.forDifficulty(it, Random(1)).chooseMove(freeCapture)?.to)
+        }
+    }
+
+    @Test
+    fun alwaysRandomPlayerStillPlaysLegalMoves() {
+        val computer = ComputerPlayer(depth = 1, randomMoveChance = 1.0, random = Random(5))
+        val moves = (1..20).map { computer.chooseMove(GameState.initial())!! }
+        assertTrue(moves.all { GameState.initial().isLegal(it) })
+        assertTrue(moves.toSet().size > 1, "Expected different random moves")
+    }
+
+    @Test
+    fun deeperSearchStopsWhenTimeRunsOut() {
+        // With no time at all it still finishes the minimum depth and returns a move.
+        val computer = ComputerPlayer(depth = 1, maxDepth = 20, timeBudget = Duration.ZERO, random = Random(2))
+        val move = computer.chooseMove(GameState.initial())
+        assertTrue(move != null && GameState.initial().isLegal(move))
+    }
+}

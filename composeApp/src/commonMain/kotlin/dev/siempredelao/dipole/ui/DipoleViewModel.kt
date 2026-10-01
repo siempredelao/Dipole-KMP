@@ -7,6 +7,7 @@ import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameSession
 import dev.siempredelao.dipole.game.Move
+import dev.siempredelao.dipole.game.Square
 import dev.siempredelao.dipole.saves.GamePreferences
 import dev.siempredelao.dipole.saves.SavedGame
 import dev.siempredelao.dipole.saves.SavedGamesRepository
@@ -28,6 +29,8 @@ class DipoleViewModel(
     private val repository: SavedGamesRepository = SettingsSavedGamesRepository(),
     private val preferences: GamePreferences = SettingsGamePreferences(),
     private val computerFor: (Difficulty) -> ComputerPlayer = { ComputerPlayer.forDifficulty(it) },
+    /** Works out hints; always the strongest player, whatever the game's difficulty. */
+    private val hinter: ComputerPlayer = ComputerPlayer.forDifficulty(Difficulty.Hard),
     private val clock: Clock = Clock.System,
     private val computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
@@ -41,6 +44,7 @@ class DipoleViewModel(
     val uiState: StateFlow<DipoleUiState> = _uiState.asStateFlow()
 
     private var computerMove: Job? = null
+    private var hintJob: Job? = null
 
     fun onAction(action: DipoleAction) {
         when (action) {
@@ -61,6 +65,7 @@ class DipoleViewModel(
             DipoleAction.UndoClicked -> {
                 if (_uiState.value.session.canUndo) startSession(_uiState.value.session.undo(), message = null)
             }
+            DipoleAction.HintClicked -> toggleHints()
             DipoleAction.SaveClicked -> _uiState.update {
                 it.copy(dialog = DipoleDialog.Save(SavedGame.defaultName(clock.now())))
             }
@@ -78,10 +83,35 @@ class DipoleViewModel(
         val target = current.targets[action.square]
         when {
             target != null -> play(target)
-            action.square in current.movable -> _uiState.update {
-                it.copy(selected = if (it.selected == action.square) null else action.square)
-            }
-            else -> _uiState.update { it.copy(selected = null) }
+            action.square in current.movable -> select(if (current.selected == action.square) null else action.square)
+            else -> select(null)
+        }
+    }
+
+    private fun select(square: Square?) {
+        _uiState.update { it.copy(selected = square, hint = null) }
+        requestHint()
+    }
+
+    private fun toggleHints() {
+        if (!_uiState.value.canHint) return
+        _uiState.update { it.copy(hintsOn = !it.hintsOn, hint = null) }
+        requestHint()
+    }
+
+    /** Works out the hint for the selected stack in the background, if hints are on. */
+    private fun requestHint() {
+        hintJob?.cancel()
+        val current = _uiState.value
+        val square = current.selected
+        if (!current.hintsOn || square == null) return
+        val session = current.session
+        hintJob = viewModelScope.launch {
+            val hint = withContext(computeDispatcher) { hinter.hint(session.state, square) } ?: return@launch
+            // Only show it if the player is still looking at the same stack in the same position.
+            val latest = _uiState.value
+            if (latest.session !== session || latest.selected != square || !latest.hintsOn) return@launch
+            _uiState.update { it.copy(hint = hint) }
         }
     }
 
@@ -116,9 +146,12 @@ class DipoleViewModel(
         }
     }
 
-    /** Switches to [session], closing any dialog and clearing the selection. */
+    /** Switches to [session], closing any dialog and clearing the selection and hints. */
     private fun startSession(session: GameSession, message: String?) {
-        _uiState.update { it.copy(session = session, selected = null, dialog = null, message = message) }
+        hintJob?.cancel()
+        _uiState.update {
+            it.copy(session = session, selected = null, dialog = null, message = message, hintsOn = false, hint = null)
+        }
         playComputerIfItsTurn()
     }
 
@@ -131,7 +164,7 @@ class DipoleViewModel(
             val move = withContext(computeDispatcher) { computerFor(session.difficulty).chooseMove(session.state) } ?: return@launch
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
-            _uiState.update { it.copy(session = session.play(move), selected = null) }
+            _uiState.update { it.copy(session = session.play(move), selected = null, hintsOn = false, hint = null) }
             playComputerIfItsTurn()
         }
     }

@@ -1,5 +1,6 @@
 package dev.siempredelao.dipole.ui
 
+import dev.siempredelao.dipole.game.ComputerPlayer
 import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.Direction
 import dev.siempredelao.dipole.game.GameMode
@@ -48,7 +49,13 @@ class DipoleViewModelTest {
         override var lastDifficulty = Difficulty.Medium
     }
 
-    private fun viewModel() = DipoleViewModel(repository, preferences, clock = clock, computeDispatcher = dispatcher)
+    private fun viewModel() = DipoleViewModel(
+        repository,
+        preferences,
+        hinter = ComputerPlayer(depth = 1),
+        clock = clock,
+        computeDispatcher = dispatcher,
+    )
 
     private fun TestScope.play(vm: DipoleViewModel, move: Move) {
         vm.onAction(DipoleAction.SquareTapped(move.from))
@@ -151,6 +158,68 @@ class DipoleViewModelTest {
         vm.onAction(DipoleAction.SavedGameDeleted(load.savedGames.single()))
         assertNull(vm.uiState.value.dialog)
         assertFalse(vm.uiState.value.hasSavedGames)
+    }
+
+    @Test
+    fun noHintUntilHintIsTapped() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        advanceUntilIdle()
+        assertFalse(vm.uiState.value.hintsOn)
+        assertNull(vm.uiState.value.hint)
+    }
+
+    @Test
+    fun hintShowsTheBestMoveFromTheSelectedStack() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.HintClicked)
+        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        assertNull(vm.uiState.value.hint) // still thinking
+        advanceUntilIdle()
+        val hint = vm.uiState.value.hint
+        assertEquals(GameState.WHITE_START, hint?.move?.from)
+        assertTrue(vm.uiState.value.state.isLegal(hint!!.move))
+    }
+
+    @Test
+    fun tappingHintWithAStackSelectedShowsItsHint() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(DipoleAction.HintClicked)
+        advanceUntilIdle()
+        assertEquals(GameState.WHITE_START, vm.uiState.value.hint?.move?.from)
+    }
+
+    @Test
+    fun hintsSwitchOffWhenTheTurnPasses() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.HintClicked)
+        play(vm, opening)
+        assertEquals(Player.White, vm.uiState.value.state.toMove)
+        assertFalse(vm.uiState.value.hintsOn)
+        assertNull(vm.uiState.value.hint)
+    }
+
+    @Test
+    fun hintCanBeTurnedOffAgain() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.HintClicked)
+        vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))
+        advanceUntilIdle()
+        vm.onAction(DipoleAction.HintClicked)
+        assertFalse(vm.uiState.value.hintsOn)
+        assertNull(vm.uiState.value.hint)
+    }
+
+    @Test
+    fun noHintsOnTheComputersTurn() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.SquareTapped(opening.from))
+        vm.onAction(DipoleAction.SquareTapped(opening.to))
+        assertFalse(vm.uiState.value.canHint)
+        vm.onAction(DipoleAction.HintClicked)
+        assertFalse(vm.uiState.value.hintsOn)
+        advanceUntilIdle()
     }
 }
 

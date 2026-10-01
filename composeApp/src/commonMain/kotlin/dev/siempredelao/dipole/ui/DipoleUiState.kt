@@ -4,6 +4,7 @@ import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameSession
 import dev.siempredelao.dipole.game.GameState
+import dev.siempredelao.dipole.game.Hint
 import dev.siempredelao.dipole.game.Move
 import dev.siempredelao.dipole.game.Square
 import dev.siempredelao.dipole.saves.SavedGame
@@ -16,6 +17,10 @@ data class DipoleUiState(
     /** A short confirmation such as "Game saved", cleared once shown. */
     val message: String? = null,
     val hasSavedGames: Boolean = false,
+    /** True once the player tapped Hint this turn; switched off when the turn passes. */
+    val hintsOn: Boolean = false,
+    /** The recommended move from the selected stack, once worked out. */
+    val hint: Hint? = null,
 ) {
     val state: GameState get() = session.state
 
@@ -30,6 +35,9 @@ data class DipoleUiState(
     /** Squares holding a stack the player can move now. */
     val movable: Set<Square>
         get() = if (session.isComputerTurn) emptySet() else state.legalMoves().map { it.from }.toSet()
+
+    /** Hints are offered whenever a human is to move. */
+    val canHint: Boolean get() = !session.isComputerTurn && !state.isOver
 }
 
 sealed interface DipoleDialog {
@@ -50,6 +58,7 @@ sealed interface DipoleAction {
     data class DifficultyChosen(val difficulty: Difficulty) : DipoleAction
     data object BackToModeClicked : DipoleAction
     data object UndoClicked : DipoleAction
+    data object HintClicked : DipoleAction
     data object SaveClicked : DipoleAction
     data class SaveConfirmed(val name: String) : DipoleAction
     data object LoadClicked : DipoleAction

@@ -30,6 +30,8 @@ data class DipoleUiState(
     val showRules: Boolean = false,
     /** The tutorial page shown on top of everything else, or null when the tutorial is closed. */
     val tutorialPage: TutorialPage? = null,
+    /** Goes up by one each time a human wins, so the screen throws confetti once per win. */
+    val celebration: Int = 0,
     /** True while the settings menu (New game, Save, Load) is open. */
     val menuOpen: Boolean = false,
     /** Whether moves make a sound and vibrate. */

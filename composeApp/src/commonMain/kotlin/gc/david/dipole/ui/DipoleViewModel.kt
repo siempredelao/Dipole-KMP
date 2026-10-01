@@ -34,15 +34,17 @@ class DipoleViewModel(
     private val hinter: ComputerPlayer = ComputerPlayer.forDifficulty(Difficulty.Hard),
     private val clock: Clock = Clock.System,
     private val computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    /** The game to open with; by default a new one against the computer with the last choices. */
+    initialSession: GameSession = GameSession.new(
+        GameMode.VsComputer,
+        preferences.lastDifficulty,
+        humanSide = preferences.lastSide,
+    ),
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         DipoleUiState(
-            session = GameSession.new(
-                GameMode.VsComputer,
-                preferences.lastDifficulty,
-                humanSide = preferences.lastSide,
-            ),
+            session = initialSession,
             hasSavedGames = repository.list().isNotEmpty(),
             soundOn = preferences.soundOn,
             appearanceMode = preferences.appearanceMode,
@@ -179,7 +181,16 @@ class DipoleViewModel(
     private fun play(move: Move) {
         val session = _uiState.value.session
         if (session.isComputerTurn || !session.state.isLegal(move)) return
-        startSession(session.play(move), message = null)
+        val next = session.play(move)
+        startSession(next, message = null)
+        celebrateIfHumanWon(next)
+    }
+
+    /** A human just won with the move that led to [session]: in two-player games, either player. */
+    private fun celebrateIfHumanWon(session: GameSession) {
+        val winner = session.state.winner ?: return
+        if (session.mode == GameMode.VsComputer && winner != session.humanSide) return
+        _uiState.update { it.copy(celebration = it.celebration + 1) }
     }
 
     private fun save(name: String) {
@@ -225,7 +236,10 @@ class DipoleViewModel(
             val move = withContext(computeDispatcher) { computerFor(session.difficulty).chooseMove(session.state) } ?: return@launch
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
-            _uiState.update { it.copy(session = session.play(move), selected = null, hintsOn = false, hint = null) }
+            val next = session.play(move)
+            _uiState.update { it.copy(session = next, selected = null, hintsOn = false, hint = null) }
+            // The computer can lose on its own move, by moving its last checkers off the board.
+            celebrateIfHumanWon(next)
             playComputerIfItsTurn()
         }
     }

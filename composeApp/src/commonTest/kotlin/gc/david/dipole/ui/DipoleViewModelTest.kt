@@ -6,9 +6,12 @@ import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
+import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
+import gc.david.dipole.game.Stack
+import gc.david.dipole.game.Square
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGame
 import gc.david.dipole.saves.SavedGamesRepository
@@ -57,13 +60,19 @@ class DipoleViewModelTest {
         override var tutorialSeen = false
     }
 
-    private fun viewModel() = DipoleViewModel(
+    private fun viewModel(initialSession: GameSession? = null) = DipoleViewModel(
         repository,
         preferences,
         hinter = ComputerPlayer(depth = 1),
         clock = clock,
         computeDispatcher = dispatcher,
+        initialSession = initialSession
+            ?: GameSession.new(GameMode.VsComputer, preferences.lastDifficulty, humanSide = preferences.lastSide),
     )
+
+    /** A game of [mode] starting from [board], with [toMove] to play. */
+    private fun endgame(mode: GameMode, toMove: Player, vararg board: Pair<Square, Stack>) =
+        GameSession.new(mode, initial = GameState(mapOf(*board), toMove))
 
     private fun TestScope.play(vm: DipoleViewModel, move: Move) {
         vm.onAction(DipoleAction.SquareTapped(move.from))
@@ -362,6 +371,62 @@ class DipoleViewModelTest {
         vm.onAction(DipoleAction.TutorialClosed)
         vm.onAction(DipoleAction.TutorialPageShown(TutorialPage.Moving))
         assertNull(vm.uiState.value.tutorialPage)
+    }
+
+    @Test
+    fun winningAgainstTheComputerIsCelebrated() = runTest(dispatcher) {
+        val vm = viewModel(
+            endgame(GameMode.VsComputer, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
+        )
+        assertEquals(0, vm.uiState.value.celebration)
+        play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
+        assertEquals(Player.White, vm.uiState.value.state.winner)
+        assertEquals(1, vm.uiState.value.celebration)
+    }
+
+    @Test
+    fun theComputerWinningIsNotCelebrated() = runTest(dispatcher) {
+        val vm = viewModel(
+            endgame(GameMode.VsComputer, Player.Black, Square(3, 3) to Stack(Player.White, 1), Square(4, 4) to Stack(Player.Black, 1)),
+        )
+        advanceUntilIdle()
+        assertEquals(Player.Black, vm.uiState.value.state.winner)
+        assertEquals(0, vm.uiState.value.celebration)
+    }
+
+    @Test
+    fun theComputerLosingOnItsOwnMoveIsCelebrated() = runTest(dispatcher) {
+        // Black's only checker can only move off the board, which loses the game.
+        val vm = viewModel(
+            endgame(GameMode.VsComputer, Player.Black, Square(0, 0) to Stack(Player.Black, 1), Square(7, 7) to Stack(Player.White, 1)),
+        )
+        advanceUntilIdle()
+        assertEquals(Player.White, vm.uiState.value.state.winner)
+        assertEquals(1, vm.uiState.value.celebration)
+    }
+
+    @Test
+    fun eitherPlayerWinningATwoPlayerGameIsCelebrated() = runTest(dispatcher) {
+        val vm = viewModel(
+            endgame(GameMode.TwoPlayers, Player.Black, Square(3, 3) to Stack(Player.White, 1), Square(4, 4) to Stack(Player.Black, 1)),
+        )
+        play(vm, Move(Square(4, 4), Direction.SouthWest, 1))
+        assertEquals(Player.Black, vm.uiState.value.state.winner)
+        assertEquals(1, vm.uiState.value.celebration)
+    }
+
+    @Test
+    fun undoingAWinDoesNotCelebrateAgainUntilTheNextWin() = runTest(dispatcher) {
+        val win = Move(Square(2, 2), Direction.NorthEast, 1)
+        val vm = viewModel(
+            endgame(GameMode.TwoPlayers, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
+        )
+        play(vm, win)
+        vm.onAction(DipoleAction.UndoClicked)
+        assertEquals(null, vm.uiState.value.state.winner)
+        assertEquals(1, vm.uiState.value.celebration)
+        play(vm, win)
+        assertEquals(2, vm.uiState.value.celebration)
     }
 }
 

@@ -46,6 +46,23 @@ class ComputerPlayerTest {
     }
 
     @Test
+    fun mediumBeatsEasy() {
+        val games = 6
+        val mediumWins = (0 until games).count { game ->
+            val medium = ComputerPlayer.forDifficulty(Difficulty.Medium, Random(game))
+            val easy = ComputerPlayer.forDifficulty(Difficulty.Easy, Random(game + 100))
+            val mediumIsWhite = game % 2 == 0
+            var state = GameState.initial()
+            while (!state.isOver) {
+                val whiteToMove = state.toMove == Player.White
+                state = state.play((if (whiteToMove == mediumIsWhite) medium else easy).chooseMove(state)!!)
+            }
+            (state.winner == Player.White) == mediumIsWhite
+        }
+        assertTrue(mediumWins >= games - 1, "Medium won only $mediumWins of $games")
+    }
+
+    @Test
     fun deeperSearchStopsWhenTimeRunsOut() {
         // With no time at all it still finishes the minimum depth and returns a move.
         val computer = ComputerPlayer(depth = 1, maxDepth = 20, timeBudget = Duration.ZERO, random = Random(2))

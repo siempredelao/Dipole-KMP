@@ -29,6 +29,7 @@
     <string name="bear_off_button">%1$d taşı çıkar %2$s</string>
     <string name="tap_target_help">Vurgulanan bir kareye dokun. Sayı, kaç taşın hareket ettiğini gösterir.</string>
     <string name="settings">Ayarlar</string>
+    <string name="sound_and_vibration">Ses ve titreşim</string>
     <string name="new_game">Yeni oyun</string>
     <string name="undo">Geri al</string>
     <string name="hint">İpucu</string>

@@ -29,6 +29,7 @@
     <string name="bear_off_button">Sortir %1$d %2$s</string>
     <string name="tap_target_help">Touchez une case en surbrillance. Le nombre indique combien de pions se déplacent.</string>
     <string name="settings">Paramètres</string>
+    <string name="sound_and_vibration">Son et vibration</string>
     <string name="new_game">Nouvelle partie</string>
     <string name="undo">Défaire</string>
     <string name="hint">Indice</string>

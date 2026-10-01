@@ -25,6 +25,8 @@ Play against the computer or with two players on one device.
 - `composeApp/src/commonMain/.../game` also has `GameSession`, the state of a game in progress
   (mode, moves, undo).
 - `composeApp/src/commonMain/.../saves` - saved games, stored with multiplatform-settings.
+- `composeApp/src/commonMain/.../sound` - move and capture sounds, synthesized in code and played
+  by each platform's audio API.
 - `composeApp/src/commonMain/composeResources` - UI strings: English in `values`, translations in
   `values-<language>`.
 - `composeApp/src/commonMain/.../ui` - the shared Compose UI: `DipoleViewModel` holds the state and

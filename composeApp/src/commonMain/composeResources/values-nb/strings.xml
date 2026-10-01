@@ -29,6 +29,7 @@
     <string name="bear_off_button">Flytt %1$d ut %2$s</string>
     <string name="tap_target_help">Trykk på en markert rute. Tallet viser hvor mange brikker som flyttes.</string>
     <string name="settings">Innstillinger</string>
+    <string name="sound_and_vibration">Lyd og vibrasjon</string>
     <string name="new_game">Nytt spill</string>
     <string name="undo">Angre</string>
     <string name="hint">Hint</string>

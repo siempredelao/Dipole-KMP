@@ -30,9 +30,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -76,6 +80,7 @@ import gc.david.dipole.resources.ic_info
 import gc.david.dipole.resources.rules_title
 import gc.david.dipole.resources.save_game_title
 import gc.david.dipole.resources.settings
+import gc.david.dipole.resources.sound_and_vibration
 import gc.david.dipole.resources.status_black_sits_out
 import gc.david.dipole.resources.status_black_to_move
 import gc.david.dipole.resources.status_black_wins
@@ -91,6 +96,8 @@ import gc.david.dipole.resources.tap_target_help
 import gc.david.dipole.resources.tray_off_board
 import gc.david.dipole.resources.tray_on_board
 import gc.david.dipole.resources.undo
+import gc.david.dipole.sound.GameSound
+import gc.david.dipole.sound.playSound
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -123,7 +130,15 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     val state = uiState.state
     val bearOffs = uiState.bearOffs
     val hintAlpha = blinkAlpha(uiState.hint)
-    val flight = rememberFlight(session)
+    val haptics = LocalHapticFeedback.current
+    val flight = rememberFlight(session) { landed ->
+        if (uiState.soundOn) {
+            playSound(if (landed.isCapture) GameSound.Capture else GameSound.Move)
+            haptics.performHapticFeedback(
+                if (landed.isCapture) HapticFeedbackType.LongPress else HapticFeedbackType.TextHandleMove,
+            )
+        }
+    }
     val hintedMove = uiState.hint?.move
 
     Column(
@@ -254,7 +269,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
 
 private const val MESSAGE_MILLIS = 2_000L
 
-/** The settings icon and its menu: New game, Save game and Load game. */
+/** The settings icon and its menu: New game, Save game, Load game and the sound switch. */
 @Composable
 private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit, modifier: Modifier = Modifier) {
     Box(modifier) {
@@ -278,6 +293,12 @@ private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Uni
                 text = { Text(stringResource(Res.string.load_game_title)) },
                 onClick = { onAction(DipoleAction.LoadClicked) },
                 enabled = uiState.hasSavedGames,
+            )
+            HorizontalDivider()
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.sound_and_vibration)) },
+                onClick = { onAction(DipoleAction.SoundToggled) },
+                trailingIcon = { Switch(checked = uiState.soundOn, onCheckedChange = null) },
             )
         }
     }

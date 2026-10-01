@@ -29,6 +29,7 @@
     <string name="bear_off_button">Move %1$d off %2$s</string>
     <string name="tap_target_help">Tap a highlighted square. The number shows how many checkers move.</string>
     <string name="settings">Settings</string>
+    <string name="sound_and_vibration">Sound and vibration</string>
     <string name="new_game">New game</string>
     <string name="undo">Undo</string>
     <string name="hint">Hint</string>

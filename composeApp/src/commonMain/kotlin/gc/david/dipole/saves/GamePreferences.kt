@@ -11,6 +11,9 @@ interface GamePreferences {
 
     /** The side last picked for a game against the computer. */
     var lastSide: Player
+
+    /** Whether moves make a sound and vibrate. */
+    var soundOn: Boolean
 }
 
 class SettingsGamePreferences(
@@ -29,8 +32,13 @@ class SettingsGamePreferences(
             ?: Player.White
         set(value) = settings.putString(LAST_SIDE_KEY, value.name)
 
+    override var soundOn: Boolean
+        get() = settings.getBoolean(SOUND_ON_KEY, true)
+        set(value) = settings.putBoolean(SOUND_ON_KEY, value)
+
     private companion object {
         const val LAST_DIFFICULTY_KEY = "last_difficulty"
         const val LAST_SIDE_KEY = "last_side"
+        const val SOUND_ON_KEY = "sound_on"
     }
 }

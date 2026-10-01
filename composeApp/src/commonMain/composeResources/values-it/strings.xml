@@ -29,6 +29,7 @@
     <string name="bear_off_button">Porta fuori %1$d %2$s</string>
     <string name="tap_target_help">Tocca una casella evidenziata. Il numero indica quante pedine si muovono.</string>
     <string name="settings">Impostazioni</string>
+    <string name="sound_and_vibration">Suoni e vibrazione</string>
     <string name="new_game">Nuova partita</string>
     <string name="undo">Annulla mossa</string>
     <string name="hint">Suggerimento</string>

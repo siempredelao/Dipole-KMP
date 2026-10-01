@@ -29,6 +29,7 @@
     <string name="bear_off_button">Tirar %1$d %2$s</string>
     <string name="tap_target_help">Toque em uma casa destacada. O número mostra quantas peças se movem.</string>
     <string name="settings">Configurações</string>
+    <string name="sound_and_vibration">Som e vibração</string>
     <string name="new_game">Novo jogo</string>
     <string name="undo">Desfazer</string>
     <string name="hint">Dica</string>

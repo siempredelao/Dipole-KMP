@@ -27,6 +27,8 @@ data class DipoleUiState(
     val showRules: Boolean = false,
     /** True while the settings menu (New game, Save, Load) is open. */
     val menuOpen: Boolean = false,
+    /** Whether moves make a sound and vibrate. */
+    val soundOn: Boolean = true,
 ) {
     val state: GameState get() = session.state
 
@@ -75,6 +77,7 @@ sealed interface DipoleAction {
     data object RulesClicked : DipoleAction
     data object MenuClicked : DipoleAction
     data object MenuDismissed : DipoleAction
+    data object SoundToggled : DipoleAction
     data object RulesClosed : DipoleAction
     data object SaveClicked : DipoleAction
     data class SaveConfirmed(val name: String) : DipoleAction

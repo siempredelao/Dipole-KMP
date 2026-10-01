@@ -5,7 +5,9 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
@@ -30,11 +32,12 @@ class Flight(val animation: MoveAnimation, val progress: Float)
 @Composable
 fun rememberFlight(session: GameSession, onLanded: (MoveAnimation) -> Unit = {}): Flight? {
     val animation = moveAnimation(session)
+    val currentOnLanded by rememberUpdatedState(onLanded)
     val progress = remember(animation) { Animatable(if (animation == null) 1f else 0f) }
     LaunchedEffect(animation) {
         if (animation == null) return@LaunchedEffect
         progress.animateTo(1f, tween(MOVE_MILLIS, easing = FastOutSlowInEasing))
-        onLanded(animation)
+        currentOnLanded(animation)
     }
     return animation?.takeIf { progress.value < 1f }?.let { Flight(it, progress.value) }
 }

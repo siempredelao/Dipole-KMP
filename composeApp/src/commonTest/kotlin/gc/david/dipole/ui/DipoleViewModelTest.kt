@@ -48,6 +48,7 @@ class DipoleViewModelTest {
     private val preferences = object : GamePreferences {
         override var lastDifficulty = Difficulty.Medium
         override var lastSide = Player.White
+        override var soundOn = true
     }
 
     private fun viewModel() = DipoleViewModel(
@@ -183,6 +184,16 @@ class DipoleViewModelTest {
         vm.onAction(DipoleAction.SavedGameDeleted(load.savedGames.single()))
         assertNull(vm.uiState.value.dialog)
         assertFalse(vm.uiState.value.hasSavedGames)
+    }
+
+    @Test
+    fun soundSwitchIsRemembered() {
+        val vm = viewModel()
+        assertTrue(vm.uiState.value.soundOn)
+        vm.onAction(DipoleAction.SoundToggled)
+        assertFalse(vm.uiState.value.soundOn)
+        assertFalse(preferences.soundOn)
+        assertFalse(viewModel().uiState.value.soundOn)
     }
 
     @Test

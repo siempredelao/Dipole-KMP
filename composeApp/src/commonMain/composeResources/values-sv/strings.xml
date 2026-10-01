@@ -29,6 +29,7 @@
     <string name="bear_off_button">Flytta ut %1$d %2$s</string>
     <string name="tap_target_help">Tryck på en markerad ruta. Siffran visar hur många pjäser som flyttas.</string>
     <string name="settings">Inställningar</string>
+    <string name="sound_and_vibration">Ljud och vibration</string>
     <string name="new_game">Nytt spel</string>
     <string name="undo">Ångra</string>
     <string name="hint">Tips</string>

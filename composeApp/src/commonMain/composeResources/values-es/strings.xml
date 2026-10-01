@@ -29,6 +29,7 @@
     <string name="bear_off_button">Sacar %1$d %2$s</string>
     <string name="tap_target_help">Toca una casilla resaltada. El número indica cuántas fichas se mueven.</string>
     <string name="settings">Ajustes</string>
+    <string name="sound_and_vibration">Sonido y vibración</string>
     <string name="new_game">Nueva partida</string>
     <string name="undo">Deshacer</string>
     <string name="hint">Pista</string>

@@ -43,6 +43,7 @@ class DipoleViewModel(
                 humanSide = preferences.lastSide,
             ),
             hasSavedGames = repository.list().isNotEmpty(),
+            soundOn = preferences.soundOn,
         ),
     )
     val uiState: StateFlow<DipoleUiState> = _uiState.asStateFlow()
@@ -83,6 +84,10 @@ class DipoleViewModel(
             DipoleAction.HintClicked -> toggleHints()
             DipoleAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
             DipoleAction.MenuDismissed -> _uiState.update { it.copy(menuOpen = false) }
+            DipoleAction.SoundToggled -> {
+                preferences.soundOn = !_uiState.value.soundOn
+                _uiState.update { it.copy(soundOn = preferences.soundOn) }
+            }
             DipoleAction.RulesClicked -> _uiState.update { it.copy(showRules = true) }
             DipoleAction.RulesClosed -> _uiState.update { it.copy(showRules = false) }
             DipoleAction.SaveClicked -> _uiState.update {

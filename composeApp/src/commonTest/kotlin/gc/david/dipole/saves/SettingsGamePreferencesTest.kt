@@ -29,6 +29,13 @@ class SettingsGamePreferencesTest {
     }
 
     @Test
+    fun soundIsOnUntilSwitchedOff() {
+        assertEquals(true, SettingsGamePreferences(settings).soundOn)
+        SettingsGamePreferences(settings).soundOn = false
+        assertEquals(false, SettingsGamePreferences(settings).soundOn)
+    }
+
+    @Test
     fun unknownStoredValueFallsBackToMedium() {
         settings.putString("last_difficulty", "Impossible")
         assertEquals(Difficulty.Medium, SettingsGamePreferences(settings).lastDifficulty)

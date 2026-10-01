@@ -130,9 +130,9 @@ class DipoleViewModelTest {
 
         vm.onAction(DipoleAction.SaveClicked)
         val dialog = assertIs<DipoleDialog.Save>(vm.uiState.value.dialog)
-        assertEquals(SavedGame.defaultName(clock.now()), dialog.defaultName)
+        assertEquals(clock.now(), dialog.savedAt)
         vm.onAction(DipoleAction.SaveConfirmed("Opening"))
-        assertEquals("Game saved", vm.uiState.value.message)
+        assertEquals(DipoleMessage.GameSaved, vm.uiState.value.message)
         assertTrue(vm.uiState.value.hasSavedGames)
 
         vm.onAction(DipoleAction.NewGameClicked)
@@ -145,7 +145,7 @@ class DipoleViewModelTest {
         assertEquals(saved.state, vm.uiState.value.state)
         assertEquals(saved.moves, vm.uiState.value.session.moves)
         assertEquals(GameMode.VsComputer, vm.uiState.value.session.mode)
-        assertEquals("Game loaded", vm.uiState.value.message)
+        assertEquals(DipoleMessage.GameLoaded, vm.uiState.value.message)
         assertNull(vm.uiState.value.dialog)
     }
 

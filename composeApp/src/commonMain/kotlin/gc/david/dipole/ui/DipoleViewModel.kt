@@ -67,7 +67,7 @@ class DipoleViewModel(
             }
             DipoleAction.HintClicked -> toggleHints()
             DipoleAction.SaveClicked -> _uiState.update {
-                it.copy(dialog = DipoleDialog.Save(SavedGame.defaultName(clock.now())))
+                it.copy(dialog = DipoleDialog.Save(clock.now()))
             }
             is DipoleAction.SaveConfirmed -> save(action.name)
             DipoleAction.LoadClicked -> _uiState.update { it.copy(dialog = DipoleDialog.Load(repository.list())) }
@@ -123,16 +123,16 @@ class DipoleViewModel(
 
     private fun save(name: String) {
         repository.save(SavedGame.of(_uiState.value.session, name, clock.now()))
-        _uiState.update { it.copy(dialog = null, message = "Game saved", hasSavedGames = true) }
+        _uiState.update { it.copy(dialog = null, message = DipoleMessage.GameSaved, hasSavedGames = true) }
     }
 
     private fun load(game: SavedGame) {
         val session = game.toSession()
         if (session == null) {
-            _uiState.update { it.copy(dialog = null, message = "That save can't be loaded") }
+            _uiState.update { it.copy(dialog = null, message = DipoleMessage.SaveUnreadable) }
             return
         }
-        startSession(session, message = "Game loaded")
+        startSession(session, message = DipoleMessage.GameLoaded)
     }
 
     private fun delete(game: SavedGame) {
@@ -147,7 +147,7 @@ class DipoleViewModel(
     }
 
     /** Switches to [session], closing any dialog and clearing the selection and hints. */
-    private fun startSession(session: GameSession, message: String?) {
+    private fun startSession(session: GameSession, message: DipoleMessage?) {
         hintJob?.cancel()
         _uiState.update {
             it.copy(session = session, selected = null, dialog = null, message = message, hintsOn = false, hint = null)

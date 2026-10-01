@@ -8,6 +8,7 @@ import gc.david.dipole.game.Hint
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Square
 import gc.david.dipole.saves.SavedGame
+import kotlin.time.Instant
 
 /** Everything [DipoleScreen] shows. */
 data class DipoleUiState(
@@ -15,7 +16,7 @@ data class DipoleUiState(
     val selected: Square? = null,
     val dialog: DipoleDialog? = null,
     /** A short confirmation such as "Game saved", cleared once shown. */
-    val message: String? = null,
+    val message: DipoleMessage? = null,
     val hasSavedGames: Boolean = false,
     /** True once the player tapped Hint this turn; switched off when the turn passes. */
     val hintsOn: Boolean = false,
@@ -46,9 +47,12 @@ sealed interface DipoleDialog {
     /** Second step of New game against the computer, with [suggested] picked last time. */
     data class ChooseDifficulty(val suggested: Difficulty) : DipoleDialog
 
-    data class Save(val defaultName: String) : DipoleDialog
+    /** Asks for a save name; the default name comes from [savedAt], formatted for the user's language. */
+    data class Save(val savedAt: Instant) : DipoleDialog
     data class Load(val savedGames: List<SavedGame>) : DipoleDialog
 }
+
+enum class DipoleMessage { GameSaved, GameLoaded, SaveUnreadable }
 
 sealed interface DipoleAction {
     data class SquareTapped(val square: Square) : DipoleAction

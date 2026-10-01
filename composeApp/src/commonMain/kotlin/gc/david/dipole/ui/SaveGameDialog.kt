@@ -9,31 +9,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.cancel
+import gc.david.dipole.resources.save
+import gc.david.dipole.resources.save_game_name
+import gc.david.dipole.resources.save_game_title
+import kotlin.time.Instant
+import org.jetbrains.compose.resources.stringResource
 
-/** Asks for a name for the save, pre-filled with [defaultName]. */
+/** Asks for a name for the save, pre-filled with the date and time it is [savedAt]. */
 @Composable
 fun SaveGameDialog(
-    defaultName: String,
+    savedAt: Instant,
     onSave: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val defaultName = formatDate(savedAt)
     var name by remember(defaultName) { mutableStateOf(defaultName) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Save game") },
+        title = { Text(stringResource(Res.string.save_game_title)) },
         text = {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Name") },
+                label = { Text(stringResource(Res.string.save_game_name)) },
                 singleLine = true,
             )
         },
         confirmButton = {
-            TextButton(onClick = { onSave(name) }) { Text("Save") }
+            TextButton(onClick = { onSave(name.ifBlank { defaultName }) }) { Text(stringResource(Res.string.save)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
         },
     )
 }

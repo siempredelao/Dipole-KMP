@@ -12,6 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.back
+import gc.david.dipole.resources.cancel
+import gc.david.dipole.resources.mode_vs_computer
+import org.jetbrains.compose.resources.stringResource
 
 /** Second step of New game against the computer. [suggested] (last time's pick) is highlighted. */
 @Composable
@@ -23,11 +28,11 @@ fun DifficultyDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("vs Computer") },
+        title = { Text(stringResource(Res.string.mode_vs_computer)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Difficulty.entries.forEach { difficulty ->
-                    val label = "${difficulty.label} · ${difficulty.description}"
+                    val label = "${stringResource(difficulty.label)} · ${stringResource(difficulty.description)}"
                     if (difficulty == suggested) {
                         Button(onClick = { onDifficultyChosen(difficulty) }, modifier = Modifier.fillMaxWidth()) {
                             Text(label)
@@ -41,24 +46,10 @@ fun DifficultyDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
         },
         dismissButton = {
-            TextButton(onClick = onBack) { Text("Back") }
+            TextButton(onClick = onBack) { Text(stringResource(Res.string.back)) }
         },
     )
 }
-
-val Difficulty.label: String
-    get() = when (this) {
-        Difficulty.Easy -> "Easy"
-        Difficulty.Medium -> "Medium"
-        Difficulty.Hard -> "Hard"
-    }
-
-private val Difficulty.description: String
-    get() = when (this) {
-        Difficulty.Easy -> "makes mistakes"
-        Difficulty.Medium -> "plays solidly"
-        Difficulty.Hard -> "thinks ahead"
-    }

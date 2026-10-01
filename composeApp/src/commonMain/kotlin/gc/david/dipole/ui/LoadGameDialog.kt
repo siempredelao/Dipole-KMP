@@ -19,8 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import gc.david.dipole.game.GameMode
+import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.cancel
+import gc.david.dipole.resources.delete
+import gc.david.dipole.resources.load_game_title
+import gc.david.dipole.resources.mode_two_players
+import gc.david.dipole.resources.mode_vs_computer
+import gc.david.dipole.resources.moves
 import gc.david.dipole.saves.SavedGame
 import kotlin.time.Instant
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /** Lists the saved games, newest first. Tap one to load it. */
 @Composable
@@ -32,7 +41,7 @@ fun LoadGameDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Load game") },
+        title = { Text(stringResource(Res.string.load_game_title)) },
         text = {
             LazyColumn(Modifier.heightIn(max = 400.dp)) {
                 items(savedGames, key = { it.id }) { game ->
@@ -42,7 +51,7 @@ fun LoadGameDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
         },
     )
 }
@@ -57,13 +66,18 @@ private fun SavedGameRow(game: SavedGame, onLoad: () -> Unit, onDelete: () -> Un
             Text(game.name, style = MaterialTheme.typography.bodyLarge)
             Text(details(game), style = MaterialTheme.typography.bodySmall)
         }
-        TextButton(onClick = onDelete) { Text("Delete") }
+        TextButton(onClick = onDelete) { Text(stringResource(Res.string.delete)) }
     }
 }
 
+@Composable
 private fun details(game: SavedGame): String {
-    val mode = if (game.mode == GameMode.VsComputer) "vs Computer (${game.difficulty.label})" else "2 Players"
-    val moves = if (game.moves.size == 1) "1 move" else "${game.moves.size} moves"
-    val date = SavedGame.defaultName(Instant.fromEpochMilliseconds(game.savedAtEpochMillis))
-    return "$mode · $moves · $date"
+    val mode = if (game.mode == GameMode.VsComputer) {
+        "${stringResource(Res.string.mode_vs_computer)} (${stringResource(game.difficulty.label)})"
+    } else {
+        stringResource(Res.string.mode_two_players)
+    }
+    val moveCount = pluralStringResource(Res.plurals.moves, game.moves.size, game.moves.size)
+    val date = formatDate(Instant.fromEpochMilliseconds(game.savedAtEpochMillis))
+    return "$mode · $moveCount · $date"
 }

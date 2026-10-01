@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">vs Computer</string>
+    <string name="mode_two_players">2 Players</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="difficulty_easy_description">makes mistakes</string>
+    <string name="difficulty_medium_description">plays solidly</string>
+    <string name="difficulty_hard_description">thinks ahead</string>
+    <string name="player_white">White</string>
+    <string name="player_black">Black</string>
+    <string name="status_you_win">You win!</string>
+    <string name="status_computer_wins">The computer wins.</string>
+    <string name="status_white_wins">White wins!</string>
+    <string name="status_black_wins">Black wins!</string>
+    <string name="status_white_sits_out">White has no moves and sits out.</string>
+    <string name="status_black_sits_out">Black has no moves and sits out.</string>
+    <string name="status_computer_thinking">Computer is thinking…</string>
+    <string name="status_your_move">Your move (White)</string>
+    <string name="status_white_to_move">White to move</string>
+    <string name="status_black_to_move">Black to move</string>
+    <string name="tray_on_board">%1$s: %2$d on the board</string>
+    <string name="tray_off_board">Off the board</string>
+    <string name="bear_off_explanation">Or move checkers off the board. They leave play and go to your off-board stack:</string>
+    <string name="bear_off_button">Move %1$d off %2$s</string>
+    <string name="tap_target_help">Tap a highlighted square. The number shows how many checkers move.</string>
+    <string name="new_game">New game</string>
+    <string name="undo">Undo</string>
+    <string name="hint">Hint</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="hint_pick_stack">Hint: tap one of your stacks to see its best move.</string>
+    <string name="hint_thinking">Thinking about a hint…</string>
+    <string name="hint_better_elsewhere">Hint: the blinking move is this stack’s best, but a better move exists elsewhere.</string>
+    <string name="hint_best">Hint: the blinking move is the best one.</string>
+    <string name="rules">How to play: tap one of your stacks, then a highlighted square. A stack (or part of it) moves exactly as many squares as checkers are moved, jumping over anything in between. Plain moves and merges go forward or diagonally forward; straight moves need an even number of checkers. Captures (red) go in any direction and take a whole enemy stack no bigger than the moving one. A plain move that would go past the edge of the board is allowed: that stack is removed from play. Remove all enemy checkers to win.</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="save_game_title">Save game</string>
+    <string name="save_game_name">Name</string>
+    <string name="load_game_title">Load game</string>
+    <string name="delete">Delete</string>
+    <string name="message_game_saved">Game saved</string>
+    <string name="message_game_loaded">Game loaded</string>
+    <string name="message_save_unreadable">That save can’t be loaded</string>
+    <string name="date_format">%1$d %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d move</item>
+        <item quantity="other">%1$d moves</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </string-array>
+</resources>

@@ -55,7 +55,35 @@ import gc.david.dipole.game.MoveKind
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
+import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.bear_off_button
+import gc.david.dipole.resources.bear_off_explanation
+import gc.david.dipole.resources.hint
+import gc.david.dipole.resources.hint_best
+import gc.david.dipole.resources.hint_better_elsewhere
+import gc.david.dipole.resources.hint_pick_stack
+import gc.david.dipole.resources.hint_thinking
+import gc.david.dipole.resources.load
+import gc.david.dipole.resources.new_game
+import gc.david.dipole.resources.rules
+import gc.david.dipole.resources.save
+import gc.david.dipole.resources.status_black_sits_out
+import gc.david.dipole.resources.status_black_to_move
+import gc.david.dipole.resources.status_black_wins
+import gc.david.dipole.resources.status_computer_thinking
+import gc.david.dipole.resources.status_computer_wins
+import gc.david.dipole.resources.status_white_sits_out
+import gc.david.dipole.resources.status_white_to_move
+import gc.david.dipole.resources.status_white_wins
+import gc.david.dipole.resources.status_you_win
+import gc.david.dipole.resources.status_your_move
+import gc.david.dipole.resources.tap_target_help
+import gc.david.dipole.resources.tray_off_board
+import gc.david.dipole.resources.tray_on_board
+import gc.david.dipole.resources.undo
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 private val LightSquare = Color(0xFFEBD3A8)
 private val DarkSquare = Color(0xFF7A4E2D)
@@ -93,7 +121,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     ) {
         Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
         Text(
-            if (session.mode == GameMode.VsComputer) "vs Computer · ${session.difficulty.label}" else "2 Players",
+            modeLabel(session.mode, session.difficulty),
             color = Color.LightGray,
             fontSize = 14.sp,
         )
@@ -119,7 +147,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         PlayerTray(state, Player.White, trayModifier)
         if (bearOffs.isNotEmpty()) {
             Text(
-                "Or move checkers off the board. They leave play and go to your off-board stack:",
+                stringResource(Res.string.bear_off_explanation),
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )
@@ -130,30 +158,36 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
                         onClick = { onAction(DipoleAction.BearOffChosen(move)) },
                         border = border ?: ButtonDefaults.outlinedButtonBorder(),
                     ) {
-                        Text("Move ${move.count} off ${arrow(move.direction)}")
+                        Text(stringResource(Res.string.bear_off_button, move.count, arrow(move.direction)))
                     }
                 }
             }
         } else if (uiState.selected != null) {
-            Text("Tap a highlighted square. The number shows how many checkers move.", color = Color.LightGray)
+            Text(stringResource(Res.string.tap_target_help), color = Color.LightGray)
         }
-        hintText(uiState)?.let { Text(it, color = HintColor, textAlign = TextAlign.Center) }
+        hintText(uiState)?.let { Text(stringResource(it), color = HintColor, textAlign = TextAlign.Center) }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text("New game") }
-            OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) { Text("Undo") }
+            Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text(stringResource(Res.string.new_game)) }
+            OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
+                Text(stringResource(Res.string.undo))
+            }
             val onHint = { onAction(DipoleAction.HintClicked) }
             if (uiState.hintsOn) {
-                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = HintColor)) { Text("Hint") }
+                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = HintColor)) {
+                    Text(stringResource(Res.string.hint))
+                }
             } else {
-                OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text("Hint") }
+                OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick = { onAction(DipoleAction.SaveClicked) }) { Text("Save") }
-            TextButton(onClick = { onAction(DipoleAction.LoadClicked) }, enabled = uiState.hasSavedGames) { Text("Load") }
+            TextButton(onClick = { onAction(DipoleAction.SaveClicked) }) { Text(stringResource(Res.string.save)) }
+            TextButton(onClick = { onAction(DipoleAction.LoadClicked) }, enabled = uiState.hasSavedGames) {
+                Text(stringResource(Res.string.load))
+            }
         }
         uiState.message?.let { message ->
-            Text(message, color = Color.LightGray)
+            Text(stringResource(message.text), color = Color.LightGray)
             LaunchedEffect(message) {
                 delay(MESSAGE_MILLIS)
                 onAction(DipoleAction.MessageShown)
@@ -175,7 +209,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             onDismiss = dismiss,
         )
         is DipoleDialog.Save -> SaveGameDialog(
-            defaultName = dialog.defaultName,
+            savedAt = dialog.savedAt,
             onSave = { onAction(DipoleAction.SaveConfirmed(it)) },
             onDismiss = dismiss,
         )
@@ -212,33 +246,42 @@ private fun blinkAlpha(hint: Hint?): Float {
     return alpha.value
 }
 
-private fun hintText(uiState: DipoleUiState): String? {
+private fun hintText(uiState: DipoleUiState): StringResource? {
     if (!uiState.hintsOn) return null
     val hint = uiState.hint
     return when {
-        uiState.selected == null -> "Hint: tap one of your stacks to see its best move."
-        hint == null -> "Thinking about a hint…"
-        hint.betterMoveElsewhere -> "Hint: the blinking move is this stack's best, but a better move exists elsewhere."
-        else -> "Hint: the blinking move is the best one."
+        uiState.selected == null -> Res.string.hint_pick_stack
+        hint == null -> Res.string.hint_thinking
+        hint.betterMoveElsewhere -> Res.string.hint_better_elsewhere
+        else -> Res.string.hint_best
     }
 }
 
+@Composable
 private fun statusText(session: GameSession): String {
     val state = session.state
     val vsComputer = session.mode == GameMode.VsComputer
     state.winner?.let { winner ->
-        return if (vsComputer) {
-            if (winner == GameSession.HUMAN_SIDE) "You win!" else "The computer wins."
-        } else {
-            "$winner wins!"
+        val text = when {
+            vsComputer && winner == GameSession.HUMAN_SIDE -> Res.string.status_you_win
+            vsComputer -> Res.string.status_computer_wins
+            winner == Player.White -> Res.string.status_white_wins
+            else -> Res.string.status_black_wins
         }
+        return stringResource(text)
     }
-    val prefix = if (session.opponentSatOut) "${state.toMove.opponent} has no moves and sits out. " else ""
-    return prefix + when {
-        session.isComputerTurn -> "Computer is thinking…"
-        vsComputer -> "Your move (White)"
-        else -> "${state.toMove} to move"
+    val turn = when {
+        session.isComputerTurn -> Res.string.status_computer_thinking
+        vsComputer -> Res.string.status_your_move
+        state.toMove == Player.White -> Res.string.status_white_to_move
+        else -> Res.string.status_black_to_move
     }
+    if (!session.opponentSatOut) return stringResource(turn)
+    val satOut = when (state.toMove.opponent) {
+        Player.White -> Res.string.status_white_sits_out
+        Player.Black -> Res.string.status_black_sits_out
+    }
+    return "${stringResource(satOut)} ${stringResource(turn)}"
 }
 
 /** A player's checkers on the board, next to the pile of their checkers removed from play. */
@@ -247,11 +290,16 @@ private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Mo
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, Color.Gray, CircleShape))
         Text(
-            "$player: ${state.checkersOf(player)} on the board",
+            stringResource(Res.string.tray_on_board, stringResource(player.label), state.checkersOf(player)),
             color = Color.White,
             modifier = Modifier.padding(start = 8.dp).weight(1f),
         )
-        Text("Off the board", color = Color.LightGray, fontSize = 13.sp, modifier = Modifier.padding(end = 8.dp))
+        Text(
+            stringResource(Res.string.tray_off_board),
+            color = Color.LightGray,
+            fontSize = 13.sp,
+            modifier = Modifier.padding(end = 8.dp),
+        )
         RemovedPile(player, state.removedCheckersOf(player))
     }
 }
@@ -382,12 +430,7 @@ private fun Checker(stack: Stack, isSelected: Boolean, isMovable: Boolean, modif
 @Composable
 private fun Rules() {
     Text(
-        "How to play: tap one of your stacks, then a highlighted square. A stack (or part of it) moves " +
-            "exactly as many squares as checkers are moved, jumping over anything in between. Plain moves " +
-            "and merges go forward or diagonally forward; straight moves need an even number of checkers. " +
-            "Captures (red) go in any direction and take a whole enemy stack no bigger than the moving one. " +
-            "A plain move that would go past the edge of the board is allowed: that stack is removed from " +
-            "play. Remove all enemy checkers to win.",
+        stringResource(Res.string.rules),
         color = Color.LightGray,
         fontSize = 13.sp,
         modifier = Modifier.widthIn(max = 560.dp),

@@ -14,6 +14,10 @@ kotlin {
         namespace = "gc.david.dipole.shared"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
+        // Needed for Compose Multiplatform resources (the translated strings).
+        androidResources {
+            enable = true
+        }
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -43,6 +47,7 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.material3)
+            implementation(libs.compose.components.resources)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
@@ -64,6 +69,10 @@ kotlin {
 dependencies {
     // Renders @Preview composables in Android Studio.
     androidRuntimeClasspath(libs.compose.ui.tooling)
+}
+
+compose.resources {
+    packageOfResClass = "gc.david.dipole.resources"
 }
 
 compose.desktop {

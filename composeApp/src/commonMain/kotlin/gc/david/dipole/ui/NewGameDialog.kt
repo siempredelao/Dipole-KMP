@@ -11,6 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import gc.david.dipole.game.GameMode
+import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.cancel
+import gc.david.dipole.resources.mode_two_players
+import gc.david.dipole.resources.mode_vs_computer
+import gc.david.dipole.resources.new_game
+import org.jetbrains.compose.resources.stringResource
 
 /** Asks which mode to play before starting a new game. Cancelling keeps the current game. */
 @Composable
@@ -20,19 +26,19 @@ fun NewGameDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New game") },
+        title = { Text(stringResource(Res.string.new_game)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onModeChosen(GameMode.VsComputer) }, modifier = Modifier.fillMaxWidth()) {
-                    Text("vs Computer")
+                    Text(stringResource(Res.string.mode_vs_computer))
                 }
                 Button(onClick = { onModeChosen(GameMode.TwoPlayers) }, modifier = Modifier.fillMaxWidth()) {
-                    Text("2 Players")
+                    Text(stringResource(Res.string.mode_two_players))
                 }
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(Res.string.cancel)) }
         },
     )
 }

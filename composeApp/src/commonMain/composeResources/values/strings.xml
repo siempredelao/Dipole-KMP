@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Or move checkers off the board. They leave play and go to your off-board stack:</string>
     <string name="bear_off_button">Move %1$d off %2$s</string>
     <string name="tap_target_help">Tap a highlighted square. The number shows how many checkers move.</string>
+    <string name="settings">Settings</string>
     <string name="new_game">New game</string>
     <string name="undo">Undo</string>
     <string name="hint">Hint</string>
     <string name="save">Save</string>
-    <string name="load">Load</string>
     <string name="hint_pick_stack">Hint: tap one of your stacks to see its best move.</string>
     <string name="hint_thinking">Thinking about a hint…</string>
     <string name="hint_better_elsewhere">Hint: the blinking move is this stack’s best, but a better move exists elsewhere.</string>

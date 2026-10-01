@@ -24,6 +24,8 @@ data class DipoleUiState(
     val hint: Hint? = null,
     /** True while the rules screen is open on top of the game. */
     val showRules: Boolean = false,
+    /** True while the settings menu (New game, Save, Load) is open. */
+    val menuOpen: Boolean = false,
 ) {
     val state: GameState get() = session.state
 
@@ -66,6 +68,8 @@ sealed interface DipoleAction {
     data object UndoClicked : DipoleAction
     data object HintClicked : DipoleAction
     data object RulesClicked : DipoleAction
+    data object MenuClicked : DipoleAction
+    data object MenuDismissed : DipoleAction
     data object RulesClosed : DipoleAction
     data object SaveClicked : DipoleAction
     data class SaveConfirmed(val name: String) : DipoleAction

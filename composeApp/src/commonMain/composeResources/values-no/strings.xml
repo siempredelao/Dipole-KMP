@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Eller flytt brikker ut av brettet. De går ut av spillet og havner i stabelen din utenfor brettet:</string>
     <string name="bear_off_button">Flytt %1$d ut %2$s</string>
     <string name="tap_target_help">Trykk på en markert rute. Tallet viser hvor mange brikker som flyttes.</string>
+    <string name="settings">Innstillinger</string>
     <string name="new_game">Nytt spill</string>
     <string name="undo">Angre</string>
     <string name="hint">Hint</string>
     <string name="save">Lagre</string>
-    <string name="load">Last inn</string>
     <string name="hint_pick_stack">Hint: Trykk på en av stablene dine for å se det beste trekket.</string>
     <string name="hint_thinking">Finner et hint…</string>
     <string name="hint_better_elsewhere">Hint: Det blinkende trekket er stabelens beste, men det finnes et bedre trekk et annet sted.</string>

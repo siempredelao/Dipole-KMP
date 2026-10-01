@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Eller flyt brikker ud af brættet. De forlader spillet og lægges i din stak uden for brættet:</string>
     <string name="bear_off_button">Flyt %1$d ud %2$s</string>
     <string name="tap_target_help">Tryk på et markeret felt. Tallet viser, hvor mange brikker der flyttes.</string>
+    <string name="settings">Indstillinger</string>
     <string name="new_game">Nyt spil</string>
     <string name="undo">Fortryd</string>
     <string name="hint">Tip</string>
     <string name="save">Gem</string>
-    <string name="load">Indlæs</string>
     <string name="hint_pick_stack">Tip: Tryk på en af dine stakke for at se dens bedste træk.</string>
     <string name="hint_thinking">Finder et tip…</string>
     <string name="hint_better_elsewhere">Tip: Det blinkende træk er stakkens bedste, men der findes et bedre træk et andet sted.</string>

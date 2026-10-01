@@ -50,7 +50,7 @@ class DipoleViewModel(
         when (action) {
             is DipoleAction.SquareTapped -> onSquareTapped(action)
             is DipoleAction.BearOffChosen -> play(action.move)
-            DipoleAction.NewGameClicked -> _uiState.update { it.copy(dialog = DipoleDialog.NewGame) }
+            DipoleAction.NewGameClicked -> _uiState.update { it.copy(menuOpen = false, dialog = DipoleDialog.NewGame) }
             is DipoleAction.ModeChosen -> when (action.mode) {
                 GameMode.TwoPlayers -> startSession(GameSession.new(GameMode.TwoPlayers), message = null)
                 GameMode.VsComputer -> _uiState.update {
@@ -66,13 +66,17 @@ class DipoleViewModel(
                 if (_uiState.value.session.canUndo) startSession(_uiState.value.session.undo(), message = null)
             }
             DipoleAction.HintClicked -> toggleHints()
+            DipoleAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
+            DipoleAction.MenuDismissed -> _uiState.update { it.copy(menuOpen = false) }
             DipoleAction.RulesClicked -> _uiState.update { it.copy(showRules = true) }
             DipoleAction.RulesClosed -> _uiState.update { it.copy(showRules = false) }
             DipoleAction.SaveClicked -> _uiState.update {
-                it.copy(dialog = DipoleDialog.Save(clock.now()))
+                it.copy(menuOpen = false, dialog = DipoleDialog.Save(clock.now()))
             }
             is DipoleAction.SaveConfirmed -> save(action.name)
-            DipoleAction.LoadClicked -> _uiState.update { it.copy(dialog = DipoleDialog.Load(repository.list())) }
+            DipoleAction.LoadClicked -> _uiState.update {
+                it.copy(menuOpen = false, dialog = DipoleDialog.Load(repository.list()))
+            }
             is DipoleAction.SavedGameChosen -> load(action.game)
             is DipoleAction.SavedGameDeleted -> delete(action.game)
             DipoleAction.DialogDismissed -> _uiState.update { it.copy(dialog = null) }

@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Ou sortez des pions du plateau. Ils quittent le jeu et rejoignent votre pile hors du plateau :</string>
     <string name="bear_off_button">Sortir %1$d %2$s</string>
     <string name="tap_target_help">Touchez une case en surbrillance. Le nombre indique combien de pions se déplacent.</string>
+    <string name="settings">Paramètres</string>
     <string name="new_game">Nouvelle partie</string>
     <string name="undo">Défaire</string>
     <string name="hint">Indice</string>
     <string name="save">Enregistrer</string>
-    <string name="load">Charger</string>
     <string name="hint_pick_stack">Indice : touchez une de vos piles pour voir son meilleur coup.</string>
     <string name="hint_thinking">Recherche d’un indice…</string>
     <string name="hint_better_elsewhere">Indice : le coup qui clignote est le meilleur de cette pile, mais il existe un meilleur coup ailleurs.</string>

@@ -28,11 +28,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -66,11 +67,13 @@ import gc.david.dipole.resources.hint_best
 import gc.david.dipole.resources.hint_better_elsewhere
 import gc.david.dipole.resources.hint_pick_stack
 import gc.david.dipole.resources.hint_thinking
-import gc.david.dipole.resources.load
+import gc.david.dipole.resources.ic_settings
+import gc.david.dipole.resources.load_game_title
 import gc.david.dipole.resources.new_game
 import gc.david.dipole.resources.ic_info
 import gc.david.dipole.resources.rules_title
-import gc.david.dipole.resources.save
+import gc.david.dipole.resources.save_game_title
+import gc.david.dipole.resources.settings
 import gc.david.dipole.resources.status_black_sits_out
 import gc.david.dipole.resources.status_black_to_move
 import gc.david.dipole.resources.status_black_wins
@@ -128,17 +131,20 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // An invisible spacer the size of the icon keeps the title centred.
-            Spacer(Modifier.size(48.dp))
-            Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
-            IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
-                Icon(
-                    painterResource(Res.drawable.ic_info),
-                    contentDescription = stringResource(Res.string.rules_title),
-                    tint = Color.LightGray,
-                )
+        Box(Modifier.fillMaxWidth()) {
+            Row(Modifier.align(Alignment.Center), verticalAlignment = Alignment.CenterVertically) {
+                // An invisible spacer the size of the icon keeps the title centred.
+                Spacer(Modifier.size(48.dp))
+                Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
+                    Icon(
+                        painterResource(Res.drawable.ic_info),
+                        contentDescription = stringResource(Res.string.rules_title),
+                        tint = Color.LightGray,
+                    )
+                }
             }
+            SettingsMenu(uiState, onAction, Modifier.align(Alignment.CenterEnd))
         }
         Text(
             modeLabel(session.mode, session.difficulty),
@@ -187,7 +193,6 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         }
         hintText(uiState)?.let { Text(stringResource(it), color = HintColor, textAlign = TextAlign.Center) }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text(stringResource(Res.string.new_game)) }
             OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
                 Text(stringResource(Res.string.undo))
             }
@@ -198,12 +203,6 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
                 }
             } else {
                 OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick = { onAction(DipoleAction.SaveClicked) }) { Text(stringResource(Res.string.save)) }
-            TextButton(onClick = { onAction(DipoleAction.LoadClicked) }, enabled = uiState.hasSavedGames) {
-                Text(stringResource(Res.string.load))
             }
         }
         uiState.message?.let { message ->
@@ -243,6 +242,35 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
 }
 
 private const val MESSAGE_MILLIS = 2_000L
+
+/** The settings icon and its menu: New game, Save game and Load game. */
+@Composable
+private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit, modifier: Modifier = Modifier) {
+    Box(modifier) {
+        IconButton(onClick = { onAction(DipoleAction.MenuClicked) }) {
+            Icon(
+                painterResource(Res.drawable.ic_settings),
+                contentDescription = stringResource(Res.string.settings),
+                tint = Color.LightGray,
+            )
+        }
+        DropdownMenu(expanded = uiState.menuOpen, onDismissRequest = { onAction(DipoleAction.MenuDismissed) }) {
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.new_game)) },
+                onClick = { onAction(DipoleAction.NewGameClicked) },
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.save_game_title)) },
+                onClick = { onAction(DipoleAction.SaveClicked) },
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.load_game_title)) },
+                onClick = { onAction(DipoleAction.LoadClicked) },
+                enabled = uiState.hasSavedGames,
+            )
+        }
+    }
+}
 private const val BLINKS = 3
 private const val BLINK_HALF_MILLIS = 200
 

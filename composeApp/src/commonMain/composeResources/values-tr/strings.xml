@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Ya da taşları tahtanın dışına çıkar. Oyundan çıkarlar ve tahta dışındaki yığınına giderler:</string>
     <string name="bear_off_button">%1$d taşı çıkar %2$s</string>
     <string name="tap_target_help">Vurgulanan bir kareye dokun. Sayı, kaç taşın hareket ettiğini gösterir.</string>
+    <string name="settings">Ayarlar</string>
     <string name="new_game">Yeni oyun</string>
     <string name="undo">Geri al</string>
     <string name="hint">İpucu</string>
     <string name="save">Kaydet</string>
-    <string name="load">Yükle</string>
     <string name="hint_pick_stack">İpucu: En iyi hamlesini görmek için yığınlarından birine dokun.</string>
     <string name="hint_thinking">İpucu aranıyor…</string>
     <string name="hint_better_elsewhere">İpucu: Yanıp sönen hamle bu yığının en iyisi, ama başka yerde daha iyi bir hamle var.</string>

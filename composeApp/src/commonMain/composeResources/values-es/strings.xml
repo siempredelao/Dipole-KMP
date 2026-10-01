@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">O saca fichas del tablero. Salen del juego y van a tu pila de fuera del tablero:</string>
     <string name="bear_off_button">Sacar %1$d %2$s</string>
     <string name="tap_target_help">Toca una casilla resaltada. El número indica cuántas fichas se mueven.</string>
+    <string name="settings">Ajustes</string>
     <string name="new_game">Nueva partida</string>
     <string name="undo">Deshacer</string>
     <string name="hint">Pista</string>
     <string name="save">Guardar</string>
-    <string name="load">Cargar</string>
     <string name="hint_pick_stack">Pista: toca una de tus pilas para ver su mejor movimiento.</string>
     <string name="hint_thinking">Buscando una pista…</string>
     <string name="hint_better_elsewhere">Pista: el movimiento que parpadea es el mejor de esta pila, pero hay uno mejor en otra.</string>

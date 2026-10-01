@@ -161,6 +161,20 @@ class DipoleViewModelTest {
     }
 
     @Test
+    fun choosingAMenuItemClosesTheMenu() {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.MenuClicked)
+        assertTrue(vm.uiState.value.menuOpen)
+        vm.onAction(DipoleAction.MenuDismissed)
+        assertFalse(vm.uiState.value.menuOpen)
+
+        vm.onAction(DipoleAction.MenuClicked)
+        vm.onAction(DipoleAction.NewGameClicked)
+        assertFalse(vm.uiState.value.menuOpen)
+        assertEquals(DipoleDialog.NewGame, vm.uiState.value.dialog)
+    }
+
+    @Test
     fun rulesOpenAndCloseWithoutTouchingTheGame() = runTest(dispatcher) {
         val vm = viewModel()
         play(vm, opening)

@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Albo zdejmij pionki z planszy. Wypadają z gry i trafiają na twój stos poza planszą:</string>
     <string name="bear_off_button">Zdejmij %1$d %2$s</string>
     <string name="tap_target_help">Dotknij podświetlonego pola. Liczba pokazuje, ile pionków się przesuwa.</string>
+    <string name="settings">Ustawienia</string>
     <string name="new_game">Nowa gra</string>
     <string name="undo">Cofnij</string>
     <string name="hint">Podpowiedź</string>
     <string name="save">Zapisz</string>
-    <string name="load">Wczytaj</string>
     <string name="hint_pick_stack">Podpowiedź: dotknij jednego ze swoich stosów, aby zobaczyć jego najlepszy ruch.</string>
     <string name="hint_thinking">Szukam podpowiedzi…</string>
     <string name="hint_better_elsewhere">Podpowiedź: migający ruch jest najlepszy dla tego stosu, ale gdzie indziej jest lepszy.</string>

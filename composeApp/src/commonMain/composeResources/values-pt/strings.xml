@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Ou tire peças do tabuleiro. Elas saem do jogo e vão para a sua pilha fora do tabuleiro:</string>
     <string name="bear_off_button">Tirar %1$d %2$s</string>
     <string name="tap_target_help">Toque em uma casa destacada. O número mostra quantas peças se movem.</string>
+    <string name="settings">Configurações</string>
     <string name="new_game">Novo jogo</string>
     <string name="undo">Desfazer</string>
     <string name="hint">Dica</string>
     <string name="save">Salvar</string>
-    <string name="load">Carregar</string>
     <string name="hint_pick_stack">Dica: toque em uma das suas pilhas para ver a melhor jogada dela.</string>
     <string name="hint_thinking">Procurando uma dica…</string>
     <string name="hint_better_elsewhere">Dica: a jogada que pisca é a melhor desta pilha, mas existe uma jogada melhor em outra.</string>

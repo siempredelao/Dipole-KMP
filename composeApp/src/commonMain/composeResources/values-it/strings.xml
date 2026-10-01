@@ -25,11 +25,11 @@
     <string name="bear_off_explanation">Oppure porta pedine fuori dalla scacchiera. Escono dal gioco e vanno nella tua pila esterna:</string>
     <string name="bear_off_button">Porta fuori %1$d %2$s</string>
     <string name="tap_target_help">Tocca una casella evidenziata. Il numero indica quante pedine si muovono.</string>
+    <string name="settings">Impostazioni</string>
     <string name="new_game">Nuova partita</string>
     <string name="undo">Annulla mossa</string>
     <string name="hint">Suggerimento</string>
     <string name="save">Salva</string>
-    <string name="load">Carica</string>
     <string name="hint_pick_stack">Suggerimento: tocca una delle tue pile per vedere la sua mossa migliore.</string>
     <string name="hint_thinking">Cerco un suggerimento…</string>
     <string name="hint_better_elsewhere">Suggerimento: la mossa che lampeggia è la migliore di questa pila, ma ce n’è una migliore altrove.</string>

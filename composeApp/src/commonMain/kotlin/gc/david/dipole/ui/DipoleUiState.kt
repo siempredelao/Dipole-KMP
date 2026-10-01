@@ -1,5 +1,7 @@
 package gc.david.dipole.ui
 
+import gc.david.dipole.appearance.AppearanceMode
+import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
@@ -29,6 +31,8 @@ data class DipoleUiState(
     val menuOpen: Boolean = false,
     /** Whether moves make a sound and vibrate. */
     val soundOn: Boolean = true,
+    val appearanceMode: AppearanceMode = AppearanceMode.System,
+    val boardTheme: BoardTheme = BoardTheme.Wood,
 ) {
     val state: GameState get() = session.state
 
@@ -60,6 +64,7 @@ sealed interface DipoleDialog {
     /** Asks for a save name; the default name comes from [savedAt], formatted for the user's language. */
     data class Save(val savedAt: Instant) : DipoleDialog
     data class Load(val savedGames: List<SavedGame>) : DipoleDialog
+    data object Appearance : DipoleDialog
 }
 
 enum class DipoleMessage { GameSaved, GameLoaded, SaveUnreadable }
@@ -78,6 +83,9 @@ sealed interface DipoleAction {
     data object MenuClicked : DipoleAction
     data object MenuDismissed : DipoleAction
     data object SoundToggled : DipoleAction
+    data object AppearanceClicked : DipoleAction
+    data class AppearanceModeChosen(val mode: AppearanceMode) : DipoleAction
+    data class BoardThemeChosen(val theme: BoardTheme) : DipoleAction
     data object RulesClosed : DipoleAction
     data object SaveClicked : DipoleAction
     data class SaveConfirmed(val name: String) : DipoleAction

@@ -1,6 +1,8 @@
 package gc.david.dipole.saves
 
 import com.russhwolf.settings.Settings
+import gc.david.dipole.appearance.AppearanceMode
+import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.Player
 
@@ -14,6 +16,10 @@ interface GamePreferences {
 
     /** Whether moves make a sound and vibrate. */
     var soundOn: Boolean
+
+    var appearanceMode: AppearanceMode
+
+    var boardTheme: BoardTheme
 }
 
 class SettingsGamePreferences(
@@ -36,9 +42,23 @@ class SettingsGamePreferences(
         get() = settings.getBoolean(SOUND_ON_KEY, true)
         set(value) = settings.putBoolean(SOUND_ON_KEY, value)
 
+    override var appearanceMode: AppearanceMode
+        get() = settings.getStringOrNull(APPEARANCE_MODE_KEY)
+            ?.let { name -> AppearanceMode.entries.firstOrNull { it.name == name } }
+            ?: AppearanceMode.System
+        set(value) = settings.putString(APPEARANCE_MODE_KEY, value.name)
+
+    override var boardTheme: BoardTheme
+        get() = settings.getStringOrNull(BOARD_THEME_KEY)
+            ?.let { name -> BoardTheme.entries.firstOrNull { it.name == name } }
+            ?: BoardTheme.Wood
+        set(value) = settings.putString(BOARD_THEME_KEY, value.name)
+
     private companion object {
         const val LAST_DIFFICULTY_KEY = "last_difficulty"
         const val LAST_SIDE_KEY = "last_side"
         const val SOUND_ON_KEY = "sound_on"
+        const val APPEARANCE_MODE_KEY = "appearance_mode"
+        const val BOARD_THEME_KEY = "board_theme"
     }
 }

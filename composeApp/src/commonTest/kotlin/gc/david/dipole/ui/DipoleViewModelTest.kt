@@ -1,5 +1,7 @@
 package gc.david.dipole.ui
 
+import gc.david.dipole.appearance.AppearanceMode
+import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.Direction
@@ -49,6 +51,8 @@ class DipoleViewModelTest {
         override var lastDifficulty = Difficulty.Medium
         override var lastSide = Player.White
         override var soundOn = true
+        override var appearanceMode = AppearanceMode.System
+        override var boardTheme = BoardTheme.Wood
     }
 
     private fun viewModel() = DipoleViewModel(
@@ -184,6 +188,22 @@ class DipoleViewModelTest {
         vm.onAction(DipoleAction.SavedGameDeleted(load.savedGames.single()))
         assertNull(vm.uiState.value.dialog)
         assertFalse(vm.uiState.value.hasSavedGames)
+    }
+
+    @Test
+    fun appearanceChoicesApplyAndAreRemembered() {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.MenuClicked)
+        vm.onAction(DipoleAction.AppearanceClicked)
+        assertFalse(vm.uiState.value.menuOpen)
+        assertEquals(DipoleDialog.Appearance, vm.uiState.value.dialog)
+        vm.onAction(DipoleAction.AppearanceModeChosen(AppearanceMode.Light))
+        vm.onAction(DipoleAction.BoardThemeChosen(BoardTheme.HighContrast))
+        assertEquals(AppearanceMode.Light, vm.uiState.value.appearanceMode)
+        assertEquals(BoardTheme.HighContrast, vm.uiState.value.boardTheme)
+        val reopened = viewModel().uiState.value
+        assertEquals(AppearanceMode.Light, reopened.appearanceMode)
+        assertEquals(BoardTheme.HighContrast, reopened.boardTheme)
     }
 
     @Test

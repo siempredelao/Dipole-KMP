@@ -1,6 +1,8 @@
 package gc.david.dipole.saves
 
 import com.russhwolf.settings.MapSettings
+import gc.david.dipole.appearance.AppearanceMode
+import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.Player
 import kotlin.test.Test
@@ -33,6 +35,16 @@ class SettingsGamePreferencesTest {
         assertEquals(true, SettingsGamePreferences(settings).soundOn)
         SettingsGamePreferences(settings).soundOn = false
         assertEquals(false, SettingsGamePreferences(settings).soundOn)
+    }
+
+    @Test
+    fun appearanceDefaultsToSystemAndWoodAndIsRemembered() {
+        assertEquals(AppearanceMode.System, SettingsGamePreferences(settings).appearanceMode)
+        assertEquals(BoardTheme.Wood, SettingsGamePreferences(settings).boardTheme)
+        SettingsGamePreferences(settings).appearanceMode = AppearanceMode.Dark
+        SettingsGamePreferences(settings).boardTheme = BoardTheme.Slate
+        assertEquals(AppearanceMode.Dark, SettingsGamePreferences(settings).appearanceMode)
+        assertEquals(BoardTheme.Slate, SettingsGamePreferences(settings).boardTheme)
     }
 
     @Test

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun DipoleApp() {
     val viewModel = viewModel { DipoleViewModel() }
     val uiState by viewModel.uiState.collectAsState()
-    DipoleTheme {
+    DipoleTheme(uiState.appearanceMode, uiState.boardTheme) {
         DipoleScreen(uiState, viewModel::onAction)
     }
 }

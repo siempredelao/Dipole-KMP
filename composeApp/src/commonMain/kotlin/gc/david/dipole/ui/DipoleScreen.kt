@@ -38,7 +38,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +66,7 @@ import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
 import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.appearance
 import gc.david.dipole.resources.bear_off_button
 import gc.david.dipole.resources.bear_off_explanation
 import gc.david.dipole.resources.hint
@@ -254,13 +254,20 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             onDelete = { onAction(DipoleAction.SavedGameDeleted(it)) },
             onDismiss = dismiss,
         )
+        DipoleDialog.Appearance -> AppearanceDialog(
+            mode = uiState.appearanceMode,
+            board = uiState.boardTheme,
+            onModeChosen = { onAction(DipoleAction.AppearanceModeChosen(it)) },
+            onBoardChosen = { onAction(DipoleAction.BoardThemeChosen(it)) },
+            onDismiss = dismiss,
+        )
         null -> Unit
     }
 }
 
 private const val MESSAGE_MILLIS = 2_000L
 
-/** The settings icon and its menu: New game, Save game, Load game and the sound switch. */
+/** The settings icon and its menu: New game, Save game, Load game, Appearance and the sound switch. */
 @Composable
 private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit, modifier: Modifier = Modifier) {
     Box(modifier) {
@@ -286,6 +293,10 @@ private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Uni
                 enabled = uiState.hasSavedGames,
             )
             HorizontalDivider()
+            DropdownMenuItem(
+                text = { Text(stringResource(Res.string.appearance)) },
+                onClick = { onAction(DipoleAction.AppearanceClicked) },
+            )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.sound_and_vibration)) },
                 onClick = { onAction(DipoleAction.SoundToggled) },

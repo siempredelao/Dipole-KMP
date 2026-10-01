@@ -44,6 +44,8 @@ class DipoleViewModel(
             ),
             hasSavedGames = repository.list().isNotEmpty(),
             soundOn = preferences.soundOn,
+            appearanceMode = preferences.appearanceMode,
+            boardTheme = preferences.boardTheme,
         ),
     )
     val uiState: StateFlow<DipoleUiState> = _uiState.asStateFlow()
@@ -84,6 +86,17 @@ class DipoleViewModel(
             DipoleAction.HintClicked -> toggleHints()
             DipoleAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
             DipoleAction.MenuDismissed -> _uiState.update { it.copy(menuOpen = false) }
+            DipoleAction.AppearanceClicked -> _uiState.update {
+                it.copy(menuOpen = false, dialog = DipoleDialog.Appearance)
+            }
+            is DipoleAction.AppearanceModeChosen -> {
+                preferences.appearanceMode = action.mode
+                _uiState.update { it.copy(appearanceMode = action.mode) }
+            }
+            is DipoleAction.BoardThemeChosen -> {
+                preferences.boardTheme = action.theme
+                _uiState.update { it.copy(boardTheme = action.theme) }
+            }
             DipoleAction.SoundToggled -> {
                 preferences.soundOn = !_uiState.value.soundOn
                 _uiState.update { it.copy(soundOn = preferences.soundOn) }

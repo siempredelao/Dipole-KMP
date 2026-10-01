@@ -35,6 +35,9 @@ colour-blind and low-vision players.
   `values-<language>`.
 - `composeApp/src/commonMain/.../ui` - the shared Compose UI: `DipoleViewModel` holds the state and
   `DipoleScreen` draws it.
+- `androidApp/src/main/res` - Android launch splash: `drawable/splash_icon.xml` (the icon with its
+  arrows grouped) animated by `drawable-v31/splash_icon_animated.xml`; older Android versions show
+  the icon still. `MainActivity` keeps the splash up until the animation ends.
 - `composeApp/src/{jvmMain,wasmJsMain,iosMain}` - desktop, web and iOS entry points.
 - `androidApp` - Android application (AGP 9 keeps the app module separate from the KMP library).
 - `iosApp` - Xcode project hosting the shared UI.

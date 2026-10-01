@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The launcher icon's foreground (art/app-icon.svg) with each arrow in its own group, pivoting
+     where the arrow leaves the checker, so splash_icon_animated can grow the arrows out of it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:name="arrow_left"
+        android:pivotX="45.51"
+        android:pivotY="63.51">
+        <path
+            android:strokeColor="#2B1A0E"
+            android:strokeWidth="10"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M45.51,63.51L34.78,52.78" />
+        <path
+            android:fillColor="#2B1A0E"
+            android:strokeColor="#2B1A0E"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M27.00,45.00L40.08,47.47L29.47,58.08Z" />
+        <path
+            android:strokeColor="#FFB02E"
+            android:strokeWidth="5.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M45.51,63.51L34.78,52.78" />
+        <path
+            android:fillColor="#FFB02E"
+            android:pathData="M27.00,45.00L40.08,47.47L29.47,58.08Z" />
+    </group>
+    <group
+        android:name="arrow_front"
+        android:pivotX="54"
+        android:pivotY="60">
+        <path
+            android:strokeColor="#2B1A0E"
+            android:strokeWidth="10"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M54.00,60.00L54.00,38.00" />
+        <path
+            android:fillColor="#2B1A0E"
+            android:strokeColor="#2B1A0E"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M54.00,27.00L61.50,38.00L46.50,38.00Z" />
+        <path
+            android:strokeColor="#FFB02E"
+            android:strokeWidth="5.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M54.00,60.00L54.00,38.00" />
+        <path
+            android:fillColor="#FFB02E"
+            android:pathData="M54.00,27.00L61.50,38.00L46.50,38.00Z" />
+    </group>
+    <group
+        android:name="arrow_right"
+        android:pivotX="62.49"
+        android:pivotY="63.51">
+        <path
+            android:strokeColor="#2B1A0E"
+            android:strokeWidth="10"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M62.49,63.51L73.22,52.78" />
+        <path
+            android:fillColor="#2B1A0E"
+            android:strokeColor="#2B1A0E"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M81.00,45.00L78.53,58.08L67.92,47.47Z" />
+        <path
+            android:strokeColor="#FFB02E"
+            android:strokeWidth="5.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M62.49,63.51L73.22,52.78" />
+        <path
+            android:fillColor="#FFB02E"
+            android:pathData="M81.00,45.00L78.53,58.08L67.92,47.47Z" />
+    </group>
+    <path
+        android:fillColor="#F5F0E6"
+        android:strokeColor="#26211E"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M43,72a11,11 0 1,0 22,0a11,11 0 1,0 -22,0Z" />
+</vector>

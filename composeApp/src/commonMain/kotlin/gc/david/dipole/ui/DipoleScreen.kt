@@ -113,8 +113,15 @@ private val boardColors: BoardColors @Composable get() = LocalBoardColors.curren
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
+    uiState.tutorialPage?.let { page ->
+        TutorialScreen(page, onAction)
+        return
+    }
     if (uiState.showRules) {
-        RulesScreen(onBack = { onAction(DipoleAction.RulesClosed) })
+        RulesScreen(
+            onBack = { onAction(DipoleAction.RulesClosed) },
+            onShowTutorial = { onAction(DipoleAction.TutorialClicked) },
+        )
         return
     }
     val session = uiState.session
@@ -420,8 +427,9 @@ private fun RemovedPile(player: Player, count: Int) {
 
 private val DiscShape = RoundedCornerShape(50)
 
+/** The board; with no [onSquareClick] it is a still diagram, as in the tutorial. */
 @Composable
-private fun Board(
+internal fun Board(
     state: GameState,
     flipped: Boolean,
     flight: Flight?,
@@ -429,7 +437,7 @@ private fun Board(
     movable: Set<Square>,
     targets: Map<Square, Move>,
     lastMove: Move?,
-    onSquareClick: (Square) -> Unit,
+    onSquareClick: ((Square) -> Unit)?,
     hintedSquare: Square? = null,
     hintAlpha: Float = 0f,
     modifier: Modifier = Modifier,
@@ -449,7 +457,13 @@ private fun Board(
                                 .size(cell)
                                 .background(if (square.isDark) colors.darkSquare else colors.lightSquare)
                                 .then(if (highlighted) lastMoveMark(colors) else Modifier)
-                                .then(if (square.isDark) Modifier.clickable { onSquareClick(square) } else Modifier),
+                                .then(
+                                    if (square.isDark && onSquareClick != null) {
+                                        Modifier.clickable { onSquareClick(square) }
+                                    } else {
+                                        Modifier
+                                    },
+                                ),
                             contentAlignment = Alignment.Center,
                         ) {
                             // While checkers are flying in, their landing square still shows what was there.
@@ -575,7 +589,7 @@ private fun squareAt(screenRow: Int, screenCol: Int, flipped: Boolean): Square =
     }
 
 /** Arrow for a direction as seen on screen, which is turned round when the board is [flipped]. */
-private fun arrow(direction: Direction, flipped: Boolean): String {
+internal fun arrow(direction: Direction, flipped: Boolean): String {
     if (!flipped) return arrow(direction)
     return arrow(Direction.entries.first { it.dRow == -direction.dRow && it.dCol == -direction.dCol })
 }

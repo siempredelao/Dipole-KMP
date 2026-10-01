@@ -78,6 +78,28 @@ class GameSessionTest {
     }
 
     @Test
+    fun computerMovesFirstWhenTheHumanPlaysBlack() {
+        val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
+        assertTrue(session.isComputerTurn)
+        val afterComputer = session.play(whiteOpening)
+        assertFalse(afterComputer.isComputerTurn)
+        // Only the computer has moved, so there is nothing of the human's to take back.
+        assertFalse(afterComputer.canUndo)
+        assertSame(afterComputer, afterComputer.undo())
+    }
+
+    @Test
+    fun undoAsBlackGoesBackToBlacksLastTurn() {
+        val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
+            .play(whiteOpening).play(blackReply).play(whiteSecond)
+        assertTrue(session.canUndo)
+        val undone = session.undo()
+        assertEquals(listOf(whiteOpening), undone.moves)
+        assertEquals(Player.Black, undone.state.toMove)
+        assertEquals(Player.Black, undone.humanSide)
+    }
+
+    @Test
     fun replayRejectsIllegalMoves() {
         assertNull(GameSession.replay(GameMode.TwoPlayers, listOf(blackReply)))
     }

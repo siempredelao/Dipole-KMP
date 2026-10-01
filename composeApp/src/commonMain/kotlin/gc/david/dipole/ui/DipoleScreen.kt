@@ -83,7 +83,8 @@ import gc.david.dipole.resources.status_white_sits_out
 import gc.david.dipole.resources.status_white_to_move
 import gc.david.dipole.resources.status_white_wins
 import gc.david.dipole.resources.status_you_win
-import gc.david.dipole.resources.status_your_move
+import gc.david.dipole.resources.status_your_move_black
+import gc.david.dipole.resources.status_your_move_white
 import gc.david.dipole.resources.tap_target_help
 import gc.david.dipole.resources.tray_off_board
 import gc.david.dipole.resources.tray_on_board
@@ -222,6 +223,8 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         )
         is DipoleDialog.ChooseDifficulty -> DifficultyDialog(
             suggested = dialog.suggested,
+            side = dialog.side,
+            onSideChosen = { onAction(DipoleAction.SideChosen(it)) },
             onDifficultyChosen = { onAction(DipoleAction.DifficultyChosen(it)) },
             onBack = { onAction(DipoleAction.BackToModeClicked) },
             onDismiss = dismiss,
@@ -310,7 +313,7 @@ private fun statusText(session: GameSession): String {
     val vsComputer = session.mode == GameMode.VsComputer
     state.winner?.let { winner ->
         val text = when {
-            vsComputer && winner == GameSession.HUMAN_SIDE -> Res.string.status_you_win
+            vsComputer && winner == session.humanSide -> Res.string.status_you_win
             vsComputer -> Res.string.status_computer_wins
             winner == Player.White -> Res.string.status_white_wins
             else -> Res.string.status_black_wins
@@ -319,7 +322,8 @@ private fun statusText(session: GameSession): String {
     }
     val turn = when {
         session.isComputerTurn -> Res.string.status_computer_thinking
-        vsComputer -> Res.string.status_your_move
+        vsComputer && session.humanSide == Player.White -> Res.string.status_your_move_white
+        vsComputer -> Res.string.status_your_move_black
         state.toMove == Player.White -> Res.string.status_white_to_move
         else -> Res.string.status_black_to_move
     }

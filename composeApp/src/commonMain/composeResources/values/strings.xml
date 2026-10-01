@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">White has no moves and sits out.</string>
     <string name="status_black_sits_out">Black has no moves and sits out.</string>
     <string name="status_computer_thinking">Computer is thinking…</string>
-    <string name="status_your_move">Your move (White)</string>
+    <string name="status_your_move_white">Your move (White)</string>
+    <string name="status_your_move_black">Your move (Black)</string>
+    <string name="side_title">Your color</string>
+    <string name="side_white_first">White moves first.</string>
     <string name="status_white_to_move">White to move</string>
     <string name="status_black_to_move">Black to move</string>
     <string name="tray_on_board">%1$s: %2$d on the board</string>

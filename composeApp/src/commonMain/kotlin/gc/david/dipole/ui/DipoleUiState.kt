@@ -6,6 +6,7 @@ import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Hint
 import gc.david.dipole.game.Move
+import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.saves.SavedGame
 import kotlin.time.Instant
@@ -48,8 +49,11 @@ data class DipoleUiState(
 sealed interface DipoleDialog {
     data object NewGame : DipoleDialog
 
-    /** Second step of New game against the computer, with [suggested] picked last time. */
-    data class ChooseDifficulty(val suggested: Difficulty) : DipoleDialog
+    /**
+     * Second step of New game against the computer: the human picks a [side] (initially the one
+     * picked last time) and a difficulty, with [suggested] picked last time.
+     */
+    data class ChooseDifficulty(val suggested: Difficulty, val side: Player) : DipoleDialog
 
     /** Asks for a save name; the default name comes from [savedAt], formatted for the user's language. */
     data class Save(val savedAt: Instant) : DipoleDialog
@@ -63,6 +67,7 @@ sealed interface DipoleAction {
     data class BearOffChosen(val move: Move) : DipoleAction
     data object NewGameClicked : DipoleAction
     data class ModeChosen(val mode: GameMode) : DipoleAction
+    data class SideChosen(val side: Player) : DipoleAction
     data class DifficultyChosen(val difficulty: Difficulty) : DipoleAction
     data object BackToModeClicked : DipoleAction
     data object UndoClicked : DipoleAction

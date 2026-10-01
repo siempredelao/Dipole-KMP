@@ -2,6 +2,7 @@ package gc.david.dipole.saves
 
 import com.russhwolf.settings.MapSettings
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.game.Player
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -18,6 +19,13 @@ class SettingsGamePreferencesTest {
     fun lastDifficultyIsRemembered() {
         SettingsGamePreferences(settings).lastDifficulty = Difficulty.Hard
         assertEquals(Difficulty.Hard, SettingsGamePreferences(settings).lastDifficulty)
+    }
+
+    @Test
+    fun lastSideDefaultsToWhiteAndIsRemembered() {
+        assertEquals(Player.White, SettingsGamePreferences(settings).lastSide)
+        SettingsGamePreferences(settings).lastSide = Player.Black
+        assertEquals(Player.Black, SettingsGamePreferences(settings).lastSide)
     }
 
     @Test

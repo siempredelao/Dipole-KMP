@@ -37,7 +37,11 @@ class DipoleViewModel(
 
     private val _uiState = MutableStateFlow(
         DipoleUiState(
-            session = GameSession.new(GameMode.VsComputer, preferences.lastDifficulty),
+            session = GameSession.new(
+                GameMode.VsComputer,
+                preferences.lastDifficulty,
+                humanSide = preferences.lastSide,
+            ),
             hasSavedGames = repository.list().isNotEmpty(),
         ),
     )
@@ -45,6 +49,11 @@ class DipoleViewModel(
 
     private var computerMove: Job? = null
     private var hintJob: Job? = null
+
+    init {
+        // When the human last played Black, the computer opens the game.
+        playComputerIfItsTurn()
+    }
 
     fun onAction(action: DipoleAction) {
         when (action) {
@@ -54,12 +63,18 @@ class DipoleViewModel(
             is DipoleAction.ModeChosen -> when (action.mode) {
                 GameMode.TwoPlayers -> startSession(GameSession.new(GameMode.TwoPlayers), message = null)
                 GameMode.VsComputer -> _uiState.update {
-                    it.copy(dialog = DipoleDialog.ChooseDifficulty(preferences.lastDifficulty))
+                    it.copy(dialog = DipoleDialog.ChooseDifficulty(preferences.lastDifficulty, preferences.lastSide))
                 }
             }
+            is DipoleAction.SideChosen -> _uiState.update {
+                val dialog = it.dialog as? DipoleDialog.ChooseDifficulty ?: return@update it
+                it.copy(dialog = dialog.copy(side = action.side))
+            }
             is DipoleAction.DifficultyChosen -> {
+                val side = (_uiState.value.dialog as? DipoleDialog.ChooseDifficulty)?.side ?: preferences.lastSide
                 preferences.lastDifficulty = action.difficulty
-                startSession(GameSession.new(GameMode.VsComputer, action.difficulty), message = null)
+                preferences.lastSide = side
+                startSession(GameSession.new(GameMode.VsComputer, action.difficulty, humanSide = side), message = null)
             }
             DipoleAction.BackToModeClicked -> _uiState.update { it.copy(dialog = DipoleDialog.NewGame) }
             DipoleAction.UndoClicked -> {

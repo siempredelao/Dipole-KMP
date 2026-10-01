@@ -5,6 +5,7 @@ import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.Move
+import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import kotlin.random.Random
 import kotlin.time.Instant
@@ -23,21 +24,27 @@ data class SavedGame(
     val moves: List<Move>,
     /** The computer's difficulty; only meaningful in [GameMode.VsComputer]. */
     val difficulty: Difficulty = Difficulty.Medium,
+    /** The side the human plays; only meaningful in [GameMode.VsComputer]. */
+    val humanSide: Player = Player.White,
 ) {
     /** Rebuilds the game, or returns null if the stored moves aren't a legal game. */
-    fun toSession(): GameSession? = GameSession.replay(mode, moves, difficulty)
+    fun toSession(): GameSession? = GameSession.replay(mode, moves, difficulty, humanSide)
 
     fun encode(): String = listOf(
         HEADER,
         mode.name,
         difficulty.name,
+        humanSide.name,
         savedAtEpochMillis.toString(),
         name,
         moves.joinToString(";") { "${it.from.row},${it.from.col},${it.direction.name},${it.count}" },
     ).joinToString("\n")
 
     companion object {
-        private const val HEADER = "dipole-save 2"
+        private const val HEADER = "dipole-save 3"
+
+        /** Saves made before the human could play Black: no side line, played as White. */
+        private const val HEADER_V2 = "dipole-save 2"
 
         /** Saves made before difficulty levels existed: no difficulty line, played at Medium. */
         private const val HEADER_V1 = "dipole-save 1"
@@ -49,21 +56,25 @@ data class SavedGame(
             mode = session.mode,
             moves = session.moves,
             difficulty = session.difficulty,
+            humanSide = session.humanSide,
         )
 
         /** Parses what [encode] produced, or returns null if [text] isn't a valid save. */
         fun decode(id: String, text: String): SavedGame? {
             val lines = text.split("\n").toMutableList()
+            // Bring older formats up to the current one: header, mode, difficulty, side, date, name, moves.
             when {
-                lines.size == 6 && lines[0] == HEADER -> Unit
-                lines.size == 5 && lines[0] == HEADER_V1 -> lines.add(2, Difficulty.Medium.name)
+                lines.size == 7 && lines[0] == HEADER -> Unit
+                lines.size == 6 && lines[0] == HEADER_V2 -> lines.add(3, Player.White.name)
+                lines.size == 5 && lines[0] == HEADER_V1 -> lines.addAll(2, listOf(Difficulty.Medium.name, Player.White.name))
                 else -> return null
             }
             val mode = GameMode.entries.firstOrNull { it.name == lines[1] } ?: return null
             val difficulty = Difficulty.entries.firstOrNull { it.name == lines[2] } ?: return null
-            val savedAt = lines[3].toLongOrNull() ?: return null
-            val moves = if (lines[5].isEmpty()) emptyList() else lines[5].split(";").map { decodeMove(it) ?: return null }
-            return SavedGame(id, lines[4], savedAt, mode, moves, difficulty)
+            val humanSide = Player.entries.firstOrNull { it.name == lines[3] } ?: return null
+            val savedAt = lines[4].toLongOrNull() ?: return null
+            val moves = if (lines[6].isEmpty()) emptyList() else lines[6].split(";").map { decodeMove(it) ?: return null }
+            return SavedGame(id, lines[5], savedAt, mode, moves, difficulty, humanSide)
         }
 
         private fun decodeMove(text: String): Move? {

@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Beyazın hamlesi yok, sırasını geçiyor.</string>
     <string name="status_black_sits_out">Siyahın hamlesi yok, sırasını geçiyor.</string>
     <string name="status_computer_thinking">Bilgisayar düşünüyor…</string>
-    <string name="status_your_move">Sıra sende (beyaz)</string>
+    <string name="status_your_move_white">Sıra sende (beyaz)</string>
+    <string name="status_your_move_black">Sıra sende (siyah)</string>
+    <string name="side_title">Rengin</string>
+    <string name="side_white_first">Beyaz başlar.</string>
     <string name="status_white_to_move">Sıra beyazda</string>
     <string name="status_black_to_move">Sıra siyahta</string>
     <string name="tray_on_board">%1$s: tahtada %2$d</string>

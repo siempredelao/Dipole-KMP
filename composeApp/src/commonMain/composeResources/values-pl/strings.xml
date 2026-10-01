@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Białe nie mają ruchu i tracą kolejkę.</string>
     <string name="status_black_sits_out">Czarne nie mają ruchu i tracą kolejkę.</string>
     <string name="status_computer_thinking">Komputer myśli…</string>
-    <string name="status_your_move">Twój ruch (białe)</string>
+    <string name="status_your_move_white">Twój ruch (białe)</string>
+    <string name="status_your_move_black">Twój ruch (czarne)</string>
+    <string name="side_title">Twój kolor</string>
+    <string name="side_white_first">Białe zaczynają.</string>
     <string name="status_white_to_move">Ruch białych</string>
     <string name="status_black_to_move">Ruch czarnych</string>
     <string name="tray_on_board">%1$s: %2$d na planszy</string>

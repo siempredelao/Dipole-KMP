@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">As brancas não têm jogadas e passam a vez.</string>
     <string name="status_black_sits_out">As pretas não têm jogadas e passam a vez.</string>
     <string name="status_computer_thinking">O computador está pensando…</string>
-    <string name="status_your_move">Sua vez (brancas)</string>
+    <string name="status_your_move_white">Sua vez (brancas)</string>
+    <string name="status_your_move_black">Sua vez (pretas)</string>
+    <string name="side_title">Sua cor</string>
+    <string name="side_white_first">As brancas começam.</string>
     <string name="status_white_to_move">Vez das brancas</string>
     <string name="status_black_to_move">Vez das pretas</string>
     <string name="tray_on_board">%1$s: %2$d no tabuleiro</string>

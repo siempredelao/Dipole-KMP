@@ -6,6 +6,7 @@ import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
+import gc.david.dipole.game.Player
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -40,10 +41,29 @@ class SavedGameTest {
     }
 
     @Test
+    fun theHumansSideIsSaved() {
+        val asBlack = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
+            .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
+        val saved = SavedGame.of(asBlack, "As Black", savedAt)
+        assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
+        assertEquals(Player.Black, saved.toSession()?.humanSide)
+    }
+
+    @Test
+    fun savesFromBeforeSideChoiceLoadAsWhite() {
+        val v2 = "dipole-save 2\nVsComputer\nHard\n1790000000000\nOld game\n0,2,NorthEast,3"
+        val saved = SavedGame.decode("old", v2)
+        assertEquals(Player.White, saved?.humanSide)
+        assertEquals(Difficulty.Hard, saved?.difficulty)
+        assertEquals("Old game", saved?.name)
+    }
+
+    @Test
     fun savesFromBeforeDifficultyLevelsLoadAsMedium() {
         val v1 = "dipole-save 1\nVsComputer\n1790000000000\nOld game\n0,2,NorthEast,3"
         val saved = SavedGame.decode("old", v1)
         assertEquals(Difficulty.Medium, saved?.difficulty)
+        assertEquals(Player.White, saved?.humanSide)
         assertEquals("Old game", saved?.name)
         assertEquals(listOf(Move(GameState.WHITE_START, Direction.NorthEast, 3)), saved?.moves)
     }
@@ -53,6 +73,7 @@ class SavedGameTest {
         assertNull(SavedGame.decode("x", "not a save"))
         assertNull(SavedGame.decode("x", "dipole-save 1\nChess\n0\nName\n"))
         assertNull(SavedGame.decode("x", "dipole-save 2\nVsComputer\nImpossible\n0\nName\n"))
+        assertNull(SavedGame.decode("x", "dipole-save 3\nVsComputer\nHard\nRed\n0\nName\n"))
         assertNull(SavedGame.decode("x", "dipole-save 1\nTwoPlayers\n0\nName\n0,2,Up,3"))
     }
 

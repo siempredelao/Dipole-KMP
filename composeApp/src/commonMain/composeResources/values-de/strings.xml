@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Weiß hat keinen Zug und setzt aus.</string>
     <string name="status_black_sits_out">Schwarz hat keinen Zug und setzt aus.</string>
     <string name="status_computer_thinking">Der Computer denkt nach…</string>
-    <string name="status_your_move">Du bist am Zug (Weiß)</string>
+    <string name="status_your_move_white">Du bist am Zug (Weiß)</string>
+    <string name="status_your_move_black">Du bist am Zug (Schwarz)</string>
+    <string name="side_title">Deine Farbe</string>
+    <string name="side_white_first">Weiß beginnt.</string>
     <string name="status_white_to_move">Weiß ist am Zug</string>
     <string name="status_black_to_move">Schwarz ist am Zug</string>
     <string name="tray_on_board">%1$s: %2$d auf dem Brett</string>

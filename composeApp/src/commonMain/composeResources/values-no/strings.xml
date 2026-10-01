@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Hvit har ingen trekk og står over.</string>
     <string name="status_black_sits_out">Svart har ingen trekk og står over.</string>
     <string name="status_computer_thinking">Datamaskinen tenker…</string>
-    <string name="status_your_move">Din tur (hvit)</string>
+    <string name="status_your_move_white">Din tur (hvit)</string>
+    <string name="status_your_move_black">Din tur (svart)</string>
+    <string name="side_title">Din farge</string>
+    <string name="side_white_first">Hvit starter.</string>
     <string name="status_white_to_move">Hvit i trekket</string>
     <string name="status_black_to_move">Svart i trekket</string>
     <string name="tray_on_board">%1$s: %2$d på brettet</string>

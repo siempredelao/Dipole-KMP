@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Vit har inga drag och står över.</string>
     <string name="status_black_sits_out">Svart har inga drag och står över.</string>
     <string name="status_computer_thinking">Datorn tänker…</string>
-    <string name="status_your_move">Din tur (vit)</string>
+    <string name="status_your_move_white">Din tur (vit)</string>
+    <string name="status_your_move_black">Din tur (svart)</string>
+    <string name="side_title">Din färg</string>
+    <string name="side_white_first">Vit börjar.</string>
     <string name="status_white_to_move">Vit drar</string>
     <string name="status_black_to_move">Svart drar</string>
     <string name="tray_on_board">%1$s: %2$d på brädet</string>

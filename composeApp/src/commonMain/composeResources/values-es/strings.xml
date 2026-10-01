@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Las blancas no tienen movimientos y pasan turno.</string>
     <string name="status_black_sits_out">Las negras no tienen movimientos y pasan turno.</string>
     <string name="status_computer_thinking">El ordenador está pensando…</string>
-    <string name="status_your_move">Te toca (blancas)</string>
+    <string name="status_your_move_white">Te toca (blancas)</string>
+    <string name="status_your_move_black">Te toca (negras)</string>
+    <string name="side_title">Tu color</string>
+    <string name="side_white_first">Las blancas empiezan.</string>
     <string name="status_white_to_move">Juegan las blancas</string>
     <string name="status_black_to_move">Juegan las negras</string>
     <string name="tray_on_board">%1$s: %2$d en el tablero</string>

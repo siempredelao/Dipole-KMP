@@ -47,6 +47,7 @@ class DipoleViewModelTest {
 
     private val preferences = object : GamePreferences {
         override var lastDifficulty = Difficulty.Medium
+        override var lastSide = Player.White
     }
 
     private fun viewModel() = DipoleViewModel(
@@ -103,7 +104,7 @@ class DipoleViewModelTest {
         assertEquals(Difficulty.Easy, vm.uiState.value.session.difficulty)
         vm.onAction(DipoleAction.NewGameClicked)
         vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
-        assertEquals(DipoleDialog.ChooseDifficulty(Difficulty.Easy), vm.uiState.value.dialog)
+        assertEquals(DipoleDialog.ChooseDifficulty(Difficulty.Easy, Player.White), vm.uiState.value.dialog)
         vm.onAction(DipoleAction.BackToModeClicked)
         assertEquals(DipoleDialog.NewGame, vm.uiState.value.dialog)
         vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
@@ -112,6 +113,30 @@ class DipoleViewModelTest {
         assertEquals(GameMode.VsComputer, vm.uiState.value.session.mode)
         assertEquals(Difficulty.Hard, vm.uiState.value.session.difficulty)
         assertEquals(Difficulty.Hard, preferences.lastDifficulty)
+    }
+
+    @Test
+    fun choosingBlackLetsTheComputerOpen() = runTest(dispatcher) {
+        val vm = viewModel()
+        vm.onAction(DipoleAction.NewGameClicked)
+        vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
+        vm.onAction(DipoleAction.SideChosen(Player.Black))
+        assertEquals(Player.Black, (vm.uiState.value.dialog as DipoleDialog.ChooseDifficulty).side)
+        vm.onAction(DipoleAction.DifficultyChosen(Difficulty.Easy))
+        assertEquals(Player.Black, vm.uiState.value.session.humanSide)
+        assertEquals(Player.Black, preferences.lastSide)
+        advanceUntilIdle()
+        assertEquals(1, vm.uiState.value.session.moves.size)
+        assertEquals(Player.Black, vm.uiState.value.state.toMove)
+    }
+
+    @Test
+    fun startsAsBlackWhenThatWasTheLastSide() = runTest(dispatcher) {
+        preferences.lastSide = Player.Black
+        val vm = viewModel()
+        assertEquals(Player.Black, vm.uiState.value.session.humanSide)
+        advanceUntilIdle()
+        assertEquals(Player.Black, vm.uiState.value.state.toMove)
     }
 
     @Test

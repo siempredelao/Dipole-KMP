@@ -17,7 +17,10 @@
     <string name="status_white_sits_out">Les blancs n’ont aucun coup et passent leur tour.</string>
     <string name="status_black_sits_out">Les noirs n’ont aucun coup et passent leur tour.</string>
     <string name="status_computer_thinking">L’ordinateur réfléchit…</string>
-    <string name="status_your_move">À vous de jouer (blancs)</string>
+    <string name="status_your_move_white">À vous de jouer (blancs)</string>
+    <string name="status_your_move_black">À vous de jouer (noirs)</string>
+    <string name="side_title">Votre couleur</string>
+    <string name="side_white_first">Les blancs commencent.</string>
     <string name="status_white_to_move">Aux blancs de jouer</string>
     <string name="status_black_to_move">Aux noirs de jouer</string>
     <string name="tray_on_board">%1$s : %2$d sur le plateau</string>

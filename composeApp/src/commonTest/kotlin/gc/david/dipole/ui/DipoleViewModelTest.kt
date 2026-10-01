@@ -161,6 +161,18 @@ class DipoleViewModelTest {
     }
 
     @Test
+    fun rulesOpenAndCloseWithoutTouchingTheGame() = runTest(dispatcher) {
+        val vm = viewModel()
+        play(vm, opening)
+        val session = vm.uiState.value.session
+        vm.onAction(DipoleAction.RulesClicked)
+        assertTrue(vm.uiState.value.showRules)
+        vm.onAction(DipoleAction.RulesClosed)
+        assertFalse(vm.uiState.value.showRules)
+        assertEquals(session, vm.uiState.value.session)
+    }
+
+    @Test
     fun noHintUntilHintIsTapped() = runTest(dispatcher) {
         val vm = viewModel()
         vm.onAction(DipoleAction.SquareTapped(GameState.WHITE_START))

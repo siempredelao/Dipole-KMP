@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -65,7 +68,8 @@ import gc.david.dipole.resources.hint_pick_stack
 import gc.david.dipole.resources.hint_thinking
 import gc.david.dipole.resources.load
 import gc.david.dipole.resources.new_game
-import gc.david.dipole.resources.rules
+import gc.david.dipole.resources.ic_info
+import gc.david.dipole.resources.rules_title
 import gc.david.dipole.resources.save
 import gc.david.dipole.resources.status_black_sits_out
 import gc.david.dipole.resources.status_black_to_move
@@ -83,6 +87,7 @@ import gc.david.dipole.resources.tray_on_board
 import gc.david.dipole.resources.undo
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 private val LightSquare = Color(0xFFEBD3A8)
@@ -104,6 +109,10 @@ fun DipoleScreen(viewModel: DipoleViewModel = viewModel { DipoleViewModel() }) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
+    if (uiState.showRules) {
+        RulesScreen(onBack = { onAction(DipoleAction.RulesClosed) })
+        return
+    }
     val session = uiState.session
     val state = uiState.state
     val bearOffs = uiState.bearOffs
@@ -119,7 +128,18 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // An invisible spacer the size of the icon keeps the title centred.
+            Spacer(Modifier.size(48.dp))
+            Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
+                Icon(
+                    painterResource(Res.drawable.ic_info),
+                    contentDescription = stringResource(Res.string.rules_title),
+                    tint = Color.LightGray,
+                )
+            }
+        }
         Text(
             modeLabel(session.mode, session.difficulty),
             color = Color.LightGray,
@@ -193,7 +213,6 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
                 onAction(DipoleAction.MessageShown)
             }
         }
-        Rules()
     }
 
     val dismiss = { onAction(DipoleAction.DialogDismissed) }
@@ -425,16 +444,6 @@ private fun Checker(stack: Stack, isSelected: Boolean, isMovable: Boolean, modif
             fontSize = 18.sp,
         )
     }
-}
-
-@Composable
-private fun Rules() {
-    Text(
-        stringResource(Res.string.rules),
-        color = Color.LightGray,
-        fontSize = 13.sp,
-        modifier = Modifier.widthIn(max = 560.dp),
-    )
 }
 
 private val Player.color: Color get() = if (this == Player.White) WhiteChecker else BlackChecker

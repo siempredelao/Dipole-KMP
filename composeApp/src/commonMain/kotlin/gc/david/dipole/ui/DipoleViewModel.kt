@@ -66,6 +66,8 @@ class DipoleViewModel(
                 if (_uiState.value.session.canUndo) startSession(_uiState.value.session.undo(), message = null)
             }
             DipoleAction.HintClicked -> toggleHints()
+            DipoleAction.RulesClicked -> _uiState.update { it.copy(showRules = true) }
+            DipoleAction.RulesClosed -> _uiState.update { it.copy(showRules = false) }
             DipoleAction.SaveClicked -> _uiState.update {
                 it.copy(dialog = DipoleDialog.Save(clock.now()))
             }

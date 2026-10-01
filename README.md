@@ -29,6 +29,8 @@ colour-blind and low-vision players.
 - `composeApp/src/commonMain/.../saves` - saved games, stored with multiplatform-settings.
 - `composeApp/src/commonMain/.../sound` - move and capture sounds, synthesized in code and played
   by each platform's audio API.
+- `composeApp/src/commonMain/.../celebration` - the confetti thrown when a human wins, as plain
+  Kotlin physics; `ui/ConfettiOverlay.kt` draws it.
 - `composeApp/src/commonMain/.../tutorial` - the tutorial's pages and their example positions,
   shown on first launch and from the rules screen.
 - `composeApp/src/commonMain/composeResources` - UI strings: English in `values`, translations in

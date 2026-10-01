@@ -38,13 +38,15 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -53,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import gc.david.dipole.game.BOARD_SIZE
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
@@ -103,21 +104,11 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
-private val LightSquare = Color(0xFFEBD3A8)
-private val DarkSquare = Color(0xFF7A4E2D)
 private val WhiteChecker = Color(0xFFF5F0E6)
 private val BlackChecker = Color(0xFF26211E)
-private val Highlight = Color(0xFF7FC97F)
-private val CaptureHighlight = Color(0xFFE0605A)
-private val LastMove = Color(0x55F2D95C)
-private val HintColor = Color(0xFF5CC8F2)
 
-/** Connects [DipoleScreen] to its [DipoleViewModel]. */
-@Composable
-fun DipoleScreen(viewModel: DipoleViewModel = viewModel { DipoleViewModel() }) {
-    val uiState by viewModel.uiState.collectAsState()
-    DipoleScreen(uiState, viewModel::onAction)
-}
+private val appColors: AppColors @Composable get() = LocalAppColors.current
+private val boardColors: BoardColors @Composable get() = LocalBoardColors.current
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -154,12 +145,12 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             Row(Modifier.align(Alignment.Center), verticalAlignment = Alignment.CenterVertically) {
                 // An invisible spacer the size of the icon keeps the title centred.
                 Spacer(Modifier.size(48.dp))
-                Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = appColors.text)
                 IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
                     Icon(
                         painterResource(Res.drawable.ic_info),
                         contentDescription = stringResource(Res.string.rules_title),
-                        tint = Color.LightGray,
+                        tint = appColors.secondaryText,
                     )
                 }
             }
@@ -167,12 +158,12 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         }
         Text(
             modeLabel(session.mode, session.difficulty),
-            color = Color.LightGray,
+            color = appColors.secondaryText,
             fontSize = 14.sp,
         )
         Text(
             statusText(session),
-            color = Color.White,
+            color = appColors.text,
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
         )
@@ -201,23 +192,23 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             }
             val onHint = { onAction(DipoleAction.HintClicked) }
             if (uiState.hintsOn) {
-                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = HintColor)) {
+                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = appColors.hint)) {
                     Text(stringResource(Res.string.hint))
                 }
             } else {
                 OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
             }
         }
-        hintText(uiState)?.let { Text(stringResource(it), color = HintColor, textAlign = TextAlign.Center) }
+        hintText(uiState)?.let { Text(stringResource(it), color = appColors.hint, textAlign = TextAlign.Center) }
         if (bearOffs.isNotEmpty()) {
             Text(
                 stringResource(Res.string.bear_off_explanation),
-                color = Color.White,
+                color = appColors.text,
                 textAlign = TextAlign.Center,
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 bearOffs.forEach { move ->
-                    val border = if (move == hintedMove) BorderStroke(3.dp, HintColor.copy(alpha = hintAlpha)) else null
+                    val border = if (move == hintedMove) BorderStroke(3.dp, appColors.hint.copy(alpha = hintAlpha)) else null
                     OutlinedButton(
                         onClick = { onAction(DipoleAction.BearOffChosen(move)) },
                         border = border ?: ButtonDefaults.outlinedButtonBorder(),
@@ -227,10 +218,10 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
                 }
             }
         } else if (uiState.selected != null) {
-            Text(stringResource(Res.string.tap_target_help), color = Color.LightGray)
+            Text(stringResource(Res.string.tap_target_help), color = appColors.secondaryText)
         }
         uiState.message?.let { message ->
-            Text(stringResource(message.text), color = Color.LightGray)
+            Text(stringResource(message.text), color = appColors.secondaryText)
             LaunchedEffect(message) {
                 delay(MESSAGE_MILLIS)
                 onAction(DipoleAction.MessageShown)
@@ -277,7 +268,7 @@ private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Uni
             Icon(
                 painterResource(Res.drawable.ic_settings),
                 contentDescription = stringResource(Res.string.settings),
-                tint = Color.LightGray,
+                tint = appColors.secondaryText,
             )
         }
         DropdownMenu(expanded = uiState.menuOpen, onDismissRequest = { onAction(DipoleAction.MenuDismissed) }) {
@@ -368,15 +359,15 @@ private fun statusText(session: GameSession): String {
 @Composable
 private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, Color.Gray, CircleShape))
+        Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, appColors.outline, CircleShape))
         Text(
             stringResource(Res.string.tray_on_board, stringResource(player.label), state.checkersOf(player)),
-            color = Color.White,
+            color = appColors.text,
             modifier = Modifier.padding(start = 8.dp).weight(1f),
         )
         Text(
             stringResource(Res.string.tray_off_board),
-            color = Color.LightGray,
+            color = appColors.secondaryText,
             fontSize = 13.sp,
             modifier = Modifier.padding(end = 8.dp),
         )
@@ -395,7 +386,7 @@ private fun RemovedPile(player: Player, count: Int) {
             contentAlignment = Alignment.BottomCenter,
         ) {
             if (count == 0) {
-                Box(Modifier.size(width = 36.dp, height = discHeight).border(1.dp, Color.Gray, DiscShape))
+                Box(Modifier.size(width = 36.dp, height = discHeight).border(1.dp, appColors.outline, DiscShape))
             }
             repeat(count) { i ->
                 Box(
@@ -403,13 +394,13 @@ private fun RemovedPile(player: Player, count: Int) {
                         .offset(y = -step * i)
                         .size(width = 36.dp, height = discHeight)
                         .background(player.color, DiscShape)
-                        .border(1.dp, Color.Gray, DiscShape),
+                        .border(1.dp, appColors.outline, DiscShape),
                 )
             }
         }
         Text(
             "$count",
-            color = Color.White,
+            color = appColors.text,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 6.dp).widthIn(min = 20.dp),
         )
@@ -432,7 +423,8 @@ private fun Board(
     hintAlpha: Float = 0f,
     modifier: Modifier = Modifier,
 ) {
-    BoxWithConstraints(modifier.aspectRatio(1f).border(3.dp, Color(0xFF4A2E1A))) {
+    val colors = boardColors
+    BoxWithConstraints(modifier.aspectRatio(1f).border(3.dp, colors.border)) {
         val cell = maxWidth / BOARD_SIZE
         Column {
             for (screenRow in 0 until BOARD_SIZE) {
@@ -444,8 +436,8 @@ private fun Board(
                         Box(
                             modifier = Modifier
                                 .size(cell)
-                                .background(if (square.isDark) DarkSquare else LightSquare)
-                                .background(if (highlighted) LastMove else Color.Transparent)
+                                .background(if (square.isDark) colors.darkSquare else colors.lightSquare)
+                                .then(if (highlighted) lastMoveMark(colors) else Modifier)
                                 .then(if (square.isDark) Modifier.clickable { onSquareClick(square) } else Modifier),
                             contentAlignment = Alignment.Center,
                         ) {
@@ -464,23 +456,23 @@ private fun Board(
                             }
                             if (target != null) {
                                 val capture = state.kindOf(target) is MoveKind.Capture
-                                val color = if (capture) CaptureHighlight else Highlight
+                                val color = if (capture) colors.capture else colors.target
                                 Box(
                                     Modifier
                                         .fillMaxSize(if (state.board[square] == null) 0.45f else 0.9f)
-                                        .border(3.dp, color, CircleShape)
+                                        .then(targetRing(color, dashed = capture && colors.strongMarks))
                                         .background(color.copy(alpha = 0.35f), CircleShape),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    Text("${target.count}", color = Color.White, fontWeight = FontWeight.Bold)
+                                    Text("${target.count}", color = colors.targetText, fontWeight = FontWeight.Bold)
                                 }
                             }
                             if (square == hintedSquare) {
                                 Box(
                                     Modifier
                                         .fillMaxSize()
-                                        .background(HintColor.copy(alpha = 0.45f * hintAlpha))
-                                        .border(4.dp, HintColor.copy(alpha = hintAlpha)),
+                                        .background(colors.hint.copy(alpha = 0.45f * hintAlpha))
+                                        .border(4.dp, colors.hint.copy(alpha = hintAlpha)),
                                 )
                             }
                         }
@@ -491,6 +483,25 @@ private fun Board(
         flight?.let { FlyingChecker(it, flipped, cell) }
     }
 }
+
+/** The last move's squares: tinted, or outlined on boards that don't rely on colour alone. */
+private fun lastMoveMark(colors: BoardColors): Modifier =
+    if (colors.strongMarks) Modifier.border(3.dp, colors.lastMove) else Modifier.background(colors.lastMove)
+
+/** The ring around a target square; captures get a thick dashed ring on high-contrast boards. */
+private fun targetRing(color: Color, dashed: Boolean): Modifier =
+    if (!dashed) {
+        Modifier.border(3.dp, color, CircleShape)
+    } else {
+        Modifier.drawBehind {
+            val width = 5.dp.toPx()
+            drawCircle(
+                color = color,
+                radius = size.minDimension / 2 - width / 2,
+                style = Stroke(width = width, pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 8f))),
+            )
+        }
+    }
 
 /** The moving checkers, part way between their start and landing squares. */
 @Composable
@@ -518,15 +529,16 @@ private fun screenPosition(square: Square, flipped: Boolean): Pair<Int, Int> =
 
 @Composable
 private fun Checker(stack: Stack, isSelected: Boolean, isMovable: Boolean, modifier: Modifier = Modifier) {
+    val colors = boardColors
     val ring = when {
-        isSelected -> Color(0xFFF2D95C)
-        isMovable -> Color(0xFFB8A27A)
-        else -> Color.Gray
+        isSelected -> colors.selectedRing
+        isMovable -> colors.movableRing
+        else -> colors.checkerOutline
     }
     Box(
         modifier
             .background(stack.owner.color, CircleShape)
-            .border(if (isSelected) 4.dp else 2.dp, ring, CircleShape),
+            .border(if (isSelected) colors.checkerOutlineWidth + 2.dp else colors.checkerOutlineWidth, ring, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Text(

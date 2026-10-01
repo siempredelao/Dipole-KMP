@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -55,19 +54,19 @@ fun RulesScreen(onBack: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack) {
-                Icon(painterResource(Res.drawable.ic_arrow_back), stringResource(Res.string.back), tint = Color.White)
+                Icon(painterResource(Res.drawable.ic_arrow_back), stringResource(Res.string.back), tint = LocalAppColors.current.text)
             }
             Text(
                 stringResource(Res.string.rules_title),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = LocalAppColors.current.text,
                 modifier = Modifier.padding(start = 8.dp),
             )
         }
         Text(
             stringResource(Res.string.rules),
-            color = Color.LightGray,
+            color = LocalAppColors.current.secondaryText,
             fontSize = 16.sp,
             lineHeight = 24.sp,
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
@@ -83,10 +82,11 @@ fun RulesScreen(onBack: () -> Unit) {
 @Composable
 private fun Credits(modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
+    val colors = LocalAppColors.current
     Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        HorizontalDivider(color = Color.Gray, modifier = Modifier.padding(bottom = 8.dp))
-        Text(stringResource(Res.string.credits_designed_by), color = Color.White, fontSize = 14.sp)
-        Text(COPYRIGHT, color = Color.LightGray, fontSize = 14.sp)
+        HorizontalDivider(color = colors.outline, modifier = Modifier.padding(bottom = 8.dp))
+        Text(stringResource(Res.string.credits_designed_by), color = colors.text, fontSize = 14.sp)
+        Text(COPYRIGHT, color = colors.secondaryText, fontSize = 14.sp)
         TextButton(onClick = { uriHandler.openUri(WEBSITE_URL) }) {
             Text(stringResource(Res.string.credits_more_games, WEBSITE_NAME))
         }

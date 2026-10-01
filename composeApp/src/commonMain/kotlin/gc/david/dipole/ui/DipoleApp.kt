@@ -1,23 +1,15 @@
 package gc.david.dipole.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun DipoleApp() {
+    val viewModel = viewModel { DipoleViewModel() }
+    val uiState by viewModel.uiState.collectAsState()
     DipoleTheme {
-        DipoleScreen()
-    }
-}
-
-@Composable
-fun DipoleTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = darkColorScheme()) {
-        Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFF1E1A17), content = content)
+        DipoleScreen(uiState, viewModel::onAction)
     }
 }

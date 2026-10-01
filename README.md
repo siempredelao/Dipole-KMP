@@ -41,6 +41,9 @@ colour-blind and low-vision players.
   screens: the game (`GameViewModel` + `GameScreen`), the rules and the tutorial
   (`TutorialViewModel` + `TutorialScreen`). `SettingsViewModel` holds the appearance and sound
   settings for the whole app.
+- `composeApp/src/commonMain/.../di` - dependency injection with Koin: `AppModules.kt` declares
+  storage, the computer players and the ViewModels, and `DipoleApp` starts Koin on every platform.
+  `AppModulesTest` builds the whole graph, so a missing binding fails the tests.
 - `androidApp/src/main/res` - Android launch splash: `drawable/splash_icon.xml` (the icon with its
   arrows grouped) animated by `drawable-v31/splash_icon_animated.xml`; older Android versions show
   the icon still. `MainActivity` keeps the splash up until the animation ends.

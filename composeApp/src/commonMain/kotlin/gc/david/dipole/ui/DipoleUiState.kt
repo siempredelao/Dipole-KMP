@@ -1,7 +1,5 @@
 package gc.david.dipole.ui
 
-import gc.david.dipole.appearance.AppearanceMode
-import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
@@ -36,10 +34,6 @@ data class DipoleUiState(
     val celebrating: Boolean = false,
     /** True while the settings menu (New game, Save, Load) is open. */
     val menuOpen: Boolean = false,
-    /** Whether moves make a sound and vibrate. */
-    val soundOn: Boolean = true,
-    val appearanceMode: AppearanceMode = AppearanceMode.System,
-    val boardTheme: BoardTheme = BoardTheme.Wood,
 ) {
     val state: GameState get() = session.state
 
@@ -89,10 +83,7 @@ sealed interface DipoleAction {
     data object RulesClicked : DipoleAction
     data object MenuClicked : DipoleAction
     data object MenuDismissed : DipoleAction
-    data object SoundToggled : DipoleAction
     data object AppearanceClicked : DipoleAction
-    data class AppearanceModeChosen(val mode: AppearanceMode) : DipoleAction
-    data class BoardThemeChosen(val theme: BoardTheme) : DipoleAction
     data object RulesClosed : DipoleAction
     data object TutorialClicked : DipoleAction
     /** The player swiped to [page]. */

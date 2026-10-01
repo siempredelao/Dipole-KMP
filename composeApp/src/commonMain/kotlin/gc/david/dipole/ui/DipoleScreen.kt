@@ -112,7 +112,12 @@ private val boardColors: BoardColors @Composable get() = LocalBoardColors.curren
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
+fun DipoleScreen(
+    uiState: DipoleUiState,
+    settings: SettingsUiState,
+    onAction: (DipoleAction) -> Unit,
+    onSettingsAction: (SettingsAction) -> Unit,
+) {
     uiState.tutorialPage?.let { page ->
         TutorialScreen(page, onAction)
         return
@@ -130,7 +135,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     val hintAlpha = blinkAlpha(uiState.hint)
     val haptics = LocalHapticFeedback.current
     val flight = rememberFlight(session) { landed ->
-        if (uiState.soundOn) {
+        if (settings.soundOn) {
             playSound(if (landed.isCapture) GameSound.Capture else GameSound.Move)
             haptics.performHapticFeedback(
                 if (landed.isCapture) HapticFeedbackType.LongPress else HapticFeedbackType.TextHandleMove,
@@ -162,7 +167,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
                         )
                     }
                 }
-                SettingsMenu(uiState, onAction, Modifier.align(Alignment.CenterEnd))
+                SettingsMenu(uiState, settings, onAction, onSettingsAction, Modifier.align(Alignment.CenterEnd))
             }
             Text(
                 modeLabel(session.mode, session.difficulty),
@@ -241,7 +246,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             celebrating = uiState.celebrating,
             onStart = {
                 onAction(DipoleAction.CelebrationShown)
-                if (uiState.soundOn) {
+                if (settings.soundOn) {
                     playSound(GameSound.Win)
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 }
@@ -275,10 +280,10 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             onDismiss = dismiss,
         )
         DipoleDialog.Appearance -> AppearanceDialog(
-            mode = uiState.appearanceMode,
-            board = uiState.boardTheme,
-            onModeChosen = { onAction(DipoleAction.AppearanceModeChosen(it)) },
-            onBoardChosen = { onAction(DipoleAction.BoardThemeChosen(it)) },
+            mode = settings.appearanceMode,
+            board = settings.boardTheme,
+            onModeChosen = { onSettingsAction(SettingsAction.AppearanceModeChosen(it)) },
+            onBoardChosen = { onSettingsAction(SettingsAction.BoardThemeChosen(it)) },
             onDismiss = dismiss,
         )
         null -> Unit
@@ -289,7 +294,13 @@ private const val MESSAGE_MILLIS = 2_000L
 
 /** The settings icon and its menu: New game, Save game, Load game, Appearance and the sound switch. */
 @Composable
-private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit, modifier: Modifier = Modifier) {
+private fun SettingsMenu(
+    uiState: DipoleUiState,
+    settings: SettingsUiState,
+    onAction: (DipoleAction) -> Unit,
+    onSettingsAction: (SettingsAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(modifier) {
         IconButton(onClick = { onAction(DipoleAction.MenuClicked) }) {
             Icon(
@@ -319,8 +330,8 @@ private fun SettingsMenu(uiState: DipoleUiState, onAction: (DipoleAction) -> Uni
             )
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.sound_and_vibration)) },
-                onClick = { onAction(DipoleAction.SoundToggled) },
-                trailingIcon = { Switch(checked = uiState.soundOn, onCheckedChange = null) },
+                onClick = { onSettingsAction(SettingsAction.SoundToggled) },
+                trailingIcon = { Switch(checked = settings.soundOn, onCheckedChange = null) },
             )
         }
     }

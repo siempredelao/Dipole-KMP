@@ -18,7 +18,7 @@ import gc.david.dipole.game.Stack
 @Composable
 private fun DipoleScreenPreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
-        DipoleScreen(DipoleUiState(GameSession.new(GameMode.VsComputer)), onAction = {})
+        PreviewScreen(DipoleUiState(GameSession.new(GameMode.VsComputer)))
     }
 }
 
@@ -38,9 +38,8 @@ private val midGame = GameState(
 @Composable
 private fun DipoleScreenMidGamePreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
-        DipoleScreen(
-            DipoleUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5)),
-            onAction = {},
+        PreviewScreen(
+            DipoleUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5))
         )
     }
 }
@@ -51,14 +50,13 @@ private fun DipoleScreenMidGamePreview() {
 private fun DipoleScreenHintPreview() {
     val selected = Square(3, 5)
     DipoleTheme(mode = AppearanceMode.Dark) {
-        DipoleScreen(
+        PreviewScreen(
             DipoleUiState(
                 session = GameSession.new(GameMode.VsComputer, initial = midGame),
                 selected = selected,
                 hintsOn = true,
                 hint = ComputerPlayer(depth = 2).hint(midGame, selected),
-            ),
-            onAction = {},
+            )
         )
     }
 }
@@ -70,7 +68,7 @@ private fun DipoleScreenAsBlackPreview() {
     val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
         .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
     DipoleTheme(mode = AppearanceMode.Dark) {
-        DipoleScreen(DipoleUiState(session, selected = GameState.BLACK_START), onAction = {})
+        PreviewScreen(DipoleUiState(session, selected = GameState.BLACK_START))
     }
 }
 
@@ -102,12 +100,17 @@ private fun DipoleScreenHighContrastPreview() = MidGameWith(AppearanceMode.Dark,
 private fun MidGameWith(mode: AppearanceMode, board: BoardTheme) {
     val position = midGame.copy(board = midGame.board + (Square(2, 2) to Stack(Player.White, 4)))
     DipoleTheme(mode, board) {
-        DipoleScreen(
+        PreviewScreen(
             DipoleUiState(
                 session = GameSession.new(GameMode.TwoPlayers, initial = position),
                 selected = Square(2, 2),
-            ),
-            onAction = {},
+            )
         )
     }
+}
+
+/** The game screen with default settings and no actions, for previews. */
+@Composable
+internal fun PreviewScreen(uiState: DipoleUiState) {
+    DipoleScreen(uiState, SettingsUiState(), onAction = {}, onSettingsAction = {})
 }

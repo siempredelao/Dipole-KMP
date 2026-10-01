@@ -35,10 +35,12 @@ Play against the computer or with two players on one device.
 
 ## Credits
 
-Dipole was designed by Mark Steere: Copyright © May 2007 by Mark Steere. His rules sheet
-(https://www.marksteeregames.com/Dipole_rules.pdf) allows programming the game for online or
-offline play, as long as the name and rules are kept and the game is attributed to him. More of his
-games are at https://www.marksteeregames.com.
+Dipole was designed by Mark Steere. Copyright © May 2007 by Mark Steere.
+
+His [rules sheet](https://www.marksteeregames.com/Dipole_rules.pdf) allows programming the game for
+online or offline play, as long as the name and rules are kept and the game is attributed to him.
+
+More of his games are at [marksteeregames.com](https://www.marksteeregames.com).
 
 ## Running
 

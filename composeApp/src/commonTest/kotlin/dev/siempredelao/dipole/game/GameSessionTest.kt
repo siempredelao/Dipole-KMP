@@ -69,6 +69,15 @@ class GameSessionTest {
     }
 
     @Test
+    fun difficultyIsKeptThroughPlayUndoAndReplay() {
+        val session = GameSession.new(GameMode.VsComputer, Difficulty.Hard).play(whiteOpening)
+        assertEquals(Difficulty.Hard, session.difficulty)
+        assertEquals(Difficulty.Hard, session.undo().difficulty)
+        assertEquals(Difficulty.Hard, GameSession.replay(GameMode.VsComputer, session.moves, Difficulty.Hard)?.difficulty)
+        assertEquals(Difficulty.Medium, GameSession.new(GameMode.VsComputer).difficulty)
+    }
+
+    @Test
     fun replayRejectsIllegalMoves() {
         assertNull(GameSession.replay(GameMode.TwoPlayers, listOf(blackReply)))
     }
@@ -85,7 +94,7 @@ class GameSessionTest {
             ),
             toMove = Player.White,
         )
-        val session = GameSession.new(GameMode.TwoPlayers, start).play(Move(Square(1, 7), Direction.NorthWest, 1))
+        val session = GameSession.new(GameMode.TwoPlayers, initial = start).play(Move(Square(1, 7), Direction.NorthWest, 1))
         assertTrue(session.opponentSatOut)
     }
 }

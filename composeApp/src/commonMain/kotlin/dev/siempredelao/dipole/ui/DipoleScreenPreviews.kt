@@ -33,7 +33,7 @@ private fun DipoleScreenMidGamePreview() {
     )
     DipoleTheme {
         DipoleScreen(
-            DipoleUiState(GameSession.new(GameMode.TwoPlayers, midGame), selected = Square(3, 5)),
+            DipoleUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5)),
             onAction = {},
         )
     }

@@ -1,5 +1,6 @@
 package gc.david.dipole.tutorial
 
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
@@ -19,7 +20,7 @@ enum class TutorialPage(
     val hinted: Square? = null,
 ) {
     /** The board, the starting stacks and the goal. */
-    Goal(GameState.initial()),
+    Goal(DipoleRules.initial()),
 
     /** Moving part of a stack: the distance is the number of checkers moved. */
     Moving(
@@ -81,7 +82,7 @@ enum class TutorialPage(
     ;
 
     /** The kind of each example move in [position]; every example is a legal move. */
-    val exampleKinds: List<MoveKind> get() = examples.map { requireNotNull(position.kindOf(it)) }
+    val exampleKinds: List<MoveKind> get() = examples.map { requireNotNull(DipoleRules.kindOf(position, it)) }
 }
 
 private fun position(vararg stacks: Pair<Square, Stack>) = GameState(mapOf(*stacks), Player.White)

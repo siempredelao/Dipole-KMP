@@ -1,10 +1,10 @@
 package gc.david.dipole.saves
 
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
-import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import kotlin.test.Test
@@ -17,8 +17,8 @@ class SavedGameTest {
 
     private val savedAt = Instant.fromEpochMilliseconds(1_790_000_000_000) // 21 Sep 2026 14:13:20 UTC
     private val session = GameSession.new(GameMode.VsComputer, Difficulty.Hard)
-        .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
-        .play(Move(GameState.BLACK_START, Direction.SouthWest, 2))
+        .play(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3))
+        .play(Move(DipoleRules.BLACK_START, Direction.SouthWest, 2))
 
     @Test
     fun encodeAndDecodeRoundTrip() {
@@ -43,7 +43,7 @@ class SavedGameTest {
     @Test
     fun theHumansSideIsSaved() {
         val asBlack = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
-            .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
+            .play(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3))
         val saved = SavedGame.of(asBlack, "As Black", savedAt)
         assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
         assertEquals(Player.Black, saved.toSession()?.humanSide)
@@ -65,7 +65,7 @@ class SavedGameTest {
         assertEquals(Difficulty.Medium, saved?.difficulty)
         assertEquals(Player.White, saved?.humanSide)
         assertEquals("Old game", saved?.name)
-        assertEquals(listOf(Move(GameState.WHITE_START, Direction.NorthEast, 3)), saved?.moves)
+        assertEquals(listOf(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3)), saved?.moves)
     }
 
     @Test
@@ -79,7 +79,7 @@ class SavedGameTest {
 
     @Test
     fun illegalMovesDoNotLoad() {
-        val saved = SavedGame("x", "Broken", 0, GameMode.TwoPlayers, listOf(Move(GameState.BLACK_START, Direction.South, 2)))
+        val saved = SavedGame("x", "Broken", 0, GameMode.TwoPlayers, listOf(Move(DipoleRules.BLACK_START, Direction.South, 2)))
         assertNull(saved.toSession())
     }
 

@@ -28,7 +28,7 @@ class ComputerPlayer(
     private val timeSource: TimeSource = TimeSource.Monotonic,
 ) {
     fun chooseMove(state: GameState): Move? {
-        val moves = ordered(state, state.legalMoves())
+        val moves = ordered(state, DipoleRules.legalMoves(state))
         if (moves.isEmpty()) return null
         if (randomMoveChance > 0 && random.nextDouble() < randomMoveChance) return moves.random(random)
 
@@ -42,7 +42,7 @@ class ComputerPlayer(
      * plays a random move, whatever [randomMoveChance] is.
      */
     fun hint(state: GameState, from: Square): Hint? {
-        val moves = ordered(state, state.legalMoves())
+        val moves = ordered(state, DipoleRules.legalMoves(state))
         if (moves.none { it.from == from }) return null
         val scores = scoreMoves(state, moves)
         val best = moves.filter { it.from == from }.maxBy { scores.getValue(it) }
@@ -70,7 +70,7 @@ class ComputerPlayer(
 
     private fun scoreMoves(state: GameState, moves: List<Move>, depth: Int, deadline: TimeMark?): Map<Move, Int> {
         val me = state.toMove
-        return moves.associateWith { search(state.play(it), depth - 1, Int.MIN_VALUE + 1, Int.MAX_VALUE, me, deadline) }
+        return moves.associateWith { search(DipoleRules.play(state, it), depth - 1, Int.MIN_VALUE + 1, Int.MAX_VALUE, me, deadline) }
     }
 
     /** Scores [state] from [me]'s point of view. The side to move can stay the same after a pass. */
@@ -82,15 +82,15 @@ class ComputerPlayer(
         me: Player,
         deadline: TimeMark?,
     ): Int {
-        state.winner?.let { return if (it == me) WIN + depth else -WIN - depth }
+        DipoleRules.winner(state)?.let { return if (it == me) WIN + depth else -WIN - depth }
         if (depth == 0) return evaluate(state, me)
         if (deadline != null && deadline.hasPassedNow()) throw OutOfTime()
         val maximizing = state.toMove == me
         var a = alpha
         var b = beta
         var best = if (maximizing) Int.MIN_VALUE else Int.MAX_VALUE
-        for (move in ordered(state, state.legalMoves())) {
-            val score = search(state.play(move), depth - 1, a, b, me, deadline)
+        for (move in ordered(state, DipoleRules.legalMoves(state))) {
+            val score = search(DipoleRules.play(state, move), depth - 1, a, b, me, deadline)
             if (maximizing) {
                 best = maxOf(best, score)
                 a = maxOf(a, score)
@@ -104,7 +104,7 @@ class ComputerPlayer(
     }
 
     private fun evaluate(state: GameState, me: Player): Int {
-        val material = (state.checkersOf(me) - state.checkersOf(me.opponent)) * MATERIAL_WEIGHT
+        val material = (DipoleRules.checkersOf(state, me) - DipoleRules.checkersOf(state, me.opponent)) * MATERIAL_WEIGHT
         if (!countThreats) return material
         // The side to move can probably take the biggest stack it threatens, so count that.
         val threat = biggestThreatenedStack(state, attacker = state.toMove) * THREAT_WEIGHT
@@ -129,7 +129,7 @@ class ComputerPlayer(
 
     /** Captures first, biggest captures first, so alpha-beta prunes more. */
     private fun ordered(state: GameState, moves: List<Move>): List<Move> =
-        moves.sortedByDescending { (state.kindOf(it) as? MoveKind.Capture)?.captured ?: -1 }
+        moves.sortedByDescending { (DipoleRules.kindOf(state, it) as? MoveKind.Capture)?.captured ?: -1 }
 
     private class OutOfTime : RuntimeException()
 

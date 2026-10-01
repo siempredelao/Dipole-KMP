@@ -2,14 +2,15 @@ package gc.david.dipole.ui
 
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
-import gc.david.dipole.game.Stack
 import gc.david.dipole.game.Square
+import gc.david.dipole.game.Stack
 import gc.david.dipole.saves.SavedGame
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -38,7 +39,7 @@ class GameViewModelTest {
     private val clock = object : Clock {
         override fun now() = Instant.fromEpochMilliseconds(1_790_000_000_000)
     }
-    private val opening = Move(GameState.WHITE_START, Direction.NorthEast, 3)
+    private val opening = Move(DipoleRules.WHITE_START, Direction.NorthEast, 3)
 
     @BeforeTest
     fun setUp() = Dispatchers.setMain(dispatcher)
@@ -73,7 +74,7 @@ class GameViewModelTest {
     fun startsAGameAgainstTheComputer() {
         val state = viewModel().uiState.value
         assertEquals(GameMode.VsComputer, state.session.mode)
-        assertEquals(GameState.initial(), state.state)
+        assertEquals(DipoleRules.initial(), state.state)
         assertFalse(state.hasSavedGames)
     }
 
@@ -216,7 +217,7 @@ class GameViewModelTest {
     @Test
     fun noHintUntilHintIsTapped() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.SquareTapped(DipoleRules.WHITE_START))
         advanceUntilIdle()
         assertFalse(vm.uiState.value.hintsOn)
         assertNull(vm.uiState.value.hint)
@@ -226,21 +227,21 @@ class GameViewModelTest {
     fun hintShowsTheBestMoveFromTheSelectedStack() = runTest(dispatcher) {
         val vm = viewModel()
         vm.onAction(GameAction.HintClicked)
-        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.SquareTapped(DipoleRules.WHITE_START))
         assertNull(vm.uiState.value.hint) // still thinking
         advanceUntilIdle()
         val hint = vm.uiState.value.hint
-        assertEquals(GameState.WHITE_START, hint?.move?.from)
-        assertTrue(vm.uiState.value.state.isLegal(hint!!.move))
+        assertEquals(DipoleRules.WHITE_START, hint?.move?.from)
+        assertTrue(DipoleRules.isLegal(vm.uiState.value.state, hint!!.move))
     }
 
     @Test
     fun tappingHintWithAStackSelectedShowsItsHint() = runTest(dispatcher) {
         val vm = viewModel()
-        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.SquareTapped(DipoleRules.WHITE_START))
         vm.onAction(GameAction.HintClicked)
         advanceUntilIdle()
-        assertEquals(GameState.WHITE_START, vm.uiState.value.hint?.move?.from)
+        assertEquals(DipoleRules.WHITE_START, vm.uiState.value.hint?.move?.from)
     }
 
     @Test
@@ -257,7 +258,7 @@ class GameViewModelTest {
     fun hintCanBeTurnedOffAgain() = runTest(dispatcher) {
         val vm = viewModel()
         vm.onAction(GameAction.HintClicked)
-        vm.onAction(GameAction.SquareTapped(GameState.WHITE_START))
+        vm.onAction(GameAction.SquareTapped(DipoleRules.WHITE_START))
         advanceUntilIdle()
         vm.onAction(GameAction.HintClicked)
         assertFalse(vm.uiState.value.hintsOn)
@@ -282,7 +283,7 @@ class GameViewModelTest {
         )
         assertEquals(0, vm.uiState.value.celebration)
         play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
-        assertEquals(Player.White, vm.uiState.value.state.winner)
+        assertEquals(Player.White, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
         assertTrue(vm.uiState.value.celebrating)
         // Once the confetti has started it isn't thrown again, e.g. after visiting the rules.
@@ -297,7 +298,7 @@ class GameViewModelTest {
             endgame(GameMode.VsComputer, Player.Black, Square(3, 3) to Stack(Player.White, 1), Square(4, 4) to Stack(Player.Black, 1)),
         )
         advanceUntilIdle()
-        assertEquals(Player.Black, vm.uiState.value.state.winner)
+        assertEquals(Player.Black, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(0, vm.uiState.value.celebration)
         assertFalse(vm.uiState.value.celebrating)
     }
@@ -309,7 +310,7 @@ class GameViewModelTest {
             endgame(GameMode.VsComputer, Player.Black, Square(0, 0) to Stack(Player.Black, 1), Square(7, 7) to Stack(Player.White, 1)),
         )
         advanceUntilIdle()
-        assertEquals(Player.White, vm.uiState.value.state.winner)
+        assertEquals(Player.White, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
     }
 
@@ -319,7 +320,7 @@ class GameViewModelTest {
             endgame(GameMode.TwoPlayers, Player.Black, Square(3, 3) to Stack(Player.White, 1), Square(4, 4) to Stack(Player.Black, 1)),
         )
         play(vm, Move(Square(4, 4), Direction.SouthWest, 1))
-        assertEquals(Player.Black, vm.uiState.value.state.winner)
+        assertEquals(Player.Black, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
     }
 
@@ -331,7 +332,7 @@ class GameViewModelTest {
         )
         play(vm, win)
         vm.onAction(GameAction.UndoClicked)
-        assertEquals(null, vm.uiState.value.state.winner)
+        assertEquals(null, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
         play(vm, win)
         assertEquals(2, vm.uiState.value.celebration)

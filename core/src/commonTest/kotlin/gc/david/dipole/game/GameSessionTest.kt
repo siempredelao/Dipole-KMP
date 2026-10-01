@@ -9,14 +9,14 @@ import kotlin.test.assertTrue
 
 class GameSessionTest {
 
-    private val whiteOpening = Move(GameState.WHITE_START, Direction.NorthEast, 3)
-    private val blackReply = Move(GameState.BLACK_START, Direction.SouthWest, 2)
-    private val whiteSecond = Move(GameState.WHITE_START, Direction.North, 2)
+    private val whiteOpening = Move(DipoleRules.WHITE_START, Direction.NorthEast, 3)
+    private val blackReply = Move(DipoleRules.BLACK_START, Direction.SouthWest, 2)
+    private val whiteSecond = Move(DipoleRules.WHITE_START, Direction.North, 2)
 
     @Test
     fun newSessionStartsFromTheInitialPosition() {
         val session = GameSession.new(GameMode.TwoPlayers)
-        assertEquals(GameState.initial(), session.state)
+        assertEquals(DipoleRules.initial(), session.state)
         assertTrue(session.moves.isEmpty())
         assertNull(session.lastMove)
         assertFalse(session.canUndo)
@@ -27,7 +27,7 @@ class GameSessionTest {
         val session = GameSession.new(GameMode.TwoPlayers).play(whiteOpening)
         assertEquals(listOf(whiteOpening), session.moves)
         assertEquals(whiteOpening, session.lastMove)
-        assertEquals(GameState.initial().play(whiteOpening), session.state)
+        assertEquals(DipoleRules.play(DipoleRules.initial(), whiteOpening), session.state)
     }
 
     @Test
@@ -43,7 +43,7 @@ class GameSessionTest {
         val session = GameSession.new(GameMode.VsComputer).play(whiteOpening).play(blackReply)
         val undone = session.undo()
         assertTrue(undone.moves.isEmpty())
-        assertEquals(GameState.initial(), undone.state)
+        assertEquals(DipoleRules.initial(), undone.state)
     }
 
     @Test

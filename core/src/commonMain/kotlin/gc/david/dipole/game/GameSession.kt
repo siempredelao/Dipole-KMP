@@ -21,7 +21,7 @@ class GameSession private constructor(
     val lastMove: Move? get() = moves.lastOrNull()
 
     val isComputerTurn: Boolean
-        get() = mode == GameMode.VsComputer && state.toMove != humanSide && !state.isOver
+        get() = mode == GameMode.VsComputer && state.toMove != humanSide && !DipoleRules.isOver(state)
 
     /** True when the player who didn't just move had no legal move, so the mover goes again. */
     val opponentSatOut: Boolean
@@ -30,7 +30,7 @@ class GameSession private constructor(
     val canUndo: Boolean get() = !isComputerTurn && undo() !== this
 
     fun play(move: Move): GameSession =
-        GameSession(mode, difficulty, humanSide, moves + move, states + state.play(move))
+        GameSession(mode, difficulty, humanSide, moves + move, states + DipoleRules.play(state, move))
 
     /**
      * Takes back the last move. Against the computer it goes back to the last position where the
@@ -51,7 +51,7 @@ class GameSession private constructor(
         fun new(
             mode: GameMode,
             difficulty: Difficulty = Difficulty.Medium,
-            initial: GameState = GameState.initial(),
+            initial: GameState = DipoleRules.initial(),
             humanSide: Player = Player.White,
         ): GameSession = GameSession(mode, difficulty, humanSide, emptyList(), listOf(initial))
 
@@ -63,7 +63,7 @@ class GameSession private constructor(
             humanSide: Player = Player.White,
         ): GameSession? =
             moves.fold(new(mode, difficulty, humanSide = humanSide)) { session, move ->
-                if (!session.state.isLegal(move)) return null
+                if (!DipoleRules.isLegal(session.state, move)) return null
                 session.play(move)
             }
     }

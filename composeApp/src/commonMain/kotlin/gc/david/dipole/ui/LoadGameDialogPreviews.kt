@@ -2,16 +2,16 @@ package gc.david.dipole.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
-import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
 import gc.david.dipole.saves.SavedGame
 
 @Preview
 @Composable
 private fun LoadGameDialogPreview() {
-    val opening = Move(GameState.WHITE_START, Direction.NorthEast, 3)
+    val opening = Move(DipoleRules.WHITE_START, Direction.NorthEast, 3)
     DipoleTheme {
         LoadGameDialog(
             savedGames = listOf(

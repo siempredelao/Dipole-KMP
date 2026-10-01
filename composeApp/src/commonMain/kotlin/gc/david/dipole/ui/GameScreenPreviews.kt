@@ -5,6 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import gc.david.dipole.appearance.AppearanceMode
 import gc.david.dipole.appearance.BoardTheme
 import gc.david.dipole.game.ComputerPlayer
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
@@ -66,9 +67,9 @@ private fun GameScreenHintPreview() {
 @Composable
 private fun GameScreenAsBlackPreview() {
     val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
-        .play(Move(GameState.WHITE_START, Direction.NorthEast, 3))
+        .play(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3))
     DipoleTheme(mode = AppearanceMode.Dark) {
-        PreviewScreen(GameUiState(session, selected = GameState.BLACK_START))
+        PreviewScreen(GameUiState(session, selected = DipoleRules.BLACK_START))
     }
 }
 

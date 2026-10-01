@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
@@ -19,7 +20,7 @@ class MoveAnimation(val move: Move, val before: GameState) {
     /** The checkers that travel: [Move.count] of them, from the moving stack. */
     val mover: Stack = Stack(before.board.getValue(move.from).owner, move.count)
 
-    val isCapture: Boolean = before.kindOf(move) is MoveKind.Capture
+    val isCapture: Boolean = DipoleRules.kindOf(before, move) is MoveKind.Capture
 }
 
 /** A [MoveAnimation] in flight, [progress] going from 0 (just left) to 1 (landed). */

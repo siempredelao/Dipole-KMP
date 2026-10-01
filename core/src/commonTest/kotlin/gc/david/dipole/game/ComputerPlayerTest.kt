@@ -21,11 +21,11 @@ class ComputerPlayerTest {
     fun everyDifficultyPlaysLegalMoves() {
         Difficulty.entries.forEach { difficulty ->
             val computer = ComputerPlayer.forDifficulty(difficulty, Random(3))
-            var state = GameState.initial()
+            var state = DipoleRules.initial()
             repeat(4) {
                 val move = computer.chooseMove(state)!!
-                assertTrue(state.isLegal(move), "$difficulty played illegal $move")
-                state = state.play(move)
+                assertTrue(DipoleRules.isLegal(state, move), "$difficulty played illegal $move")
+                state = DipoleRules.play(state, move)
             }
         }
     }
@@ -40,8 +40,8 @@ class ComputerPlayerTest {
     @Test
     fun alwaysRandomPlayerStillPlaysLegalMoves() {
         val computer = ComputerPlayer(depth = 1, randomMoveChance = 1.0, random = Random(5))
-        val moves = (1..20).map { computer.chooseMove(GameState.initial())!! }
-        assertTrue(moves.all { GameState.initial().isLegal(it) })
+        val moves = (1..20).map { computer.chooseMove(DipoleRules.initial())!! }
+        assertTrue(moves.all { DipoleRules.isLegal(DipoleRules.initial(), it) })
         assertTrue(moves.toSet().size > 1, "Expected different random moves")
     }
 
@@ -52,12 +52,12 @@ class ComputerPlayerTest {
             val medium = ComputerPlayer.forDifficulty(Difficulty.Medium, Random(game))
             val easy = ComputerPlayer.forDifficulty(Difficulty.Easy, Random(game + 100))
             val mediumIsWhite = game % 2 == 0
-            var state = GameState.initial()
-            while (!state.isOver) {
+            var state = DipoleRules.initial()
+            while (!DipoleRules.isOver(state)) {
                 val whiteToMove = state.toMove == Player.White
-                state = state.play((if (whiteToMove == mediumIsWhite) medium else easy).chooseMove(state)!!)
+                state = DipoleRules.play(state, (if (whiteToMove == mediumIsWhite) medium else easy).chooseMove(state)!!)
             }
-            (state.winner == Player.White) == mediumIsWhite
+            (DipoleRules.winner(state) == Player.White) == mediumIsWhite
         }
         assertTrue(mediumWins >= games - 1, "Medium won only $mediumWins of $games")
     }
@@ -95,7 +95,7 @@ class ComputerPlayerTest {
     fun deeperSearchStopsWhenTimeRunsOut() {
         // With no time at all it still finishes the minimum depth and returns a move.
         val computer = ComputerPlayer(depth = 1, maxDepth = 20, timeBudget = Duration.ZERO, random = Random(2))
-        val move = computer.chooseMove(GameState.initial())
-        assertTrue(move != null && GameState.initial().isLegal(move))
+        val move = computer.chooseMove(DipoleRules.initial())
+        assertTrue(move != null && DipoleRules.isLegal(DipoleRules.initial(), move))
     }
 }

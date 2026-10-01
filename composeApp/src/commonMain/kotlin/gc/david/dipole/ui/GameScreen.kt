@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gc.david.dipole.game.BOARD_SIZE
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
@@ -74,10 +75,10 @@ import gc.david.dipole.resources.hint_best
 import gc.david.dipole.resources.hint_better_elsewhere
 import gc.david.dipole.resources.hint_pick_stack
 import gc.david.dipole.resources.hint_thinking
+import gc.david.dipole.resources.ic_info
 import gc.david.dipole.resources.ic_settings
 import gc.david.dipole.resources.load_game_title
 import gc.david.dipole.resources.new_game
-import gc.david.dipole.resources.ic_info
 import gc.david.dipole.resources.rules_title
 import gc.david.dipole.resources.save_game_title
 import gc.david.dipole.resources.settings
@@ -363,7 +364,7 @@ private fun hintText(uiState: GameUiState): StringResource? {
 private fun statusText(session: GameSession): String {
     val state = session.state
     val vsComputer = session.mode == GameMode.VsComputer
-    state.winner?.let { winner ->
+    DipoleRules.winner(state)?.let { winner ->
         val text = when {
             vsComputer && winner == session.humanSide -> Res.string.status_you_win
             vsComputer -> Res.string.status_computer_wins
@@ -393,7 +394,7 @@ private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Mo
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, appColors.outline, CircleShape))
         Text(
-            stringResource(Res.string.tray_on_board, stringResource(player.label), state.checkersOf(player)),
+            stringResource(Res.string.tray_on_board, stringResource(player.label), DipoleRules.checkersOf(state, player)),
             color = appColors.text,
             modifier = Modifier.padding(start = 8.dp).weight(1f),
         )
@@ -403,7 +404,7 @@ private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Mo
             fontSize = 13.sp,
             modifier = Modifier.padding(end = 8.dp),
         )
-        RemovedPile(player, state.removedCheckersOf(player))
+        RemovedPile(player, DipoleRules.removedCheckersOf(state, player))
     }
 }
 
@@ -414,7 +415,7 @@ private fun RemovedPile(player: Player, count: Int) {
     val step = 3.dp
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(
-            Modifier.size(width = 36.dp, height = discHeight + step * (GameState.STARTING_STACK - 1)),
+            Modifier.size(width = 36.dp, height = discHeight + step * (DipoleRules.STARTING_STACK - 1)),
             contentAlignment = Alignment.BottomCenter,
         ) {
             if (count == 0) {
@@ -494,7 +495,7 @@ internal fun Board(
                                 )
                             }
                             if (target != null) {
-                                val capture = state.kindOf(target) is MoveKind.Capture
+                                val capture = DipoleRules.kindOf(state, target) is MoveKind.Capture
                                 val color = if (capture) colors.capture else colors.target
                                 Box(
                                     Modifier

@@ -1,5 +1,6 @@
 package gc.david.dipole.tutorial
 
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.MoveKind
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,7 +13,7 @@ class TutorialPageTest {
         TutorialPage.entries.forEach { page ->
             page.examples.forEach { move ->
                 assertEquals(page.selected, move.from, "$page $move")
-                assertTrue(page.position.isLegal(move), "$page $move")
+                assertTrue(DipoleRules.isLegal(page.position, move), "$page $move")
             }
         }
     }
@@ -38,12 +39,12 @@ class TutorialPageTest {
     @Test
     fun blackSitsOutInTheSittingOutPage() {
         val position = TutorialPage.SittingOut.position
-        assertTrue(position.legalMoves().isEmpty())
+        assertTrue(DipoleRules.legalMoves(position).isEmpty())
     }
 
     @Test
     fun theTipsHintIsALegalCapture() {
         val page = TutorialPage.Tips
-        assertTrue(page.position.legalMovesFrom(page.selected!!).any { it.to == page.hinted })
+        assertTrue(DipoleRules.legalMovesFrom(page.position, page.selected!!).any { it.to == page.hinted })
     }
 }

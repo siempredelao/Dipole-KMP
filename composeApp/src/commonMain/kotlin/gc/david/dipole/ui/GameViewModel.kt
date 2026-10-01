@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.ComputerPlayerFactory
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
 import gc.david.dipole.game.Move
@@ -140,7 +141,7 @@ class GameViewModel(
 
     private fun play(move: Move) {
         val session = _uiState.value.session
-        if (session.isComputerTurn || !session.state.isLegal(move)) return
+        if (session.isComputerTurn || !DipoleRules.isLegal(session.state, move)) return
         val next = session.play(move)
         startSession(next, message = null)
         celebrateIfHumanWon(next)
@@ -148,7 +149,7 @@ class GameViewModel(
 
     /** A human just won with the move that led to [session]: in two-player games, either player. */
     private fun celebrateIfHumanWon(session: GameSession) {
-        val winner = session.state.winner ?: return
+        val winner = DipoleRules.winner(session.state) ?: return
         if (session.mode == GameMode.VsComputer && winner != session.humanSide) return
         _uiState.update { it.copy(celebration = it.celebration + 1, celebrating = true) }
     }

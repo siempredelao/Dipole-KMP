@@ -41,10 +41,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -121,6 +123,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
     val state = uiState.state
     val bearOffs = uiState.bearOffs
     val hintAlpha = blinkAlpha(uiState.hint)
+    val flight = rememberFlight(session)
     val hintedMove = uiState.hint?.move
 
     Column(
@@ -166,6 +169,7 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         Board(
             state = state,
             flipped = flipped,
+            flight = flight,
             selected = uiState.selected,
             movable = uiState.movable,
             targets = uiState.targets,
@@ -397,6 +401,7 @@ private val DiscShape = RoundedCornerShape(50)
 private fun Board(
     state: GameState,
     flipped: Boolean,
+    flight: Flight?,
     selected: Square?,
     movable: Set<Square>,
     targets: Map<Square, Move>,
@@ -423,12 +428,17 @@ private fun Board(
                                 .then(if (square.isDark) Modifier.clickable { onSquareClick(square) } else Modifier),
                             contentAlignment = Alignment.Center,
                         ) {
-                            state.board[square]?.let { stack ->
+                            // While checkers are flying in, their landing square still shows what was there.
+                            val landing = flight?.takeIf { square == it.animation.move.to }
+                            val shown = if (landing != null) landing.animation.before.board[square] else state.board[square]
+                            shown?.let { stack ->
+                                // A captured stack fades out as the capturing checkers arrive.
+                                val fade = if (landing?.animation?.isCapture == true) 1f - landing.progress else 1f
                                 Checker(
                                     stack = stack,
                                     isSelected = square == selected,
                                     isMovable = square in movable,
-                                    modifier = Modifier.fillMaxSize(0.8f),
+                                    modifier = Modifier.fillMaxSize(0.8f).alpha(fade),
                                 )
                             }
                             if (target != null) {
@@ -457,8 +467,33 @@ private fun Board(
                 }
             }
         }
+        flight?.let { FlyingChecker(it, flipped, cell) }
     }
 }
+
+/** The moving checkers, part way between their start and landing squares. */
+@Composable
+private fun FlyingChecker(flight: Flight, flipped: Boolean, cell: Dp) {
+    val move = flight.animation.move
+    val p = flight.progress
+    val (fromRow, fromCol) = screenPosition(move.from, flipped)
+    val (toRow, toCol) = screenPosition(move.to, flipped)
+    val x = cell * (fromCol + (toCol - fromCol) * p)
+    val y = cell * (fromRow + (toRow - fromRow) * p)
+    // Checkers leaving the board fade out on their way off it.
+    val fade = if (move.to.isOnBoard) 1f else 1f - p
+    Box(Modifier.offset(x, y).size(cell).alpha(fade), contentAlignment = Alignment.Center) {
+        Checker(flight.animation.mover, isSelected = false, isMovable = false, modifier = Modifier.fillMaxSize(0.8f))
+    }
+}
+
+/** Where [square] is drawn, as (row, column) counted from the top left; works off the board too. */
+private fun screenPosition(square: Square, flipped: Boolean): Pair<Int, Int> =
+    if (flipped) {
+        square.row to BOARD_SIZE - 1 - square.col
+    } else {
+        BOARD_SIZE - 1 - square.row to square.col
+    }
 
 @Composable
 private fun Checker(stack: Stack, isSelected: Boolean, isMovable: Boolean, modifier: Modifier = Modifier) {

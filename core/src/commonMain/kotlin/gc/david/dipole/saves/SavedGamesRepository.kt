@@ -21,11 +21,11 @@ class SettingsSavedGamesRepository(
 ) : SavedGamesRepository {
 
     override fun list(): List<SavedGame> =
-        ids().mapNotNull { id -> settings.getStringOrNull(key(id))?.let { SavedGame.decode(id, it) } }
+        ids().mapNotNull { id -> settings.getStringOrNull(key(id))?.let { SavedGameCodec.decode(id, it) } }
             .sortedByDescending { it.savedAtEpochMillis }
 
     override fun save(game: SavedGame) {
-        settings.putString(key(game.id), game.encode())
+        settings.putString(key(game.id), SavedGameCodec.encode(game))
         val ids = ids()
         if (game.id !in ids) setIds(ids + game.id)
     }

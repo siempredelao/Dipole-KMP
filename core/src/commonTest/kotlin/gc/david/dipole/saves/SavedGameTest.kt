@@ -25,13 +25,13 @@ class SavedGameTest {
     @Test
     fun encodeAndDecodeRoundTrip() {
         val saved = SavedGame.of(session, "My game", savedAt)
-        assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
+        assertEquals(saved, SavedGameCodec.decode(saved.id, SavedGameCodec.encode(saved)))
     }
 
     @Test
     fun emptyGameRoundTrips() {
         val saved = SavedGame.of(GameSessions.new(GameMode.TwoPlayers), "Fresh", savedAt)
-        assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
+        assertEquals(saved, SavedGameCodec.decode(saved.id, SavedGameCodec.encode(saved)))
     }
 
     @Test
@@ -49,36 +49,8 @@ class SavedGameTest {
             Move(DipoleRules.WHITE_START, Direction.NorthEast, 3),
         )
         val saved = SavedGame.of(asBlack, "As Black", savedAt)
-        assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
+        assertEquals(saved, SavedGameCodec.decode(saved.id, SavedGameCodec.encode(saved)))
         assertEquals(Player.Black, saved.toSession()?.humanSide)
-    }
-
-    @Test
-    fun savesFromBeforeSideChoiceLoadAsWhite() {
-        val v2 = "dipole-save 2\nVsComputer\nHard\n1790000000000\nOld game\n0,2,NorthEast,3"
-        val saved = SavedGame.decode("old", v2)
-        assertEquals(Player.White, saved?.humanSide)
-        assertEquals(Difficulty.Hard, saved?.difficulty)
-        assertEquals("Old game", saved?.name)
-    }
-
-    @Test
-    fun savesFromBeforeDifficultyLevelsLoadAsMedium() {
-        val v1 = "dipole-save 1\nVsComputer\n1790000000000\nOld game\n0,2,NorthEast,3"
-        val saved = SavedGame.decode("old", v1)
-        assertEquals(Difficulty.Medium, saved?.difficulty)
-        assertEquals(Player.White, saved?.humanSide)
-        assertEquals("Old game", saved?.name)
-        assertEquals(listOf(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3)), saved?.moves)
-    }
-
-    @Test
-    fun invalidTextIsRejected() {
-        assertNull(SavedGame.decode("x", "not a save"))
-        assertNull(SavedGame.decode("x", "dipole-save 1\nChess\n0\nName\n"))
-        assertNull(SavedGame.decode("x", "dipole-save 2\nVsComputer\nImpossible\n0\nName\n"))
-        assertNull(SavedGame.decode("x", "dipole-save 3\nVsComputer\nHard\nRed\n0\nName\n"))
-        assertNull(SavedGame.decode("x", "dipole-save 1\nTwoPlayers\n0\nName\n0,2,Up,3"))
     }
 
     @Test

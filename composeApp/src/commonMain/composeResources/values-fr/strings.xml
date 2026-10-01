@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Contre l’ordinateur</string>
+    <string name="mode_two_players">2 joueurs</string>
+    <string name="difficulty_easy">Facile</string>
+    <string name="difficulty_medium">Moyen</string>
+    <string name="difficulty_hard">Difficile</string>
+    <string name="difficulty_easy_description">fait des erreurs</string>
+    <string name="difficulty_medium_description">joue solidement</string>
+    <string name="difficulty_hard_description">anticipe</string>
+    <string name="player_white">Blancs</string>
+    <string name="player_black">Noirs</string>
+    <string name="status_you_win">Vous avez gagné !</string>
+    <string name="status_computer_wins">L’ordinateur gagne.</string>
+    <string name="status_white_wins">Les blancs gagnent !</string>
+    <string name="status_black_wins">Les noirs gagnent !</string>
+    <string name="status_white_sits_out">Les blancs n’ont aucun coup et passent leur tour.</string>
+    <string name="status_black_sits_out">Les noirs n’ont aucun coup et passent leur tour.</string>
+    <string name="status_computer_thinking">L’ordinateur réfléchit…</string>
+    <string name="status_your_move">À vous de jouer (blancs)</string>
+    <string name="status_white_to_move">Aux blancs de jouer</string>
+    <string name="status_black_to_move">Aux noirs de jouer</string>
+    <string name="tray_on_board">%1$s : %2$d sur le plateau</string>
+    <string name="tray_off_board">Hors du plateau</string>
+    <string name="bear_off_explanation">Ou sortez des pions du plateau. Ils quittent le jeu et rejoignent votre pile hors du plateau :</string>
+    <string name="bear_off_button">Sortir %1$d %2$s</string>
+    <string name="tap_target_help">Touchez une case en surbrillance. Le nombre indique combien de pions se déplacent.</string>
+    <string name="new_game">Nouvelle partie</string>
+    <string name="undo">Défaire</string>
+    <string name="hint">Indice</string>
+    <string name="save">Enregistrer</string>
+    <string name="load">Charger</string>
+    <string name="hint_pick_stack">Indice : touchez une de vos piles pour voir son meilleur coup.</string>
+    <string name="hint_thinking">Recherche d’un indice…</string>
+    <string name="hint_better_elsewhere">Indice : le coup qui clignote est le meilleur de cette pile, mais il existe un meilleur coup ailleurs.</string>
+    <string name="hint_best">Indice : le coup qui clignote est le meilleur.</string>
+    <string name="rules">Comment jouer : touchez une de vos piles, puis une case en surbrillance. Une pile (ou une partie de celle-ci) avance d’exactement autant de cases que de pions déplacés, en sautant par-dessus tout ce qui se trouve entre les deux. Les déplacements simples et les fusions vont vers l’avant ou en diagonale vers l’avant ; les déplacements en ligne droite exigent un nombre pair de pions. Les captures (en rouge) vont dans toutes les directions et prennent une pile adverse entière qui n’est pas plus grande que celle qui se déplace. Un déplacement simple qui sortirait du plateau est autorisé : cette pile quitte le jeu. Éliminez tous les pions adverses pour gagner.</string>
+    <string name="cancel">Annuler</string>
+    <string name="back">Retour</string>
+    <string name="save_game_title">Enregistrer la partie</string>
+    <string name="save_game_name">Nom</string>
+    <string name="load_game_title">Charger une partie</string>
+    <string name="delete">Supprimer</string>
+    <string name="message_game_saved">Partie enregistrée</string>
+    <string name="message_game_loaded">Partie chargée</string>
+    <string name="message_save_unreadable">Impossible de charger cette partie</string>
+    <string name="date_format">%1$d %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d coup</item>
+        <item quantity="other">%1$d coups</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>janv.</item>
+        <item>févr.</item>
+        <item>mars</item>
+        <item>avr.</item>
+        <item>mai</item>
+        <item>juin</item>
+        <item>juil.</item>
+        <item>août</item>
+        <item>sept.</item>
+        <item>oct.</item>
+        <item>nov.</item>
+        <item>déc.</item>
+    </string-array>
+</resources>

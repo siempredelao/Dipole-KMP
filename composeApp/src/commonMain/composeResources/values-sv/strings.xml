@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Mot datorn</string>
+    <string name="mode_two_players">2 spelare</string>
+    <string name="difficulty_easy">Lätt</string>
+    <string name="difficulty_medium">Medel</string>
+    <string name="difficulty_hard">Svår</string>
+    <string name="difficulty_easy_description">gör misstag</string>
+    <string name="difficulty_medium_description">spelar stabilt</string>
+    <string name="difficulty_hard_description">tänker framåt</string>
+    <string name="player_white">Vit</string>
+    <string name="player_black">Svart</string>
+    <string name="status_you_win">Du vann!</string>
+    <string name="status_computer_wins">Datorn vann.</string>
+    <string name="status_white_wins">Vit vinner!</string>
+    <string name="status_black_wins">Svart vinner!</string>
+    <string name="status_white_sits_out">Vit har inga drag och står över.</string>
+    <string name="status_black_sits_out">Svart har inga drag och står över.</string>
+    <string name="status_computer_thinking">Datorn tänker…</string>
+    <string name="status_your_move">Din tur (vit)</string>
+    <string name="status_white_to_move">Vit drar</string>
+    <string name="status_black_to_move">Svart drar</string>
+    <string name="tray_on_board">%1$s: %2$d på brädet</string>
+    <string name="tray_off_board">Utanför brädet</string>
+    <string name="bear_off_explanation">Eller flytta pjäser utanför brädet. De lämnar spelet och hamnar i din hög utanför brädet:</string>
+    <string name="bear_off_button">Flytta ut %1$d %2$s</string>
+    <string name="tap_target_help">Tryck på en markerad ruta. Siffran visar hur många pjäser som flyttas.</string>
+    <string name="new_game">Nytt spel</string>
+    <string name="undo">Ångra</string>
+    <string name="hint">Tips</string>
+    <string name="save">Spara</string>
+    <string name="load">Ladda</string>
+    <string name="hint_pick_stack">Tips: Tryck på en av dina högar för att se dess bästa drag.</string>
+    <string name="hint_thinking">Letar efter ett tips…</string>
+    <string name="hint_better_elsewhere">Tips: Det blinkande draget är högens bästa, men det finns ett bättre drag någon annanstans.</string>
+    <string name="hint_best">Tips: Det blinkande draget är det bästa.</string>
+    <string name="rules">Så spelar du: Tryck på en av dina högar och sedan på en markerad ruta. En hög (eller en del av den) flyttar exakt lika många rutor som antalet pjäser som flyttas, och hoppar över allt däremellan. Vanliga drag och sammanslagningar går framåt eller snett framåt; raka drag kräver ett jämnt antal pjäser. Slag (röda) går åt alla håll och tar en hel motståndarhög som inte är större än den som flyttar. Ett vanligt drag förbi brädets kant är tillåtet: den högen lämnar spelet. Ta bort alla motståndarens pjäser för att vinna.</string>
+    <string name="cancel">Avbryt</string>
+    <string name="back">Tillbaka</string>
+    <string name="save_game_title">Spara spel</string>
+    <string name="save_game_name">Namn</string>
+    <string name="load_game_title">Ladda spel</string>
+    <string name="delete">Ta bort</string>
+    <string name="message_game_saved">Spelet sparat</string>
+    <string name="message_game_loaded">Spelet laddat</string>
+    <string name="message_save_unreadable">Det sparade spelet kan inte laddas</string>
+    <string name="date_format">%1$d %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d drag</item>
+        <item quantity="other">%1$d drag</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>jan.</item>
+        <item>feb.</item>
+        <item>mars</item>
+        <item>apr.</item>
+        <item>maj</item>
+        <item>juni</item>
+        <item>juli</item>
+        <item>aug.</item>
+        <item>sep.</item>
+        <item>okt.</item>
+        <item>nov.</item>
+        <item>dec.</item>
+    </string-array>
+</resources>

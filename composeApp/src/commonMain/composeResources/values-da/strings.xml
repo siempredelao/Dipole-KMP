@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Mod computeren</string>
+    <string name="mode_two_players">2 spillere</string>
+    <string name="difficulty_easy">Let</string>
+    <string name="difficulty_medium">Mellem</string>
+    <string name="difficulty_hard">Svær</string>
+    <string name="difficulty_easy_description">laver fejl</string>
+    <string name="difficulty_medium_description">spiller solidt</string>
+    <string name="difficulty_hard_description">tænker fremad</string>
+    <string name="player_white">Hvid</string>
+    <string name="player_black">Sort</string>
+    <string name="status_you_win">Du vandt!</string>
+    <string name="status_computer_wins">Computeren vandt.</string>
+    <string name="status_white_wins">Hvid vinder!</string>
+    <string name="status_black_wins">Sort vinder!</string>
+    <string name="status_white_sits_out">Hvid har intet træk og står over.</string>
+    <string name="status_black_sits_out">Sort har intet træk og står over.</string>
+    <string name="status_computer_thinking">Computeren tænker…</string>
+    <string name="status_your_move">Din tur (hvid)</string>
+    <string name="status_white_to_move">Hvid i trækket</string>
+    <string name="status_black_to_move">Sort i trækket</string>
+    <string name="tray_on_board">%1$s: %2$d på brættet</string>
+    <string name="tray_off_board">Uden for brættet</string>
+    <string name="bear_off_explanation">Eller flyt brikker ud af brættet. De forlader spillet og lægges i din stak uden for brættet:</string>
+    <string name="bear_off_button">Flyt %1$d ud %2$s</string>
+    <string name="tap_target_help">Tryk på et markeret felt. Tallet viser, hvor mange brikker der flyttes.</string>
+    <string name="new_game">Nyt spil</string>
+    <string name="undo">Fortryd</string>
+    <string name="hint">Tip</string>
+    <string name="save">Gem</string>
+    <string name="load">Indlæs</string>
+    <string name="hint_pick_stack">Tip: Tryk på en af dine stakke for at se dens bedste træk.</string>
+    <string name="hint_thinking">Finder et tip…</string>
+    <string name="hint_better_elsewhere">Tip: Det blinkende træk er stakkens bedste, men der findes et bedre træk et andet sted.</string>
+    <string name="hint_best">Tip: Det blinkende træk er det bedste.</string>
+    <string name="rules">Sådan spiller du: Tryk på en af dine stakke og derefter på et markeret felt. En stak (eller en del af den) flytter præcis lige så mange felter, som der flyttes brikker, og springer over alt imellem. Almindelige træk og sammenlægninger går fremad eller skråt fremad; lige træk kræver et lige antal brikker. Slag (røde) går i alle retninger og tager en hel modstanderstak, der ikke er større end den, der flytter. Et almindeligt træk ud over brættets kant er tilladt: den stak går ud af spillet. Fjern alle modstanderens brikker for at vinde.</string>
+    <string name="cancel">Annuller</string>
+    <string name="back">Tilbage</string>
+    <string name="save_game_title">Gem spil</string>
+    <string name="save_game_name">Navn</string>
+    <string name="load_game_title">Indlæs spil</string>
+    <string name="delete">Slet</string>
+    <string name="message_game_saved">Spil gemt</string>
+    <string name="message_game_loaded">Spil indlæst</string>
+    <string name="message_save_unreadable">Det gemte spil kan ikke indlæses</string>
+    <string name="date_format">%1$d. %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d træk</item>
+        <item quantity="other">%1$d træk</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>jan.</item>
+        <item>feb.</item>
+        <item>mar.</item>
+        <item>apr.</item>
+        <item>maj</item>
+        <item>jun.</item>
+        <item>jul.</item>
+        <item>aug.</item>
+        <item>sep.</item>
+        <item>okt.</item>
+        <item>nov.</item>
+        <item>dec.</item>
+    </string-array>
+</resources>

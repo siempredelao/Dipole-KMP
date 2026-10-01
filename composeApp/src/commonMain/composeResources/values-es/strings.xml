@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Contra el ordenador</string>
+    <string name="mode_two_players">2 jugadores</string>
+    <string name="difficulty_easy">Fácil</string>
+    <string name="difficulty_medium">Medio</string>
+    <string name="difficulty_hard">Difícil</string>
+    <string name="difficulty_easy_description">comete errores</string>
+    <string name="difficulty_medium_description">juega con solidez</string>
+    <string name="difficulty_hard_description">piensa con antelación</string>
+    <string name="player_white">Blancas</string>
+    <string name="player_black">Negras</string>
+    <string name="status_you_win">¡Has ganado!</string>
+    <string name="status_computer_wins">Gana el ordenador.</string>
+    <string name="status_white_wins">¡Ganan las blancas!</string>
+    <string name="status_black_wins">¡Ganan las negras!</string>
+    <string name="status_white_sits_out">Las blancas no tienen movimientos y pasan turno.</string>
+    <string name="status_black_sits_out">Las negras no tienen movimientos y pasan turno.</string>
+    <string name="status_computer_thinking">El ordenador está pensando…</string>
+    <string name="status_your_move">Te toca (blancas)</string>
+    <string name="status_white_to_move">Juegan las blancas</string>
+    <string name="status_black_to_move">Juegan las negras</string>
+    <string name="tray_on_board">%1$s: %2$d en el tablero</string>
+    <string name="tray_off_board">Fuera del tablero</string>
+    <string name="bear_off_explanation">O saca fichas del tablero. Salen del juego y van a tu pila de fuera del tablero:</string>
+    <string name="bear_off_button">Sacar %1$d %2$s</string>
+    <string name="tap_target_help">Toca una casilla resaltada. El número indica cuántas fichas se mueven.</string>
+    <string name="new_game">Nueva partida</string>
+    <string name="undo">Deshacer</string>
+    <string name="hint">Pista</string>
+    <string name="save">Guardar</string>
+    <string name="load">Cargar</string>
+    <string name="hint_pick_stack">Pista: toca una de tus pilas para ver su mejor movimiento.</string>
+    <string name="hint_thinking">Buscando una pista…</string>
+    <string name="hint_better_elsewhere">Pista: el movimiento que parpadea es el mejor de esta pila, pero hay uno mejor en otra.</string>
+    <string name="hint_best">Pista: el movimiento que parpadea es el mejor.</string>
+    <string name="rules">Cómo se juega: toca una de tus pilas y luego una casilla resaltada. Una pila (o parte de ella) avanza exactamente tantas casillas como fichas se mueven, saltando por encima de lo que haya en medio. Los movimientos simples y las fusiones van hacia delante o en diagonal hacia delante; los movimientos rectos necesitan un número par de fichas. Las capturas (en rojo) van en cualquier dirección y se llevan una pila enemiga entera que no sea mayor que la que se mueve. Se permite un movimiento simple que se salga del tablero: esa pila queda fuera del juego. Elimina todas las fichas enemigas para ganar.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="back">Atrás</string>
+    <string name="save_game_title">Guardar partida</string>
+    <string name="save_game_name">Nombre</string>
+    <string name="load_game_title">Cargar partida</string>
+    <string name="delete">Borrar</string>
+    <string name="message_game_saved">Partida guardada</string>
+    <string name="message_game_loaded">Partida cargada</string>
+    <string name="message_save_unreadable">No se puede cargar esa partida</string>
+    <string name="date_format">%1$d %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d movimiento</item>
+        <item quantity="other">%1$d movimientos</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>ene</item>
+        <item>feb</item>
+        <item>mar</item>
+        <item>abr</item>
+        <item>may</item>
+        <item>jun</item>
+        <item>jul</item>
+        <item>ago</item>
+        <item>sept</item>
+        <item>oct</item>
+        <item>nov</item>
+        <item>dic</item>
+    </string-array>
+</resources>

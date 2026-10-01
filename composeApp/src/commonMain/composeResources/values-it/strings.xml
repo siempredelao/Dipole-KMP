@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Contro il computer</string>
+    <string name="mode_two_players">2 giocatori</string>
+    <string name="difficulty_easy">Facile</string>
+    <string name="difficulty_medium">Medio</string>
+    <string name="difficulty_hard">Difficile</string>
+    <string name="difficulty_easy_description">commette errori</string>
+    <string name="difficulty_medium_description">gioca in modo solido</string>
+    <string name="difficulty_hard_description">pensa in anticipo</string>
+    <string name="player_white">Bianco</string>
+    <string name="player_black">Nero</string>
+    <string name="status_you_win">Hai vinto!</string>
+    <string name="status_computer_wins">Vince il computer.</string>
+    <string name="status_white_wins">Vince il bianco!</string>
+    <string name="status_black_wins">Vince il nero!</string>
+    <string name="status_white_sits_out">Il bianco non ha mosse e salta il turno.</string>
+    <string name="status_black_sits_out">Il nero non ha mosse e salta il turno.</string>
+    <string name="status_computer_thinking">Il computer sta pensando…</string>
+    <string name="status_your_move">Tocca a te (bianco)</string>
+    <string name="status_white_to_move">Muove il bianco</string>
+    <string name="status_black_to_move">Muove il nero</string>
+    <string name="tray_on_board">%1$s: %2$d sulla scacchiera</string>
+    <string name="tray_off_board">Fuori dalla scacchiera</string>
+    <string name="bear_off_explanation">Oppure porta pedine fuori dalla scacchiera. Escono dal gioco e vanno nella tua pila esterna:</string>
+    <string name="bear_off_button">Porta fuori %1$d %2$s</string>
+    <string name="tap_target_help">Tocca una casella evidenziata. Il numero indica quante pedine si muovono.</string>
+    <string name="new_game">Nuova partita</string>
+    <string name="undo">Annulla mossa</string>
+    <string name="hint">Suggerimento</string>
+    <string name="save">Salva</string>
+    <string name="load">Carica</string>
+    <string name="hint_pick_stack">Suggerimento: tocca una delle tue pile per vedere la sua mossa migliore.</string>
+    <string name="hint_thinking">Cerco un suggerimento…</string>
+    <string name="hint_better_elsewhere">Suggerimento: la mossa che lampeggia è la migliore di questa pila, ma ce n’è una migliore altrove.</string>
+    <string name="hint_best">Suggerimento: la mossa che lampeggia è la migliore.</string>
+    <string name="rules">Come si gioca: tocca una delle tue pile, poi una casella evidenziata. Una pila (o parte di essa) si sposta di tante caselle quante sono le pedine mosse, scavalcando tutto ciò che si trova in mezzo. Le mosse semplici e le fusioni vanno in avanti o in diagonale in avanti; le mosse in linea retta richiedono un numero pari di pedine. Le catture (in rosso) vanno in qualsiasi direzione e prendono un’intera pila avversaria non più grande di quella che si muove. È consentita una mossa semplice che uscirebbe dalla scacchiera: quella pila esce dal gioco. Elimina tutte le pedine avversarie per vincere.</string>
+    <string name="cancel">Annulla</string>
+    <string name="back">Indietro</string>
+    <string name="save_game_title">Salva partita</string>
+    <string name="save_game_name">Nome</string>
+    <string name="load_game_title">Carica partita</string>
+    <string name="delete">Elimina</string>
+    <string name="message_game_saved">Partita salvata</string>
+    <string name="message_game_loaded">Partita caricata</string>
+    <string name="message_save_unreadable">Impossibile caricare questa partita</string>
+    <string name="date_format">%1$d %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d mossa</item>
+        <item quantity="other">%1$d mosse</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>gen</item>
+        <item>feb</item>
+        <item>mar</item>
+        <item>apr</item>
+        <item>mag</item>
+        <item>giu</item>
+        <item>lug</item>
+        <item>ago</item>
+        <item>set</item>
+        <item>ott</item>
+        <item>nov</item>
+        <item>dic</item>
+    </string-array>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Gegen den Computer</string>
+    <string name="mode_two_players">2 Spieler</string>
+    <string name="difficulty_easy">Leicht</string>
+    <string name="difficulty_medium">Mittel</string>
+    <string name="difficulty_hard">Schwer</string>
+    <string name="difficulty_easy_description">macht Fehler</string>
+    <string name="difficulty_medium_description">spielt solide</string>
+    <string name="difficulty_hard_description">denkt voraus</string>
+    <string name="player_white">Weiß</string>
+    <string name="player_black">Schwarz</string>
+    <string name="status_you_win">Du hast gewonnen!</string>
+    <string name="status_computer_wins">Der Computer gewinnt.</string>
+    <string name="status_white_wins">Weiß gewinnt!</string>
+    <string name="status_black_wins">Schwarz gewinnt!</string>
+    <string name="status_white_sits_out">Weiß hat keinen Zug und setzt aus.</string>
+    <string name="status_black_sits_out">Schwarz hat keinen Zug und setzt aus.</string>
+    <string name="status_computer_thinking">Der Computer denkt nach…</string>
+    <string name="status_your_move">Du bist am Zug (Weiß)</string>
+    <string name="status_white_to_move">Weiß ist am Zug</string>
+    <string name="status_black_to_move">Schwarz ist am Zug</string>
+    <string name="tray_on_board">%1$s: %2$d auf dem Brett</string>
+    <string name="tray_off_board">Neben dem Brett</string>
+    <string name="bear_off_explanation">Oder zieh Steine vom Brett. Sie scheiden aus und kommen auf deinen Stapel neben dem Brett:</string>
+    <string name="bear_off_button">%1$d vom Brett %2$s</string>
+    <string name="tap_target_help">Tippe auf ein markiertes Feld. Die Zahl zeigt, wie viele Steine ziehen.</string>
+    <string name="new_game">Neues Spiel</string>
+    <string name="undo">Rückgängig</string>
+    <string name="hint">Tipp</string>
+    <string name="save">Speichern</string>
+    <string name="load">Laden</string>
+    <string name="hint_pick_stack">Tipp: Tippe auf einen deiner Stapel, um seinen besten Zug zu sehen.</string>
+    <string name="hint_thinking">Suche einen Tipp…</string>
+    <string name="hint_better_elsewhere">Tipp: Der blinkende Zug ist der beste dieses Stapels, aber anderswo gibt es einen besseren.</string>
+    <string name="hint_best">Tipp: Der blinkende Zug ist der beste.</string>
+    <string name="rules">So wird gespielt: Tippe auf einen deiner Stapel und dann auf ein markiertes Feld. Ein Stapel (oder ein Teil davon) zieht genau so viele Felder weit, wie Steine bewegt werden, und überspringt alles dazwischen. Einfache Züge und Vereinigungen gehen nach vorn oder schräg nach vorn; gerade Züge brauchen eine gerade Anzahl Steine. Schlagzüge (rot) gehen in jede Richtung und nehmen einen ganzen gegnerischen Stapel, der nicht größer ist als der ziehende. Ein einfacher Zug über den Brettrand hinaus ist erlaubt: Dieser Stapel scheidet aus dem Spiel aus. Entferne alle gegnerischen Steine, um zu gewinnen.</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="back">Zurück</string>
+    <string name="save_game_title">Spiel speichern</string>
+    <string name="save_game_name">Name</string>
+    <string name="load_game_title">Spiel laden</string>
+    <string name="delete">Löschen</string>
+    <string name="message_game_saved">Spiel gespeichert</string>
+    <string name="message_game_loaded">Spiel geladen</string>
+    <string name="message_save_unreadable">Dieser Spielstand kann nicht geladen werden</string>
+    <string name="date_format">%1$d. %2$s %3$d, %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d Zug</item>
+        <item quantity="other">%1$d Züge</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>Jan.</item>
+        <item>Feb.</item>
+        <item>März</item>
+        <item>Apr.</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>Aug.</item>
+        <item>Sept.</item>
+        <item>Okt.</item>
+        <item>Nov.</item>
+        <item>Dez.</item>
+    </string-array>
+</resources>

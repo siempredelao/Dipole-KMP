@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Contra o computador</string>
+    <string name="mode_two_players">2 jogadores</string>
+    <string name="difficulty_easy">Fácil</string>
+    <string name="difficulty_medium">Médio</string>
+    <string name="difficulty_hard">Difícil</string>
+    <string name="difficulty_easy_description">comete erros</string>
+    <string name="difficulty_medium_description">joga com solidez</string>
+    <string name="difficulty_hard_description">pensa à frente</string>
+    <string name="player_white">Brancas</string>
+    <string name="player_black">Pretas</string>
+    <string name="status_you_win">Você ganhou!</string>
+    <string name="status_computer_wins">O computador ganhou.</string>
+    <string name="status_white_wins">As brancas ganham!</string>
+    <string name="status_black_wins">As pretas ganham!</string>
+    <string name="status_white_sits_out">As brancas não têm jogadas e passam a vez.</string>
+    <string name="status_black_sits_out">As pretas não têm jogadas e passam a vez.</string>
+    <string name="status_computer_thinking">O computador está pensando…</string>
+    <string name="status_your_move">Sua vez (brancas)</string>
+    <string name="status_white_to_move">Vez das brancas</string>
+    <string name="status_black_to_move">Vez das pretas</string>
+    <string name="tray_on_board">%1$s: %2$d no tabuleiro</string>
+    <string name="tray_off_board">Fora do tabuleiro</string>
+    <string name="bear_off_explanation">Ou tire peças do tabuleiro. Elas saem do jogo e vão para a sua pilha fora do tabuleiro:</string>
+    <string name="bear_off_button">Tirar %1$d %2$s</string>
+    <string name="tap_target_help">Toque em uma casa destacada. O número mostra quantas peças se movem.</string>
+    <string name="new_game">Novo jogo</string>
+    <string name="undo">Desfazer</string>
+    <string name="hint">Dica</string>
+    <string name="save">Salvar</string>
+    <string name="load">Carregar</string>
+    <string name="hint_pick_stack">Dica: toque em uma das suas pilhas para ver a melhor jogada dela.</string>
+    <string name="hint_thinking">Procurando uma dica…</string>
+    <string name="hint_better_elsewhere">Dica: a jogada que pisca é a melhor desta pilha, mas existe uma jogada melhor em outra.</string>
+    <string name="hint_best">Dica: a jogada que pisca é a melhor.</string>
+    <string name="rules">Como jogar: toque em uma das suas pilhas e depois em uma casa destacada. Uma pilha (ou parte dela) anda exatamente tantas casas quanto o número de peças movidas, saltando por cima do que estiver no caminho. Movimentos simples e fusões vão para a frente ou na diagonal para a frente; movimentos em linha reta precisam de um número par de peças. Capturas (em vermelho) vão em qualquer direção e tomam uma pilha inimiga inteira que não seja maior que a que se move. Um movimento simples que passaria da borda do tabuleiro é permitido: essa pilha sai do jogo. Elimine todas as peças inimigas para vencer.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="back">Voltar</string>
+    <string name="save_game_title">Salvar jogo</string>
+    <string name="save_game_name">Nome</string>
+    <string name="load_game_title">Carregar jogo</string>
+    <string name="delete">Excluir</string>
+    <string name="message_game_saved">Jogo salvo</string>
+    <string name="message_game_loaded">Jogo carregado</string>
+    <string name="message_save_unreadable">Não foi possível carregar esse jogo</string>
+    <string name="date_format">%1$d %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d jogada</item>
+        <item quantity="other">%1$d jogadas</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>jan</item>
+        <item>fev</item>
+        <item>mar</item>
+        <item>abr</item>
+        <item>mai</item>
+        <item>jun</item>
+        <item>jul</item>
+        <item>ago</item>
+        <item>set</item>
+        <item>out</item>
+        <item>nov</item>
+        <item>dez</item>
+    </string-array>
+</resources>

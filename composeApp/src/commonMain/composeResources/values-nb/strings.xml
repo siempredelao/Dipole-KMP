@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mode_vs_computer">Mot datamaskinen</string>
+    <string name="mode_two_players">2 spillere</string>
+    <string name="difficulty_easy">Lett</string>
+    <string name="difficulty_medium">Middels</string>
+    <string name="difficulty_hard">Vanskelig</string>
+    <string name="difficulty_easy_description">gjør feil</string>
+    <string name="difficulty_medium_description">spiller solid</string>
+    <string name="difficulty_hard_description">tenker fremover</string>
+    <string name="player_white">Hvit</string>
+    <string name="player_black">Svart</string>
+    <string name="status_you_win">Du vant!</string>
+    <string name="status_computer_wins">Datamaskinen vant.</string>
+    <string name="status_white_wins">Hvit vinner!</string>
+    <string name="status_black_wins">Svart vinner!</string>
+    <string name="status_white_sits_out">Hvit har ingen trekk og står over.</string>
+    <string name="status_black_sits_out">Svart har ingen trekk og står over.</string>
+    <string name="status_computer_thinking">Datamaskinen tenker…</string>
+    <string name="status_your_move">Din tur (hvit)</string>
+    <string name="status_white_to_move">Hvit i trekket</string>
+    <string name="status_black_to_move">Svart i trekket</string>
+    <string name="tray_on_board">%1$s: %2$d på brettet</string>
+    <string name="tray_off_board">Utenfor brettet</string>
+    <string name="bear_off_explanation">Eller flytt brikker ut av brettet. De går ut av spillet og havner i stabelen din utenfor brettet:</string>
+    <string name="bear_off_button">Flytt %1$d ut %2$s</string>
+    <string name="tap_target_help">Trykk på en markert rute. Tallet viser hvor mange brikker som flyttes.</string>
+    <string name="new_game">Nytt spill</string>
+    <string name="undo">Angre</string>
+    <string name="hint">Hint</string>
+    <string name="save">Lagre</string>
+    <string name="load">Last inn</string>
+    <string name="hint_pick_stack">Hint: Trykk på en av stablene dine for å se det beste trekket.</string>
+    <string name="hint_thinking">Finner et hint…</string>
+    <string name="hint_better_elsewhere">Hint: Det blinkende trekket er stabelens beste, men det finnes et bedre trekk et annet sted.</string>
+    <string name="hint_best">Hint: Det blinkende trekket er det beste.</string>
+    <string name="rules">Slik spiller du: Trykk på en av stablene dine og deretter på en markert rute. En stabel (eller en del av den) flytter nøyaktig like mange ruter som antall brikker som flyttes, og hopper over alt imellom. Vanlige trekk og sammenslåinger går fremover eller skrått fremover; rette trekk krever et partall brikker. Slag (røde) går i alle retninger og tar en hel motstanderstabel som ikke er større enn den som flytter. Et vanlig trekk forbi kanten av brettet er tillatt: den stabelen går ut av spillet. Fjern alle motstanderens brikker for å vinne.</string>
+    <string name="cancel">Avbryt</string>
+    <string name="back">Tilbake</string>
+    <string name="save_game_title">Lagre spill</string>
+    <string name="save_game_name">Navn</string>
+    <string name="load_game_title">Last inn spill</string>
+    <string name="delete">Slett</string>
+    <string name="message_game_saved">Spill lagret</string>
+    <string name="message_game_loaded">Spill lastet inn</string>
+    <string name="message_save_unreadable">Det lagrede spillet kan ikke lastes inn</string>
+    <string name="date_format">%1$d. %2$s %3$d %4$s</string>
+    <plurals name="moves">
+        <item quantity="one">%1$d trekk</item>
+        <item quantity="other">%1$d trekk</item>
+    </plurals>
+    <string-array name="months_short">
+        <item>jan.</item>
+        <item>feb.</item>
+        <item>mar.</item>
+        <item>apr.</item>
+        <item>mai</item>
+        <item>jun.</item>
+        <item>jul.</item>
+        <item>aug.</item>
+        <item>sep.</item>
+        <item>okt.</item>
+        <item>nov.</item>
+        <item>des.</item>
+    </string-array>
+</resources>

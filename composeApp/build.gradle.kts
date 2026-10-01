@@ -56,10 +56,15 @@ kotlin {
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.core)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.koin.test)
+            implementation(libs.multiplatform.settings.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)

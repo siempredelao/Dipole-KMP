@@ -21,7 +21,7 @@ Play against the computer or with two players on one device.
 ## Project layout
 
 - `composeApp/src/commonMain/.../game` - rules engine (`Dipole.kt`) and computer opponent
-  (`ComputerPlayer.kt`), plain Kotlin with no UI dependencies.
+  (`ComputerPlayer.kt`, which also works out the move hints), plain Kotlin with no UI dependencies.
 - `composeApp/src/commonMain/.../game` also has `GameSession`, the state of a game in progress
   (mode, moves, undo).
 - `composeApp/src/commonMain/.../saves` - saved games, stored with multiplatform-settings.

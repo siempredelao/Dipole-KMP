@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -140,6 +141,12 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { onAction(DipoleAction.NewGameClicked) }) { Text("New game") }
             OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) { Text("Undo") }
+            val onHint = { onAction(DipoleAction.HintClicked) }
+            if (uiState.hintsOn) {
+                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = HintColor)) { Text("Hint") }
+            } else {
+                OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text("Hint") }
+            }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             TextButton(onClick = { onAction(DipoleAction.SaveClicked) }) { Text("Save") }
@@ -186,9 +193,13 @@ private const val MESSAGE_MILLIS = 2_000L
 private const val BLINKS = 3
 private const val BLINK_HALF_MILLIS = 200
 
-/** Fades in and out [BLINKS] times whenever a new [hint] arrives, then stays at 0. */
+/**
+ * Fades in and out [BLINKS] times whenever a new [hint] arrives, then stays at 0. Previews don't
+ * animate, so there the hint is simply shown.
+ */
 @Composable
 private fun blinkAlpha(hint: Hint?): Float {
+    if (LocalInspectionMode.current) return if (hint == null) 0f else 1f
     val alpha = remember { Animatable(0f) }
     LaunchedEffect(hint) {
         alpha.snapTo(0f)

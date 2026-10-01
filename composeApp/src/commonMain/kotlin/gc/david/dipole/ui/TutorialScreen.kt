@@ -75,12 +75,12 @@ import org.jetbrains.compose.resources.stringResource
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TutorialScreen(page: TutorialPage, onAction: (DipoleAction) -> Unit) {
+fun TutorialScreen(page: TutorialPage, onAction: (TutorialAction) -> Unit) {
     val pages = TutorialPage.entries
     val isFirst = page.ordinal == 0
     val isLast = page.ordinal == pages.lastIndex
     BackHandler {
-        onAction(if (isFirst) DipoleAction.TutorialClosed else DipoleAction.TutorialBackClicked)
+        onAction(if (isFirst) TutorialAction.Closed else TutorialAction.BackClicked)
     }
     val pagerState = rememberPagerState(initialPage = page.ordinal) { pages.size }
     // The ViewModel owns the page: follow it when Back or Next change it...
@@ -89,7 +89,7 @@ fun TutorialScreen(page: TutorialPage, onAction: (DipoleAction) -> Unit) {
     }
     // ...and tell it when the player swipes to another page.
     LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.settledPage }.collect { onAction(DipoleAction.TutorialPageShown(pages[it])) }
+        snapshotFlow { pagerState.settledPage }.collect { onAction(TutorialAction.PageShown(pages[it])) }
     }
     val colors = LocalAppColors.current
 
@@ -107,7 +107,7 @@ fun TutorialScreen(page: TutorialPage, onAction: (DipoleAction) -> Unit) {
                 modifier = Modifier.weight(1f),
             )
             if (!isLast) {
-                TextButton(onClick = { onAction(DipoleAction.TutorialClosed) }) {
+                TextButton(onClick = { onAction(TutorialAction.Closed) }) {
                     Text(stringResource(Res.string.tutorial_skip))
                 }
             }
@@ -118,12 +118,12 @@ fun TutorialScreen(page: TutorialPage, onAction: (DipoleAction) -> Unit) {
         PageDots(current = page.ordinal, count = pages.size)
         Row(Modifier.widthIn(max = 560.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             if (!isFirst) {
-                OutlinedButton(onClick = { onAction(DipoleAction.TutorialBackClicked) }) {
+                OutlinedButton(onClick = { onAction(TutorialAction.BackClicked) }) {
                     Text(stringResource(Res.string.back))
                 }
             }
             Spacer(Modifier.weight(1f))
-            Button(onClick = { onAction(DipoleAction.TutorialNextClicked) }) {
+            Button(onClick = { onAction(TutorialAction.NextClicked) }) {
                 Text(stringResource(if (isLast) Res.string.tutorial_start else Res.string.tutorial_next))
             }
         }

@@ -13,7 +13,6 @@ import gc.david.dipole.saves.SavedGame
 import gc.david.dipole.saves.SavedGamesRepository
 import gc.david.dipole.saves.SettingsGamePreferences
 import gc.david.dipole.saves.SettingsSavedGamesRepository
-import gc.david.dipole.tutorial.TutorialPage
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -46,8 +45,6 @@ class DipoleViewModel(
         DipoleUiState(
             session = initialSession,
             hasSavedGames = repository.list().isNotEmpty(),
-            // The very first launch opens the tutorial.
-            tutorialPage = if (preferences.tutorialSeen) null else TutorialPage.entries.first(),
         ),
     )
     val uiState: StateFlow<DipoleUiState> = _uiState.asStateFlow()
@@ -91,22 +88,6 @@ class DipoleViewModel(
             DipoleAction.AppearanceClicked -> _uiState.update {
                 it.copy(menuOpen = false, dialog = DipoleDialog.Appearance)
             }
-            DipoleAction.RulesClicked -> _uiState.update { it.copy(showRules = true) }
-            DipoleAction.RulesClosed -> _uiState.update { it.copy(showRules = false) }
-            DipoleAction.TutorialClicked -> _uiState.update { it.copy(tutorialPage = TutorialPage.entries.first()) }
-            is DipoleAction.TutorialPageShown -> _uiState.update {
-                if (it.tutorialPage == null) it else it.copy(tutorialPage = action.page)
-            }
-            DipoleAction.TutorialNextClicked -> {
-                val page = _uiState.value.tutorialPage ?: return
-                val next = TutorialPage.entries.getOrNull(page.ordinal + 1)
-                if (next == null) closeTutorial() else _uiState.update { it.copy(tutorialPage = next) }
-            }
-            DipoleAction.TutorialBackClicked -> _uiState.update {
-                val page = it.tutorialPage ?: return@update it
-                it.copy(tutorialPage = TutorialPage.entries.getOrNull(page.ordinal - 1) ?: page)
-            }
-            DipoleAction.TutorialClosed -> closeTutorial()
             DipoleAction.SaveClicked -> _uiState.update {
                 it.copy(menuOpen = false, dialog = DipoleDialog.Save(clock.now()))
             }
@@ -120,11 +101,6 @@ class DipoleViewModel(
             DipoleAction.MessageShown -> _uiState.update { it.copy(message = null) }
             DipoleAction.CelebrationShown -> _uiState.update { it.copy(celebrating = false) }
         }
-    }
-
-    private fun closeTutorial() {
-        preferences.tutorialSeen = true
-        _uiState.update { it.copy(tutorialPage = null) }
     }
 
     private fun onSquareTapped(action: DipoleAction.SquareTapped) {

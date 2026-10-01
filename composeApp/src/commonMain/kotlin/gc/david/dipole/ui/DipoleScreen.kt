@@ -117,18 +117,8 @@ fun DipoleScreen(
     settings: SettingsUiState,
     onAction: (DipoleAction) -> Unit,
     onSettingsAction: (SettingsAction) -> Unit,
+    onRulesClick: () -> Unit,
 ) {
-    uiState.tutorialPage?.let { page ->
-        TutorialScreen(page, onAction)
-        return
-    }
-    if (uiState.showRules) {
-        RulesScreen(
-            onBack = { onAction(DipoleAction.RulesClosed) },
-            onShowTutorial = { onAction(DipoleAction.TutorialClicked) },
-        )
-        return
-    }
     val session = uiState.session
     val state = uiState.state
     val bearOffs = uiState.bearOffs
@@ -159,7 +149,7 @@ fun DipoleScreen(
                     // An invisible spacer the size of the icon keeps the title centred.
                     Spacer(Modifier.size(48.dp))
                     Text("Dipole", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = appColors.text)
-                    IconButton(onClick = { onAction(DipoleAction.RulesClicked) }) {
+                    IconButton(onClick = onRulesClick) {
                         Icon(
                             painterResource(Res.drawable.ic_info),
                             contentDescription = stringResource(Res.string.rules_title),

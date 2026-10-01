@@ -171,6 +171,20 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
         PlayerTray(state, Player.White, trayModifier)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
+                Text(stringResource(Res.string.undo))
+            }
+            val onHint = { onAction(DipoleAction.HintClicked) }
+            if (uiState.hintsOn) {
+                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = HintColor)) {
+                    Text(stringResource(Res.string.hint))
+                }
+            } else {
+                OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
+            }
+        }
+        hintText(uiState)?.let { Text(stringResource(it), color = HintColor, textAlign = TextAlign.Center) }
         if (bearOffs.isNotEmpty()) {
             Text(
                 stringResource(Res.string.bear_off_explanation),
@@ -190,20 +204,6 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             }
         } else if (uiState.selected != null) {
             Text(stringResource(Res.string.tap_target_help), color = Color.LightGray)
-        }
-        hintText(uiState)?.let { Text(stringResource(it), color = HintColor, textAlign = TextAlign.Center) }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = { onAction(DipoleAction.UndoClicked) }, enabled = session.canUndo) {
-                Text(stringResource(Res.string.undo))
-            }
-            val onHint = { onAction(DipoleAction.HintClicked) }
-            if (uiState.hintsOn) {
-                Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = HintColor)) {
-                    Text(stringResource(Res.string.hint))
-                }
-            } else {
-                OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
-            }
         }
         uiState.message?.let { message ->
             Text(stringResource(message.text), color = Color.LightGray)

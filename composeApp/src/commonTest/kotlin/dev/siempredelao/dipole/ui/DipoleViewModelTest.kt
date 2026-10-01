@@ -1,10 +1,12 @@
 package dev.siempredelao.dipole.ui
 
+import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.Direction
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameState
 import dev.siempredelao.dipole.game.Move
 import dev.siempredelao.dipole.game.Player
+import dev.siempredelao.dipole.saves.GamePreferences
 import dev.siempredelao.dipole.saves.SavedGame
 import dev.siempredelao.dipole.saves.SavedGamesRepository
 import kotlin.test.AfterTest
@@ -42,7 +44,11 @@ class DipoleViewModelTest {
     @AfterTest
     fun tearDown() = Dispatchers.resetMain()
 
-    private fun viewModel() = DipoleViewModel(repository, clock = clock, computeDispatcher = dispatcher)
+    private val preferences = object : GamePreferences {
+        override var lastDifficulty = Difficulty.Medium
+    }
+
+    private fun viewModel() = DipoleViewModel(repository, preferences, clock = clock, computeDispatcher = dispatcher)
 
     private fun TestScope.play(vm: DipoleViewModel, move: Move) {
         vm.onAction(DipoleAction.SquareTapped(move.from))
@@ -81,6 +87,24 @@ class DipoleViewModelTest {
         assertNull(vm.uiState.value.dialog)
         assertEquals(GameMode.TwoPlayers, vm.uiState.value.session.mode)
         assertTrue(vm.uiState.value.session.moves.isEmpty())
+    }
+
+    @Test
+    fun choosingVsComputerAsksForTheDifficulty() = runTest(dispatcher) {
+        preferences.lastDifficulty = Difficulty.Easy
+        val vm = viewModel()
+        assertEquals(Difficulty.Easy, vm.uiState.value.session.difficulty)
+        vm.onAction(DipoleAction.NewGameClicked)
+        vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
+        assertEquals(DipoleDialog.ChooseDifficulty(Difficulty.Easy), vm.uiState.value.dialog)
+        vm.onAction(DipoleAction.BackToModeClicked)
+        assertEquals(DipoleDialog.NewGame, vm.uiState.value.dialog)
+        vm.onAction(DipoleAction.ModeChosen(GameMode.VsComputer))
+        vm.onAction(DipoleAction.DifficultyChosen(Difficulty.Hard))
+        assertNull(vm.uiState.value.dialog)
+        assertEquals(GameMode.VsComputer, vm.uiState.value.session.mode)
+        assertEquals(Difficulty.Hard, vm.uiState.value.session.difficulty)
+        assertEquals(Difficulty.Hard, preferences.lastDifficulty)
     }
 
     @Test

@@ -3,11 +3,14 @@ package dev.siempredelao.dipole.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.siempredelao.dipole.game.ComputerPlayer
+import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameSession
 import dev.siempredelao.dipole.game.Move
+import dev.siempredelao.dipole.saves.GamePreferences
 import dev.siempredelao.dipole.saves.SavedGame
 import dev.siempredelao.dipole.saves.SavedGamesRepository
+import dev.siempredelao.dipole.saves.SettingsGamePreferences
 import dev.siempredelao.dipole.saves.SettingsSavedGamesRepository
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,14 +26,15 @@ import kotlinx.coroutines.withContext
 
 class DipoleViewModel(
     private val repository: SavedGamesRepository = SettingsSavedGamesRepository(),
-    private val computer: ComputerPlayer = ComputerPlayer(),
+    private val preferences: GamePreferences = SettingsGamePreferences(),
+    private val computerFor: (Difficulty) -> ComputerPlayer = { ComputerPlayer.forDifficulty(it) },
     private val clock: Clock = Clock.System,
     private val computeDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         DipoleUiState(
-            session = GameSession.new(GameMode.VsComputer),
+            session = GameSession.new(GameMode.VsComputer, preferences.lastDifficulty),
             hasSavedGames = repository.list().isNotEmpty(),
         ),
     )
@@ -43,7 +47,17 @@ class DipoleViewModel(
             is DipoleAction.SquareTapped -> onSquareTapped(action)
             is DipoleAction.BearOffChosen -> play(action.move)
             DipoleAction.NewGameClicked -> _uiState.update { it.copy(dialog = DipoleDialog.NewGame) }
-            is DipoleAction.ModeChosen -> startSession(GameSession.new(action.mode), message = null)
+            is DipoleAction.ModeChosen -> when (action.mode) {
+                GameMode.TwoPlayers -> startSession(GameSession.new(GameMode.TwoPlayers), message = null)
+                GameMode.VsComputer -> _uiState.update {
+                    it.copy(dialog = DipoleDialog.ChooseDifficulty(preferences.lastDifficulty))
+                }
+            }
+            is DipoleAction.DifficultyChosen -> {
+                preferences.lastDifficulty = action.difficulty
+                startSession(GameSession.new(GameMode.VsComputer, action.difficulty), message = null)
+            }
+            DipoleAction.BackToModeClicked -> _uiState.update { it.copy(dialog = DipoleDialog.NewGame) }
             DipoleAction.UndoClicked -> {
                 if (_uiState.value.session.canUndo) startSession(_uiState.value.session.undo(), message = null)
             }
@@ -114,7 +128,7 @@ class DipoleViewModel(
         if (!session.isComputerTurn) return
         computerMove = viewModelScope.launch {
             delay(COMPUTER_DELAY_MILLIS)
-            val move = withContext(computeDispatcher) { computer.chooseMove(session.state) } ?: return@launch
+            val move = withContext(computeDispatcher) { computerFor(session.difficulty).chooseMove(session.state) } ?: return@launch
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
             _uiState.update { it.copy(session = session.play(move), selected = null) }

@@ -145,6 +145,12 @@ fun DipoleScreen(uiState: DipoleUiState, onAction: (DipoleAction) -> Unit) {
             onModeChosen = { onAction(DipoleAction.ModeChosen(it)) },
             onDismiss = dismiss,
         )
+        is DipoleDialog.ChooseDifficulty -> DifficultyDialog(
+            suggested = dialog.suggested,
+            onDifficultyChosen = { onAction(DipoleAction.DifficultyChosen(it)) },
+            onBack = { onAction(DipoleAction.BackToModeClicked) },
+            onDismiss = dismiss,
+        )
         is DipoleDialog.Save -> SaveGameDialog(
             defaultName = dialog.defaultName,
             onSave = { onAction(DipoleAction.SaveConfirmed(it)) },

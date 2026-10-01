@@ -1,5 +1,6 @@
 package dev.siempredelao.dipole.ui
 
+import dev.siempredelao.dipole.game.Difficulty
 import dev.siempredelao.dipole.game.GameMode
 import dev.siempredelao.dipole.game.GameSession
 import dev.siempredelao.dipole.game.GameState
@@ -33,6 +34,10 @@ data class DipoleUiState(
 
 sealed interface DipoleDialog {
     data object NewGame : DipoleDialog
+
+    /** Second step of New game against the computer, with [suggested] picked last time. */
+    data class ChooseDifficulty(val suggested: Difficulty) : DipoleDialog
+
     data class Save(val defaultName: String) : DipoleDialog
     data class Load(val savedGames: List<SavedGame>) : DipoleDialog
 }
@@ -42,6 +47,8 @@ sealed interface DipoleAction {
     data class BearOffChosen(val move: Move) : DipoleAction
     data object NewGameClicked : DipoleAction
     data class ModeChosen(val mode: GameMode) : DipoleAction
+    data class DifficultyChosen(val difficulty: Difficulty) : DipoleAction
+    data object BackToModeClicked : DipoleAction
     data object UndoClicked : DipoleAction
     data object SaveClicked : DipoleAction
     data class SaveConfirmed(val name: String) : DipoleAction

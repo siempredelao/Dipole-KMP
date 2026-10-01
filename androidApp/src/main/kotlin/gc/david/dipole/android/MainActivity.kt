@@ -20,19 +20,14 @@ class MainActivity : ComponentActivity() {
             val shownAt = SystemClock.uptimeMillis()
             splashScreen.setKeepOnScreenCondition { SystemClock.uptimeMillis() - shownAt < SPLASH_ANIMATION_MILLIS }
         }
-        splashScreen.setOnExitAnimationListener { splash ->
-            splash.view.animate()
-                .alpha(0f)
-                .setDuration(SPLASH_FADE_MILLIS)
-                .withEndAction { splash.remove() }
-                .start()
-        }
+        // No custom exit animation: Android 12+ draws the splash icon on its own surface, which
+        // ignored our fade and vanished before the background, making the splash blink. The
+        // system's own exit fades icon and background together.
         setContent { DipoleApp() }
     }
 
     private companion object {
         /** Length of drawable-v31/splash_icon_animated.xml. */
         const val SPLASH_ANIMATION_MILLIS = 1_350L
-        const val SPLASH_FADE_MILLIS = 200L
     }
 }

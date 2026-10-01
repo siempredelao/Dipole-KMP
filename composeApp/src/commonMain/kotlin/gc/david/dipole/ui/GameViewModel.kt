@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.ComputerPlayerFactory
-import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Square
 import gc.david.dipole.saves.GamePreferences
@@ -33,7 +33,7 @@ class GameViewModel(
     private val clock: Clock,
     private val computeDispatcher: CoroutineDispatcher,
     /** The game to open with; by default a new one against the computer with the last choices. */
-    initialSession: GameSession = GameSession.new(
+    initialSession: GameSession = GameSessions.new(
         GameMode.VsComputer,
         preferences.lastDifficulty,
         humanSide = preferences.lastSide,
@@ -62,7 +62,7 @@ class GameViewModel(
             is GameAction.BearOffChosen -> play(action.move)
             GameAction.NewGameClicked -> _uiState.update { it.copy(menuOpen = false, dialog = GameDialog.NewGame) }
             is GameAction.ModeChosen -> when (action.mode) {
-                GameMode.TwoPlayers -> startSession(GameSession.new(GameMode.TwoPlayers), message = null)
+                GameMode.TwoPlayers -> startSession(GameSessions.new(GameMode.TwoPlayers), message = null)
                 GameMode.VsComputer -> _uiState.update {
                     it.copy(dialog = GameDialog.ChooseDifficulty(preferences.lastDifficulty, preferences.lastSide))
                 }
@@ -75,11 +75,11 @@ class GameViewModel(
                 val side = (_uiState.value.dialog as? GameDialog.ChooseDifficulty)?.side ?: preferences.lastSide
                 preferences.lastDifficulty = action.difficulty
                 preferences.lastSide = side
-                startSession(GameSession.new(GameMode.VsComputer, action.difficulty, humanSide = side), message = null)
+                startSession(GameSessions.new(GameMode.VsComputer, action.difficulty, humanSide = side), message = null)
             }
             GameAction.BackToModeClicked -> _uiState.update { it.copy(dialog = GameDialog.NewGame) }
             GameAction.UndoClicked -> {
-                if (_uiState.value.session.canUndo) startSession(_uiState.value.session.undo(), message = null)
+                if (GameSessions.canUndo(_uiState.value.session)) startSession(GameSessions.undo(_uiState.value.session), message = null)
             }
             GameAction.HintClicked -> toggleHints()
             GameAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
@@ -141,8 +141,8 @@ class GameViewModel(
 
     private fun play(move: Move) {
         val session = _uiState.value.session
-        if (session.isComputerTurn || !DipoleRules.isLegal(session.state, move)) return
-        val next = session.play(move)
+        if (GameSessions.isComputerTurn(session) || !DipoleRules.isLegal(session.state, move)) return
+        val next = GameSessions.play(session, move)
         startSession(next, message = null)
         celebrateIfHumanWon(next)
     }
@@ -191,13 +191,13 @@ class GameViewModel(
     private fun playComputerIfItsTurn() {
         computerMove?.cancel()
         val session = _uiState.value.session
-        if (!session.isComputerTurn) return
+        if (!GameSessions.isComputerTurn(session)) return
         computerMove = viewModelScope.launch {
             delay(COMPUTER_DELAY_MILLIS)
             val move = withContext(computeDispatcher) { computerPlayers.forDifficulty(session.difficulty).chooseMove(session.state) } ?: return@launch
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
-            val next = session.play(move)
+            val next = GameSessions.play(session, move)
             _uiState.update { it.copy(session = next, selected = null, hintsOn = false, hint = null) }
             // The computer can lose on its own move, by moving its last checkers off the board.
             celebrateIfHumanWon(next)

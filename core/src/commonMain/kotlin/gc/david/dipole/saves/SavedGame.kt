@@ -4,6 +4,7 @@ import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
@@ -28,7 +29,7 @@ data class SavedGame(
     val humanSide: Player = Player.White,
 ) {
     /** Rebuilds the game, or returns null if the stored moves aren't a legal game. */
-    fun toSession(): GameSession? = GameSession.replay(mode, moves, difficulty, humanSide)
+    fun toSession(): GameSession? = GameSessions.replay(mode, moves, difficulty, humanSide)
 
     fun encode(): String = listOf(
         HEADER,

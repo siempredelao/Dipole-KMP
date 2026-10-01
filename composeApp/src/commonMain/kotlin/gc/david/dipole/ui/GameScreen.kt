@@ -59,6 +59,7 @@ import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Hint
 import gc.david.dipole.game.Move
@@ -191,7 +192,7 @@ fun GameScreen(
             )
             PlayerTray(state, bottomPlayer, trayModifier)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = session.canUndo) {
+                OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = GameSessions.canUndo(session)) {
                     Text(stringResource(Res.string.undo))
                 }
                 val onHint = { onAction(GameAction.HintClicked) }
@@ -374,13 +375,13 @@ private fun statusText(session: GameSession): String {
         return stringResource(text)
     }
     val turn = when {
-        session.isComputerTurn -> Res.string.status_computer_thinking
+        GameSessions.isComputerTurn(session) -> Res.string.status_computer_thinking
         vsComputer && session.humanSide == Player.White -> Res.string.status_your_move_white
         vsComputer -> Res.string.status_your_move_black
         state.toMove == Player.White -> Res.string.status_white_to_move
         else -> Res.string.status_black_to_move
     }
-    if (!session.opponentSatOut) return stringResource(turn)
+    if (!GameSessions.opponentSatOut(session)) return stringResource(turn)
     val satOut = when (state.toMove.opponent) {
         Player.White -> Res.string.status_white_sits_out
         Player.Black -> Res.string.status_black_sits_out

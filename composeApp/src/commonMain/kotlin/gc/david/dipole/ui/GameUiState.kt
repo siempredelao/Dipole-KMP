@@ -4,6 +4,7 @@ import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Hint
 import gc.david.dipole.game.Move
@@ -43,10 +44,10 @@ data class GameUiState(
 
     /** Squares holding a stack the player can move now. */
     val movable: Set<Square>
-        get() = if (session.isComputerTurn) emptySet() else DipoleRules.legalMoves(state).map { it.from }.toSet()
+        get() = if (GameSessions.isComputerTurn(session)) emptySet() else DipoleRules.legalMoves(state).map { it.from }.toSet()
 
     /** Hints are offered whenever a human is to move. */
-    val canHint: Boolean get() = !session.isComputerTurn && !DipoleRules.isOver(state)
+    val canHint: Boolean get() = !GameSessions.isComputerTurn(session) && !DipoleRules.isOver(state)
 }
 
 sealed interface GameDialog {

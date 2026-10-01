@@ -4,7 +4,7 @@ import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
-import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import kotlin.test.Test
@@ -16,9 +16,11 @@ import kotlinx.datetime.TimeZone
 class SavedGameTest {
 
     private val savedAt = Instant.fromEpochMilliseconds(1_790_000_000_000) // 21 Sep 2026 14:13:20 UTC
-    private val session = GameSession.new(GameMode.VsComputer, Difficulty.Hard)
-        .play(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3))
-        .play(Move(DipoleRules.BLACK_START, Direction.SouthWest, 2))
+    private val session = GameSessions.replay(
+        GameMode.VsComputer,
+        listOf(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3), Move(DipoleRules.BLACK_START, Direction.SouthWest, 2)),
+        Difficulty.Hard,
+    )!!
 
     @Test
     fun encodeAndDecodeRoundTrip() {
@@ -28,7 +30,7 @@ class SavedGameTest {
 
     @Test
     fun emptyGameRoundTrips() {
-        val saved = SavedGame.of(GameSession.new(GameMode.TwoPlayers), "Fresh", savedAt)
+        val saved = SavedGame.of(GameSessions.new(GameMode.TwoPlayers), "Fresh", savedAt)
         assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
     }
 
@@ -42,8 +44,10 @@ class SavedGameTest {
 
     @Test
     fun theHumansSideIsSaved() {
-        val asBlack = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
-            .play(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3))
+        val asBlack = GameSessions.play(
+            GameSessions.new(GameMode.VsComputer, humanSide = Player.Black),
+            Move(DipoleRules.WHITE_START, Direction.NorthEast, 3),
+        )
         val saved = SavedGame.of(asBlack, "As Black", savedAt)
         assertEquals(saved, SavedGame.decode(saved.id, saved.encode()))
         assertEquals(Player.Black, saved.toSession()?.humanSide)

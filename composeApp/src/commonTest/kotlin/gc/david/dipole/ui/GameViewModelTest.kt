@@ -6,12 +6,12 @@ import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
-import gc.david.dipole.saves.SavedGame
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -57,12 +57,12 @@ class GameViewModelTest {
         clock = clock,
         computeDispatcher = dispatcher,
         initialSession = initialSession
-            ?: GameSession.new(GameMode.VsComputer, preferences.lastDifficulty, humanSide = preferences.lastSide),
+            ?: GameSessions.new(GameMode.VsComputer, preferences.lastDifficulty, humanSide = preferences.lastSide),
     )
 
     /** A game of [mode] starting from [board], with [toMove] to play. */
     private fun endgame(mode: GameMode, toMove: Player, vararg board: Pair<Square, Stack>) =
-        GameSession.new(mode, initial = GameState(mapOf(*board), toMove))
+        GameSessions.new(mode, initial = GameState(mapOf(*board), toMove))
 
     private fun TestScope.play(vm: GameViewModel, move: Move) {
         vm.onAction(GameAction.SquareTapped(move.from))

@@ -7,14 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import gc.david.dipole.appearance.AppearanceMode
 import gc.david.dipole.game.GameMode
-import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 
 /** The game screen with the confetti frozen [seconds] into a celebration. */
 @Composable
 private fun CelebrationPreview(mode: AppearanceMode, seconds: Float) {
     DipoleTheme(mode = mode) {
         Box(Modifier.fillMaxSize()) {
-            PreviewScreen(GameUiState(GameSession.new(GameMode.VsComputer)))
+            PreviewScreen(GameUiState(GameSessions.new(GameMode.VsComputer)))
             ConfettiOverlay(celebration = 1, celebrating = false, onStart = {}, previewSeconds = seconds)
         }
     }

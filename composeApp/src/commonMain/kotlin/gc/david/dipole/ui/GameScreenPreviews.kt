@@ -8,7 +8,7 @@ import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
-import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
@@ -19,7 +19,7 @@ import gc.david.dipole.game.Stack
 @Composable
 private fun GameScreenPreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
-        PreviewScreen(GameUiState(GameSession.new(GameMode.VsComputer)))
+        PreviewScreen(GameUiState(GameSessions.new(GameMode.VsComputer)))
     }
 }
 
@@ -40,7 +40,7 @@ private val midGame = GameState(
 private fun GameScreenMidGamePreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
         PreviewScreen(
-            GameUiState(GameSession.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5))
+            GameUiState(GameSessions.new(GameMode.TwoPlayers, initial = midGame), selected = Square(3, 5))
         )
     }
 }
@@ -53,7 +53,7 @@ private fun GameScreenHintPreview() {
     DipoleTheme(mode = AppearanceMode.Dark) {
         PreviewScreen(
             GameUiState(
-                session = GameSession.new(GameMode.VsComputer, initial = midGame),
+                session = GameSessions.new(GameMode.VsComputer, initial = midGame),
                 selected = selected,
                 hintsOn = true,
                 hint = ComputerPlayer(depth = 2).hint(midGame, selected),
@@ -66,8 +66,10 @@ private fun GameScreenHintPreview() {
 @Preview(widthDp = 420, heightDp = 900)
 @Composable
 private fun GameScreenAsBlackPreview() {
-    val session = GameSession.new(GameMode.VsComputer, humanSide = Player.Black)
-        .play(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3))
+    val session = GameSessions.play(
+        GameSessions.new(GameMode.VsComputer, humanSide = Player.Black),
+        Move(DipoleRules.WHITE_START, Direction.NorthEast, 3),
+    )
     DipoleTheme(mode = AppearanceMode.Dark) {
         PreviewScreen(GameUiState(session, selected = DipoleRules.BLACK_START))
     }
@@ -103,7 +105,7 @@ private fun MidGameWith(mode: AppearanceMode, board: BoardTheme) {
     DipoleTheme(mode, board) {
         PreviewScreen(
             GameUiState(
-                session = GameSession.new(GameMode.TwoPlayers, initial = position),
+                session = GameSessions.new(GameMode.TwoPlayers, initial = position),
                 selected = Square(2, 2),
             )
         )

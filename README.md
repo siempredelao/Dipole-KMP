@@ -33,6 +33,13 @@ Play against the computer or with two players on one device.
 - `androidApp` - Android application (AGP 9 keeps the app module separate from the KMP library).
 - `iosApp` - Xcode project hosting the shared UI.
 
+## Credits
+
+Dipole was designed by Mark Steere: Copyright © May 2007 by Mark Steere. His rules sheet
+(https://www.marksteeregames.com/Dipole_rules.pdf) allows programming the game for online or
+offline play, as long as the name and rules are kept and the game is attributed to him. More of his
+games are at https://www.marksteeregames.com.
+
 ## Running
 
 | Platform | Command |

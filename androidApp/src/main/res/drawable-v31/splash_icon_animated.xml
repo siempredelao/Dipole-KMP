@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Splash animation: the checker alone, then the arrows grow out of it from left to right.
-     Each arrow is one animator over the whole 1100 ms with keyframes (hidden, then grows, then
+     Each arrow is one animator over the whole 1350 ms with keyframes (hidden, then grows, then
      stays), which the system splash plays more reliably than delayed sequential animators.
      Keep the total in sync with SPLASH_ANIMATION_MILLIS in MainActivity and
      windowSplashScreenAnimationDuration in values/themes.xml. -->
@@ -9,7 +9,7 @@
     android:drawable="@drawable/splash_icon">
     <target android:name="arrow_left">
         <aapt:attr name="android:animation">
-            <objectAnimator android:duration="1100">
+            <objectAnimator android:duration="1350">
             <propertyValuesHolder
                 android:propertyName="scaleX"
                 android:valueType="floatType">
@@ -17,10 +17,10 @@
                     android:fraction="0"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.2273"
+                    android:fraction="0.3704"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.5455"
+                    android:fraction="0.6296"
                     android:interpolator="@android:interpolator/overshoot"
                     android:value="1" />
                 <keyframe
@@ -34,10 +34,10 @@
                     android:fraction="0"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.2273"
+                    android:fraction="0.3704"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.5455"
+                    android:fraction="0.6296"
                     android:interpolator="@android:interpolator/overshoot"
                     android:value="1" />
                 <keyframe
@@ -49,7 +49,7 @@
     </target>
     <target android:name="arrow_front">
         <aapt:attr name="android:animation">
-            <objectAnimator android:duration="1100">
+            <objectAnimator android:duration="1350">
             <propertyValuesHolder
                 android:propertyName="scaleX"
                 android:valueType="floatType">
@@ -57,10 +57,10 @@
                     android:fraction="0"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.4545"
+                    android:fraction="0.5556"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.7727"
+                    android:fraction="0.8148"
                     android:interpolator="@android:interpolator/overshoot"
                     android:value="1" />
                 <keyframe
@@ -74,10 +74,10 @@
                     android:fraction="0"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.4545"
+                    android:fraction="0.5556"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.7727"
+                    android:fraction="0.8148"
                     android:interpolator="@android:interpolator/overshoot"
                     android:value="1" />
                 <keyframe
@@ -89,7 +89,7 @@
     </target>
     <target android:name="arrow_right">
         <aapt:attr name="android:animation">
-            <objectAnimator android:duration="1100">
+            <objectAnimator android:duration="1350">
             <propertyValuesHolder
                 android:propertyName="scaleX"
                 android:valueType="floatType">
@@ -97,7 +97,7 @@
                     android:fraction="0"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.6818"
+                    android:fraction="0.7407"
                     android:value="0" />
                 <keyframe
                     android:fraction="1"
@@ -111,7 +111,7 @@
                     android:fraction="0"
                     android:value="0" />
                 <keyframe
-                    android:fraction="0.6818"
+                    android:fraction="0.7407"
                     android:value="0" />
                 <keyframe
                     android:fraction="1"

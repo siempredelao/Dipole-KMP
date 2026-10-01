@@ -22,16 +22,18 @@ colour-blind and low-vision players.
 
 ## Project layout
 
-- `composeApp/src/commonMain/.../game` - rules engine (`Dipole.kt`) and computer opponent
+- `core` - the game without any UI. It has no Compose dependency, so the logic can't reach into
+  the UI; `composeApp` depends on it.
+- `core/src/commonMain/.../game` - rules engine (`Dipole.kt`) and computer opponent
   (`ComputerPlayer.kt`, which also works out the move hints), plain Kotlin with no UI dependencies.
-- `composeApp/src/commonMain/.../game` also has `GameSession`, the state of a game in progress
+- `core/src/commonMain/.../game` also has `GameSession`, the state of a game in progress
   (mode, moves, undo).
-- `composeApp/src/commonMain/.../saves` - saved games, stored with multiplatform-settings.
-- `composeApp/src/commonMain/.../sound` - move and capture sounds, synthesized in code and played
+- `core/src/commonMain/.../saves` - saved games, stored with multiplatform-settings.
+- `core/src/commonMain/.../sound` - move and capture sounds, synthesized in code and played
   by each platform's audio API.
-- `composeApp/src/commonMain/.../celebration` - the confetti thrown when a human wins, as plain
+- `core/src/commonMain/.../celebration` - the confetti thrown when a human wins, as plain
   Kotlin physics; `ui/ConfettiOverlay.kt` draws it.
-- `composeApp/src/commonMain/.../tutorial` - the tutorial's pages and their example positions,
+- `core/src/commonMain/.../tutorial` - the tutorial's pages and their example positions,
   shown on first launch and from the rules screen.
 - `composeApp/src/commonMain/composeResources` - UI strings: English in `values`, translations in
   `values-<language>`.

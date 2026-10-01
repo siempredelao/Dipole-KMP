@@ -28,5 +28,6 @@ dependencyResolutionManagement {
     }
 }
 
+include(":core")
 include(":composeApp")
 include(":androidApp")

@@ -8,6 +8,9 @@ import kotlin.time.TimeSource
 
 enum class Difficulty { Easy, Medium, Hard }
 
+/** A recommended [move] from one stack, and whether another stack has a clearly better move. */
+data class Hint(val move: Move, val betterMoveElsewhere: Boolean)
+
 /**
  * An alpha-beta searcher that plays Dipole.
  *
@@ -29,33 +32,45 @@ class ComputerPlayer(
         if (moves.isEmpty()) return null
         if (randomMoveChance > 0 && random.nextDouble() < randomMoveChance) return moves.random(random)
 
+        val scores = scoreMoves(state, moves)
+        val bestScore = scores.values.max()
+        return moves.filter { scores.getValue(it) == bestScore }.random(random)
+    }
+
+    /**
+     * Recommends the best move for the stack on [from], or returns null if it can't move. Never
+     * plays a random move, whatever [randomMoveChance] is.
+     */
+    fun hint(state: GameState, from: Square): Hint? {
+        val moves = ordered(state, state.legalMoves())
+        if (moves.none { it.from == from }) return null
+        val scores = scoreMoves(state, moves)
+        val best = moves.filter { it.from == from }.maxBy { scores.getValue(it) }
+        val margin = scores.values.max() - scores.getValue(best)
+        return Hint(best, betterMoveElsewhere = margin >= MATERIAL_WEIGHT)
+    }
+
+    /**
+     * Scores every move in [moves], searching [depth] plies and then deeper while the time budget
+     * lasts. Returns the scores of the deepest search that finished.
+     */
+    private fun scoreMoves(state: GameState, moves: List<Move>): Map<Move, Int> {
         val deadline = timeSource.markNow() + timeBudget
-        var best = bestMoves(state, moves, depth, deadline = null)
+        var scores = scoreMoves(state, moves, depth, deadline = null)
         for (d in depth + 1..maxDepth) {
             if (deadline.hasPassedNow()) break
-            best = try {
-                bestMoves(state, moves, d, deadline)
+            scores = try {
+                scoreMoves(state, moves, d, deadline)
             } catch (_: OutOfTime) {
                 break
             }
         }
-        return best.random(random)
+        return scores
     }
 
-    /** All moves that score best when searching [depth] plies. */
-    private fun bestMoves(state: GameState, moves: List<Move>, depth: Int, deadline: TimeMark?): List<Move> {
+    private fun scoreMoves(state: GameState, moves: List<Move>, depth: Int, deadline: TimeMark?): Map<Move, Int> {
         val me = state.toMove
-        var bestScore = Int.MIN_VALUE
-        val best = mutableListOf<Move>()
-        for (move in moves) {
-            val score = search(state.play(move), depth - 1, Int.MIN_VALUE + 1, Int.MAX_VALUE, me, deadline)
-            if (score > bestScore) {
-                bestScore = score
-                best.clear()
-            }
-            if (score == bestScore) best += move
-        }
-        return best
+        return moves.associateWith { search(state.play(it), depth - 1, Int.MIN_VALUE + 1, Int.MAX_VALUE, me, deadline) }
     }
 
     /** Scores [state] from [me]'s point of view. The side to move can stay the same after a pass. */

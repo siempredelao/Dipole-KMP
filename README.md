@@ -87,3 +87,20 @@ More of his games are at [marksteeregames.com](https://www.marksteeregames.com).
 | Android  | `./gradlew :androidApp:installDebug` (or run `androidApp` from Android Studio) |
 | Web      | `./gradlew :composeApp:wasmJsBrowserDevelopmentRun` |
 | iOS      | Open `iosApp/iosApp.xcodeproj` in Xcode and run (set your team in `iosApp/Configuration/Config.xcconfig`) |
+
+### Signed release for Google Play
+
+Put the upload key's details in `keystore.properties` at the project root (it is git-ignored, as
+are `*.jks` and `*.keystore` files). `storeFile` is relative to the project root:
+
+```properties
+storeFile=dipole-upload.jks
+storePassword=...
+keyAlias=upload
+keyPassword=...
+```
+
+Then `./gradlew :androidApp:bundleRelease` writes the signed bundle to
+`androidApp/build/outputs/bundle/release/androidApp-release.aab`. Without `keystore.properties`
+the bundle is built unsigned. Raise `versionCode` in `androidApp/build.gradle.kts` before each
+upload; Google Play rejects a code it has already seen.

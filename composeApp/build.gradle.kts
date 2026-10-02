@@ -95,3 +95,15 @@ compose.desktop {
         }
     }
 }
+
+// Renders the Google Play screenshots from the real screens, in every language, for phones and
+// tablets: ./gradlew :composeApp:storeScreenshots writes them to composeApp/build/store-screenshots.
+// The code is in jvmTest (screenshots/StoreScreenshots.kt) so it stays out of the app.
+tasks.register<JavaExec>("storeScreenshots") {
+    description = "Renders the Google Play screenshots for every language."
+    val jvmTest = kotlin.jvm().compilations.getByName("test")
+    dependsOn(jvmTest.compileAllTaskName)
+    classpath(jvmTest.output.allOutputs, jvmTest.runtimeDependencyFiles ?: files())
+    mainClass = "gc.david.dipole.screenshots.StoreScreenshotsKt"
+    args(layout.buildDirectory.dir("store-screenshots").get().asFile.path)
+}

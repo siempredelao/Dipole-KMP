@@ -106,3 +106,21 @@ the bundle is built unsigned. Release builds are shrunk with R8 (rules in
 `androidApp/proguard-rules.pro`); the bundle carries the mapping file, so Play Console shows
 readable crash stack traces. Raise `android-versionCode` in `gradle/libs.versions.toml` before
 each upload; Google Play rejects a code it has already seen.
+
+### Google Play listing
+
+The store texts and graphics live in `androidApp/src/main/play`, laid out the way Gradle Play
+Publisher expects in case uploads are automated later:
+
+- `listings/<language>/title.txt`, `short-description.txt` and `full-description.txt` for each
+  of the 11 languages (Play's limits: 30, 80 and 4000 characters).
+- `listings/en-US/graphics/icon/icon.png` (512 × 512) and
+  `listings/en-US/graphics/feature-graphic/feature-graphic.png` (1024 × 500). Play shows the
+  English graphics for every language. The icon is `art/app-icon.svg` cropped like the iOS icon;
+  the feature graphic is drawn by `art/feature-graphic.html`.
+
+`./gradlew :composeApp:storeScreenshots` renders the screenshots from the real screens on the
+desktop JVM, in every language, for phones and for 7- and 10-inch tablets, into
+`composeApp/build/store-screenshots/<language>/<device>/`. The games they show are in
+`composeApp/src/jvmTest/.../screenshots/StoreScreenshotStates.kt`, checked by
+`StoreScreenshotStatesTest`. Text is drawn with the computer's default font, not Android's.

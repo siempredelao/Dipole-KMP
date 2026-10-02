@@ -25,10 +25,10 @@ class TutorialPageTest {
 
     @Test
     fun eachPageShowsTheKindOfMoveItExplains() {
-        assertTrue(TutorialPage.PlainMoves.exampleKinds.any { it is MoveKind.Merge })
-        assertTrue(TutorialPage.PlainMoves.exampleKinds.any { it is MoveKind.Step })
-        assertTrue(TutorialPage.Captures.exampleKinds.all { it is MoveKind.Capture })
-        assertTrue(TutorialPage.OffBoard.exampleKinds.any { it is MoveKind.BearOff })
+        assertTrue(exampleKinds(TutorialPage.PlainMoves).any { it is MoveKind.Merge })
+        assertTrue(exampleKinds(TutorialPage.PlainMoves).any { it is MoveKind.Step })
+        assertTrue(exampleKinds(TutorialPage.Captures).all { it is MoveKind.Capture })
+        assertTrue(exampleKinds(TutorialPage.OffBoard).any { it is MoveKind.BearOff })
     }
 
     @Test
@@ -47,4 +47,6 @@ class TutorialPageTest {
         val page = TutorialPage.Tips
         assertTrue(DipoleRules.legalMovesFrom(page.position, page.selected!!).any { it.to == page.hinted })
     }
+
+    private fun exampleKinds(page: TutorialPage): List<MoveKind?> = page.examples.map { DipoleRules.kindOf(page.position, it) }
 }

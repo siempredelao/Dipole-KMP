@@ -4,7 +4,6 @@ import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Move
-import gc.david.dipole.game.MoveKind
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
@@ -80,9 +79,6 @@ enum class TutorialPage(
         hinted = E5,
     ),
     ;
-
-    /** The kind of each example move in [position]; every example is a legal move. */
-    val exampleKinds: List<MoveKind> get() = examples.map { requireNotNull(DipoleRules.kindOf(position, it)) }
 }
 
 private fun position(vararg stacks: Pair<Square, Stack>) = GameState(mapOf(*stacks), Player.White)

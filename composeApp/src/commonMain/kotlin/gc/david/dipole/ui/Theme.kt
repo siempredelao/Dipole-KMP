@@ -24,7 +24,7 @@ data class AppColors(
     val outline: Color,
     /** Hint text, readable on [background]. */
     val hint: Color,
-    /** Confetti for a win, one colour per [gc.david.dipole.celebration.Confetti.COLOR_COUNT]. */
+    /** Confetti for a win, one colour per [gc.david.dipole.celebration.ConfettiLauncher.COLOR_COUNT]. */
     val confetti: List<Color> = ConfettiColors,
 )
 

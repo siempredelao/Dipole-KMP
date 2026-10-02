@@ -17,9 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
-import gc.david.dipole.celebration.Confetti
+import gc.david.dipole.celebration.ConfettiLauncher
+import gc.david.dipole.celebration.ConfettiPhysics
 import gc.david.dipole.celebration.ConfettiFrame
 import gc.david.dipole.celebration.ConfettiShape
+import kotlin.random.Random
 import kotlinx.coroutines.delay
 
 /**
@@ -27,7 +29,8 @@ import kotlinx.coroutines.delay
  * winning move has landed, if [celebrating] says it hasn't been thrown yet; [onStart] then reports
  * it thrown (and plays the chime). It only draws, so taps go through to the game underneath.
  *
- * [previewSeconds] freezes the confetti at that moment, for previews.
+ * [launcher] picks how the pieces fly; [previewSeconds] freezes the confetti at that moment, for
+ * previews.
  */
 @Composable
 fun ConfettiOverlay(
@@ -35,9 +38,10 @@ fun ConfettiOverlay(
     celebrating: Boolean,
     onStart: () -> Unit,
     modifier: Modifier = Modifier,
+    launcher: ConfettiLauncher = remember { ConfettiLauncher(Random.Default) },
     previewSeconds: Float? = null,
 ) {
-    val confetti = remember(celebration) { Confetti.burst() }
+    val confetti = remember(celebration) { launcher.burst() }
     var seconds by remember(celebration) { mutableFloatStateOf(previewSeconds ?: NOT_THROWN) }
     val currentOnStart by rememberUpdatedState(onStart)
     LaunchedEffect(celebration) {
@@ -45,12 +49,12 @@ fun ConfettiOverlay(
         delay(MOVE_MILLIS.toLong())
         currentOnStart()
         val start = withFrameNanos { it }
-        while (seconds < Confetti.DURATION_SECONDS) {
+        while (seconds < ConfettiPhysics.DURATION_SECONDS) {
             seconds = withFrameNanos { (it - start) / 1_000_000_000f }
         }
     }
     if (seconds == NOT_THROWN) return
-    val frame = confetti.frame(seconds) ?: return
+    val frame = ConfettiPhysics.frame(confetti, seconds) ?: return
     val colors = LocalAppColors.current.confetti
     Canvas(modifier.fillMaxSize()) {
         frame.forEach { drawPiece(it, colors[it.piece.colorIndex]) }

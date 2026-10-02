@@ -102,5 +102,7 @@ keyPassword=...
 
 Then `./gradlew :androidApp:bundleRelease` writes the signed bundle to
 `androidApp/build/outputs/bundle/release/androidApp-release.aab`. Without `keystore.properties`
-the bundle is built unsigned. Raise `versionCode` in `androidApp/build.gradle.kts` before each
+the bundle is built unsigned. Release builds are shrunk with R8 (rules in
+`androidApp/proguard-rules.pro`); the bundle carries the mapping file, so Play Console shows
+readable crash stack traces. Raise `versionCode` in `androidApp/build.gradle.kts` before each
 upload; Google Play rejects a code it has already seen.

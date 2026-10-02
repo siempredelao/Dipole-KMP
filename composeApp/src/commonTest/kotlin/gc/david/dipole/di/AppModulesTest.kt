@@ -3,6 +3,7 @@ package gc.david.dipole.di
 import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.Settings
 import gc.david.dipole.saves.GamePreferences
+import gc.david.dipole.saves.SavedGameFactory
 import gc.david.dipole.saves.SavedGamesRepository
 import gc.david.dipole.ui.GameViewModel
 import gc.david.dipole.ui.SettingsViewModel
@@ -48,5 +49,6 @@ class AppModulesTest {
     fun storageIsSharedAcrossTheApp() {
         assertSame(koin.get<GamePreferences>(), koin.get<GamePreferences>())
         assertSame(koin.get<SavedGamesRepository>(), koin.get<SavedGamesRepository>())
+        assertSame(koin.get<SavedGameFactory>(), koin.get<SavedGameFactory>())
     }
 }

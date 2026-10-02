@@ -12,6 +12,7 @@ import gc.david.dipole.game.Move
 import gc.david.dipole.game.Square
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGame
+import gc.david.dipole.saves.SavedGameFactory
 import gc.david.dipole.saves.SavedGamesRepository
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,6 +27,7 @@ import kotlinx.coroutines.withContext
 
 class GameViewModel(
     private val repository: SavedGamesRepository,
+    private val savedGames: SavedGameFactory,
     private val preferences: GamePreferences,
     private val computerPlayers: ComputerPlayerFactory,
     /** Works out hints; always the strongest player, whatever the game's difficulty. */
@@ -155,12 +157,12 @@ class GameViewModel(
     }
 
     private fun save(name: String) {
-        repository.save(SavedGame.of(_uiState.value.session, name, clock.now()))
+        repository.save(savedGames.create(_uiState.value.session, name))
         _uiState.update { it.copy(dialog = null, message = GameMessage.GameSaved, hasSavedGames = true) }
     }
 
     private fun load(game: SavedGame) {
-        val session = game.toSession()
+        val session = GameSessions.replay(game.mode, game.moves, game.difficulty, game.humanSide)
         if (session == null) {
             _uiState.update { it.copy(dialog = null, message = GameMessage.SaveUnreadable) }
             return

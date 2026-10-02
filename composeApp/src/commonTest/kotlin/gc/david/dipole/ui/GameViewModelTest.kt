@@ -12,6 +12,8 @@ import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
+import gc.david.dipole.saves.SavedGameFactory
+import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -51,6 +53,7 @@ class GameViewModelTest {
 
     private fun viewModel(initialSession: GameSession? = null) = GameViewModel(
         repository,
+        SavedGameFactory(Random(1), clock),
         preferences,
         computerPlayers = { ComputerPlayer.forDifficulty(it) },
         hinter = ComputerPlayer(depth = 1),

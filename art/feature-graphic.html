@@ -1,0 +1,152 @@
+<!doctype html>
+<!--
+  The Google Play feature graphic (1024 x 500). The board shows the same position as the first
+  store screenshot: White's c3 stack picked, with its moves and the capture of e5.
+  Render it with any headless browser at 1024 x 500 (for example Playwright's page.screenshot()) to
+  androidApp/src/main/play/listings/en-US/graphics/feature-graphic/feature-graphic.png.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=block" rel="stylesheet">
+<style>
+  :root {
+    --light: #EBD3A8;
+    --dark: #7A4E2D;
+    --edge: #4A2E1A;
+    --white: #F5F0E6;
+    --black: #26211E;
+    --target: #7FC97F;
+    --capture: #E0605A;
+    --selected: #F2D95C;
+    --last-move: rgba(242, 217, 92, 0.33);
+  }
+  html, body { margin: 0; }
+  body {
+    width: 1024px;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    background:
+      radial-gradient(ellipse 70% 90% at 78% 55%, #5A3820 0%, transparent 70%),
+      linear-gradient(120deg, #2B1A0E 0%, #3A2414 55%, #24160C 100%);
+    font-family: "Fredoka", sans-serif;
+  }
+
+  /* The board, tilted back so it reads as a table top. */
+  .stage {
+    position: absolute;
+    left: 530px;
+    top: -138px;
+    width: 640px;
+    height: 640px;
+    transform: perspective(1400px) rotateX(38deg) rotateZ(-18deg) scale(0.93);
+    transform-origin: 50% 60%;
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    width: 640px;
+    height: 640px;
+    border: 8px solid var(--edge);
+    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.55);
+  }
+  .sq { position: relative; background: var(--light); }
+  .sq.d { background: var(--dark); }
+  .sq.last::after { content: ""; position: absolute; inset: 0; background: var(--last-move); }
+
+  .stack, .target {
+    position: absolute;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    z-index: 1;
+  }
+  .stack { inset: 10%; font-size: 34px; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.35); }
+  .stack.w { background: var(--white); color: #000; border: 3px solid #8a8a8a; }
+  .stack.b { background: var(--black); color: #fff; border: 3px solid #8a8a8a; }
+  .stack.sel { border: 7px solid var(--selected); }
+  .target { inset: 27.5%; font-size: 22px; color: #fff; border: 4px solid; }
+  .target.go { border-color: var(--target); background: rgba(127, 201, 127, 0.35); }
+  .target.cap { inset: 5%; border-color: var(--capture); background: rgba(224, 96, 90, 0.35); font-size: 34px; }
+
+  /* Name and icon. */
+  .brand {
+    position: absolute;
+    left: 84px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+  }
+  .icon {
+    width: 132px;
+    height: 132px;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(255, 255, 255, 0.08);
+  }
+  .icon svg { display: block; width: 100%; height: 100%; }
+  .name {
+    margin: 0;
+    font-size: 132px;
+    line-height: 0.9;
+    letter-spacing: 1px;
+    color: var(--white);
+    text-shadow: 0 6px 0 #1A0F07, 0 14px 30px rgba(0, 0, 0, 0.5);
+  }
+</style>
+</head>
+<body>
+  <div class="stage"><div class="board" id="board"></div></div>
+
+  <div class="brand">
+    <div class="icon">
+      <!-- art/app-icon.svg, cropped to the part the launcher shows. -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="18 18 72 72"><path d="M0,0h108v108h-108z" fill="#EBD3A8"/><path d="M9,-9h18v18h-18zM45,-9h18v18h-18zM81,-9h18v18h-18zM-9,9h18v18h-18zM27,9h18v18h-18zM63,9h18v18h-18zM99,9h18v18h-18zM9,27h18v18h-18zM45,27h18v18h-18zM81,27h18v18h-18zM-9,45h18v18h-18zM27,45h18v18h-18zM63,45h18v18h-18zM99,45h18v18h-18zM9,63h18v18h-18zM45,63h18v18h-18zM81,63h18v18h-18zM-9,81h18v18h-18zM27,81h18v18h-18zM63,81h18v18h-18zM99,81h18v18h-18zM9,99h18v18h-18zM45,99h18v18h-18zM81,99h18v18h-18z" fill="#7A4E2D"/><path d="M54.00,60.00L54.00,38.00" fill="none" stroke="#2B1A0E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M45.51,63.51L34.78,52.78" fill="none" stroke="#2B1A0E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M62.49,63.51L73.22,52.78" fill="none" stroke="#2B1A0E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M54.00,27.00L61.50,38.00L46.50,38.00Z" fill="#2B1A0E" stroke="#2B1A0E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.00,45.00L40.08,47.47L29.47,58.08Z" fill="#2B1A0E" stroke="#2B1A0E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M81.00,45.00L78.53,58.08L67.92,47.47Z" fill="#2B1A0E" stroke="#2B1A0E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M54.00,60.00L54.00,38.00" fill="none" stroke="#FFB02E" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M45.51,63.51L34.78,52.78" fill="none" stroke="#FFB02E" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M62.49,63.51L73.22,52.78" fill="none" stroke="#FFB02E" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M54.00,27.00L61.50,38.00L46.50,38.00Z" fill="#FFB02E"/><path d="M27.00,45.00L40.08,47.47L29.47,58.08Z" fill="#FFB02E"/><path d="M81.00,45.00L78.53,58.08L67.92,47.47Z" fill="#FFB02E"/><path d="M43,72a11,11 0 1,0 22,0a11,11 0 1,0 -22,0Z" fill="#F5F0E6" stroke="#26211E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h1 class="name">Dipole</h1>
+  </div>
+
+<script>
+  // Squares are named like a chess board: files a-h left to right, ranks 8 at the top to 1.
+  const stacks = { c1: "w5", f4: "w3", c3: "w4 sel", d8: "b4", e5: "b2", b6: "b1" };
+  const targets = { d4: 1, f6: 3, g7: 4, b4: 1, a5: 2, c5: 2, c7: 4 };
+  const captures = { e5: 2 };
+  const lastMove = ["c7", "b6"];
+
+  const board = document.getElementById("board");
+  for (let rank = 8; rank >= 1; rank--) {
+    for (let file = 0; file < 8; file++) {
+      const name = "abcdefgh"[file] + rank;
+      const square = document.createElement("div");
+      square.className = "sq" + ((file + rank) % 2 === 1 ? " d" : "") + (lastMove.includes(name) ? " last" : "");
+      if (stacks[name]) {
+        const [kind, ...rest] = stacks[name].split(" ");
+        const stack = document.createElement("div");
+        stack.className = `stack ${kind[0]} ${rest.join(" ")}`;
+        stack.textContent = kind.slice(1);
+        square.append(stack);
+      }
+      if (targets[name]) {
+        const target = document.createElement("div");
+        target.className = "target go";
+        target.textContent = targets[name];
+        square.append(target);
+      }
+      if (captures[name]) {
+        const target = document.createElement("div");
+        target.className = "target cap";
+        target.textContent = captures[name];
+        square.append(target);
+      }
+      board.append(square);
+    }
+  }
+</script>
+</body>
+</html>

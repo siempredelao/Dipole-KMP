@@ -47,6 +47,7 @@ fun rememberFlight(session: GameSession, onLanded: (MoveAnimation) -> Unit = {})
         progress.animateTo(1f, tween(MOVE_MILLIS, easing = FastOutSlowInEasing))
         currentOnLanded(animation)
     }
+
     return animation?.takeIf { progress.value < 1f }?.let { Flight(it, progress.value) }
 }
 
@@ -62,6 +63,7 @@ private fun moveAnimation(session: GameSession): MoveAnimation? {
         tracker.animation = tracker.session?.let { before -> newMove(before, session) }
         tracker.session = session
     }
+
     return tracker.animation
 }
 
@@ -71,5 +73,6 @@ private fun newMove(before: GameSession, after: GameSession): MoveAnimation? {
     val isNextMove = after.mode == before.mode &&
         after.moves.size == before.moves.size + 1 &&
         after.moves.subList(0, before.moves.size) == before.moves
+
     return if (isNextMove) animationOf(move, before.state) else null
 }

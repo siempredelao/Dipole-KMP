@@ -68,6 +68,7 @@ fun AppearanceDialog(
                         )
                     }
                 }
+
                 Text(
                     stringResource(Res.string.appearance_board),
                     style = MaterialTheme.typography.labelLarge,
@@ -118,6 +119,7 @@ private fun BoardSwatch(theme: BoardTheme, selected: Boolean, onClick: () -> Uni
             drawCircle(colors.target, radius = half.width / 4, center = Offset(half.width * 1.5f, half.height / 2))
             drawCircle(colors.capture, radius = half.width / 4, center = Offset(half.width / 2, half.height * 1.5f))
         }
+
         Text(
             stringResource(theme.label),
             style = MaterialTheme.typography.bodySmall,

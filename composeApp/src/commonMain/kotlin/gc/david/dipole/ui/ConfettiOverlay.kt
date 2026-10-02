@@ -17,12 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
+import gc.david.dipole.celebration.ConfettiFrame
 import gc.david.dipole.celebration.ConfettiLauncher
 import gc.david.dipole.celebration.ConfettiPhysics
-import gc.david.dipole.celebration.ConfettiFrame
 import gc.david.dipole.celebration.ConfettiShape
-import kotlin.random.Random
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 /**
  * Throws confetti over the screen for a win. Each new [celebration] throws it once, as soon as the
@@ -44,6 +44,7 @@ fun ConfettiOverlay(
     val confetti = remember(celebration) { launcher.burst() }
     var seconds by remember(celebration) { mutableFloatStateOf(previewSeconds ?: NOT_THROWN) }
     val currentOnStart by rememberUpdatedState(onStart)
+
     LaunchedEffect(celebration) {
         if (!celebrating || previewSeconds != null) return@LaunchedEffect
         delay(MOVE_MILLIS.toLong())
@@ -53,9 +54,11 @@ fun ConfettiOverlay(
             seconds = withFrameNanos { (it - start) / 1_000_000_000f }
         }
     }
+
     if (seconds == NOT_THROWN) return
     val frame = ConfettiPhysics.frame(confetti, seconds) ?: return
     val colors = LocalAppColors.current.confetti
+
     Canvas(modifier.fillMaxSize()) {
         frame.forEach { drawPiece(it, colors[it.piece.colorIndex]) }
     }
@@ -66,6 +69,7 @@ private const val NOT_THROWN = -1f
 private fun DrawScope.drawPiece(frame: ConfettiFrame, color: Color) {
     val center = Offset(frame.x * size.width, frame.y * size.height)
     val unit = PIECE_SIZE.toPx() * frame.piece.size
+
     when (frame.piece.shape) {
         ConfettiShape.Dot -> drawCircle(color, radius = unit / 2.5f, center = center, alpha = frame.alpha)
         ConfettiShape.Strip -> rotate(frame.rotationDegrees, pivot = center) {

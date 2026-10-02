@@ -29,10 +29,17 @@ fun NewGameDialog(
         title = { Text(stringResource(Res.string.new_game)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { onModeChosen(GameMode.VsComputer) }, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = { onModeChosen(GameMode.VsComputer) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(stringResource(Res.string.mode_vs_computer))
                 }
-                Button(onClick = { onModeChosen(GameMode.TwoPlayers) }, modifier = Modifier.fillMaxWidth()) {
+
+                Button(
+                    onClick = { onModeChosen(GameMode.TwoPlayers) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(stringResource(Res.string.mode_two_players))
                 }
             }

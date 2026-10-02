@@ -18,8 +18,11 @@ data class SettingsUiState(
 )
 
 sealed interface SettingsAction {
+
     data object SoundToggled : SettingsAction
+
     data class AppearanceModeChosen(val mode: AppearanceMode) : SettingsAction
+
     data class BoardThemeChosen(val theme: BoardTheme) : SettingsAction
 }
 
@@ -32,6 +35,7 @@ class SettingsViewModel(private val preferences: GamePreferences) : ViewModel() 
             boardTheme = preferences.boardTheme,
         ),
     )
+
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     fun onAction(action: SettingsAction) {

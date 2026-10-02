@@ -164,17 +164,20 @@ fun GameScreen(
                 color = appColors.secondaryText,
                 fontSize = 14.sp,
             )
+
             Text(
                 statusText(session, uiState.status),
                 color = appColors.text,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center,
             )
+
             val trayModifier = Modifier.widthIn(max = 560.dp).fillMaxWidth()
             // The human's side sits at the bottom: White, unless playing Black against the computer.
             val bottomPlayer = if (session.mode == GameMode.VsComputer) session.humanSide else Player.White
             val flipped = bottomPlayer == Player.Black
             PlayerTray(uiState, bottomPlayer.opponent, trayModifier)
+
             Board(
                 state = state,
                 flipped = flipped,
@@ -189,7 +192,9 @@ fun GameScreen(
                 onSquareClick = { onAction(GameAction.SquareTapped(it)) },
                 modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
             )
+
             PlayerTray(uiState, bottomPlayer, trayModifier)
+
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = uiState.canUndo) {
                     Text(stringResource(Res.string.undo))
@@ -204,6 +209,7 @@ fun GameScreen(
                 }
             }
             hintText(uiState)?.let { Text(stringResource(it), color = appColors.hint, textAlign = TextAlign.Center) }
+
             if (bearOffs.isNotEmpty()) {
                 Text(
                     stringResource(Res.string.bear_off_explanation),
@@ -224,6 +230,7 @@ fun GameScreen(
             } else if (uiState.selected != null) {
                 Text(stringResource(Res.string.tap_target_help), color = appColors.secondaryText)
             }
+
             uiState.message?.let { message ->
                 Text(stringResource(message.text), color = appColors.secondaryText)
                 LaunchedEffect(message) {
@@ -232,6 +239,7 @@ fun GameScreen(
                 }
             }
         }
+
         ConfettiOverlay(
             celebration = uiState.celebration,
             celebrating = uiState.celebrating,
@@ -300,25 +308,31 @@ private fun SettingsMenu(
                 tint = appColors.secondaryText,
             )
         }
+
         DropdownMenu(expanded = uiState.menuOpen, onDismissRequest = { onAction(GameAction.MenuDismissed) }) {
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.new_game)) },
                 onClick = { onAction(GameAction.NewGameClicked) },
             )
+
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.save_game_title)) },
                 onClick = { onAction(GameAction.SaveClicked) },
             )
+
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.load_game_title)) },
                 onClick = { onAction(GameAction.LoadClicked) },
                 enabled = uiState.hasSavedGames,
             )
+
             HorizontalDivider()
+
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.appearance)) },
                 onClick = { onAction(GameAction.AppearanceClicked) },
             )
+
             DropdownMenuItem(
                 text = { Text(stringResource(Res.string.sound_and_vibration)) },
                 onClick = { onSettingsAction(SettingsAction.SoundToggled) },
@@ -327,6 +341,7 @@ private fun SettingsMenu(
         }
     }
 }
+
 private const val BLINKS = 3
 private const val BLINK_HALF_MILLIS = 200
 
@@ -338,6 +353,7 @@ private const val BLINK_HALF_MILLIS = 200
 private fun blinkAlpha(hint: Hint?): Float {
     if (LocalInspectionMode.current) return if (hint == null) 0f else 1f
     val alpha = remember { Animatable(0f) }
+
     LaunchedEffect(hint) {
         alpha.snapTo(0f)
         if (hint == null) return@LaunchedEffect
@@ -346,11 +362,13 @@ private fun blinkAlpha(hint: Hint?): Float {
             alpha.animateTo(0f, tween(BLINK_HALF_MILLIS))
         }
     }
+
     return alpha.value
 }
 
 private fun hintText(uiState: GameUiState): StringResource? {
     if (!uiState.hintsOn) return null
+
     val hint = uiState.hint
     return when {
         uiState.selected == null -> Res.string.hint_pick_stack
@@ -372,6 +390,7 @@ private fun statusText(session: GameSession, status: GameStatus): String {
         }
         return stringResource(text)
     }
+
     val turn = when {
         status.computerThinking -> Res.string.status_computer_thinking
         vsComputer && session.humanSide == Player.White -> Res.string.status_your_move_white
@@ -384,6 +403,7 @@ private fun statusText(session: GameSession, status: GameStatus): String {
         Player.White -> Res.string.status_white_sits_out
         Player.Black -> Res.string.status_black_sits_out
     }
+
     return "${stringResource(satOut)} ${stringResource(turn)}"
 }
 
@@ -392,17 +412,20 @@ private fun statusText(session: GameSession, status: GameStatus): String {
 private fun PlayerTray(uiState: GameUiState, player: Player, modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, appColors.outline, CircleShape))
+
         Text(
             stringResource(Res.string.tray_on_board, stringResource(player.label), uiState.checkersOnBoard.getValue(player)),
             color = appColors.text,
             modifier = Modifier.padding(start = 8.dp).weight(1f),
         )
+
         Text(
             stringResource(Res.string.tray_off_board),
             color = appColors.secondaryText,
             fontSize = 13.sp,
             modifier = Modifier.padding(end = 8.dp),
         )
+
         RemovedPile(player, uiState.removedCheckers.getValue(player))
     }
 }
@@ -420,6 +443,7 @@ private fun RemovedPile(player: Player, count: Int) {
             if (count == 0) {
                 Box(Modifier.size(width = 36.dp, height = discHeight).border(1.dp, appColors.outline, DiscShape))
             }
+
             repeat(count) { i ->
                 Box(
                     Modifier
@@ -430,6 +454,7 @@ private fun RemovedPile(player: Player, count: Int) {
                 )
             }
         }
+
         Text(
             "$count",
             color = appColors.text,
@@ -494,6 +519,7 @@ internal fun Board(
                                     modifier = Modifier.fillMaxSize(0.8f).alpha(fade),
                                 )
                             }
+
                             if (target != null) {
                                 val capture = square in captureTargets
                                 val color = if (capture) colors.capture else colors.target
@@ -507,6 +533,7 @@ internal fun Board(
                                     Text("${target.count}", color = colors.targetText, fontWeight = FontWeight.Bold)
                                 }
                             }
+
                             if (square == hintedSquare) {
                                 Box(
                                     Modifier
@@ -575,6 +602,7 @@ private fun Checker(stack: Stack, isSelected: Boolean, isMovable: Boolean, modif
         isMovable -> colors.movableRing
         else -> colors.checkerOutline
     }
+
     Box(
         modifier
             .background(stack.owner.color, CircleShape)

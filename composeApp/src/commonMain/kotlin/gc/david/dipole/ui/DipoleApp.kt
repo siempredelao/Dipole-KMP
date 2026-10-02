@@ -48,12 +48,14 @@ private fun DipoleNavigation() {
                     onRulesClick = { navController.navigate(RulesRoute) },
                 )
             }
+
             composable<RulesRoute> {
                 RulesScreen(
                     onBack = { navController.popBackStack() },
                     onShowTutorial = { navController.navigate(TutorialRoute) },
                 )
             }
+
             composable<TutorialRoute> {
                 val viewModel = koinViewModel<TutorialViewModel>()
                 val uiState by viewModel.uiState.collectAsState()

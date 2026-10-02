@@ -49,6 +49,7 @@ data class GameUiState(
     /** Each player's checkers taken out of play, captured or moved off the board. */
     val removedCheckers: Map<Player, Int> = emptyMap(),
 ) {
+
     val state: GameState get() = session.state
 }
 
@@ -61,6 +62,7 @@ data class GameStatus(
 )
 
 sealed interface GameDialog {
+
     data object NewGame : GameDialog
 
     /**
@@ -71,31 +73,53 @@ sealed interface GameDialog {
 
     /** Asks for a save name; the default name comes from [savedAt], formatted for the user's language. */
     data class Save(val savedAt: Instant) : GameDialog
+
     data class Load(val savedGames: List<SavedGame>) : GameDialog
+
     data object Appearance : GameDialog
 }
 
 enum class GameMessage { GameSaved, GameLoaded, SaveUnreadable }
 
 sealed interface GameAction {
+
     data class SquareTapped(val square: Square) : GameAction
+
     data class BearOffChosen(val move: Move) : GameAction
+
     data object NewGameClicked : GameAction
+
     data class ModeChosen(val mode: GameMode) : GameAction
+
     data class SideChosen(val side: Player) : GameAction
+
     data class DifficultyChosen(val difficulty: Difficulty) : GameAction
+
     data object BackToModeClicked : GameAction
+
     data object UndoClicked : GameAction
+
     data object HintClicked : GameAction
+
     data object MenuClicked : GameAction
+
     data object MenuDismissed : GameAction
+
     data object AppearanceClicked : GameAction
+
     data object SaveClicked : GameAction
+
     data class SaveConfirmed(val name: String) : GameAction
+
     data object LoadClicked : GameAction
+
     data class SavedGameChosen(val game: SavedGame) : GameAction
+
     data class SavedGameDeleted(val game: SavedGame) : GameAction
+
     data object DialogDismissed : GameAction
+
     data object MessageShown : GameAction
+
     data object CelebrationShown : GameAction
 }

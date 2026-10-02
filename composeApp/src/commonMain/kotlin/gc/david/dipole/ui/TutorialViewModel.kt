@@ -20,9 +20,12 @@ data class TutorialUiState(
 )
 
 sealed interface TutorialAction {
+
     /** The player swiped to [page]. */
     data class PageShown(val page: TutorialPage) : TutorialAction
+
     data object NextClicked : TutorialAction
+
     data object BackClicked : TutorialAction
 
     /** Skip, or system back on the first page. */
@@ -32,6 +35,7 @@ sealed interface TutorialAction {
 class TutorialViewModel(private val preferences: GamePreferences) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TutorialUiState(captureTargets = captureTargets()))
+
     val uiState: StateFlow<TutorialUiState> = _uiState.asStateFlow()
 
     fun onAction(action: TutorialAction) {
@@ -56,6 +60,7 @@ class TutorialViewModel(private val preferences: GamePreferences) : ViewModel() 
     }
 
     companion object {
+
         /** The very first launch opens the tutorial instead of the game. */
         fun opensOnLaunch(preferences: GamePreferences): Boolean = !preferences.tutorialSeen
 

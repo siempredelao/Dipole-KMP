@@ -2,6 +2,7 @@ package gc.david.dipole.game
 
 /** Starts, plays, undoes and replays [GameSession]s, and answers questions about whose turn it is. */
 object GameSessions {
+
     fun new(
         mode: GameMode,
         difficulty: Difficulty = Difficulty.Medium,
@@ -43,17 +44,21 @@ object GameSessions {
      */
     fun undo(session: GameSession): GameSession {
         val count = undoneMoveCount(session) ?: return session
+
         return session.copy(moves = session.moves.take(count), positions = session.positions.take(count + 1))
     }
 
     /** How many moves are left after an undo, or null when there is nothing to undo. */
     private fun undoneMoveCount(session: GameSession): Int? {
         if (session.moves.isEmpty()) return null
+
         var count = session.moves.size - 1
         if (session.mode == GameMode.VsComputer) {
             while (count > 0 && session.positions[count].toMove != session.humanSide) count--
+
             if (session.positions[count].toMove != session.humanSide) return null
         }
+
         return count
     }
 }

@@ -55,7 +55,9 @@ fun DifficultyDialog(
                     }
                 }
                 Text(stringResource(Res.string.side_white_first), style = MaterialTheme.typography.bodySmall)
+
                 HorizontalDivider(Modifier.padding(vertical = 4.dp))
+
                 Difficulty.entries.forEach { difficulty ->
                     val label = "${stringResource(difficulty.label)} · ${stringResource(difficulty.description)}"
                     if (difficulty == suggested) {

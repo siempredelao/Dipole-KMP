@@ -81,9 +81,11 @@ fun TutorialScreen(uiState: TutorialUiState, onAction: (TutorialAction) -> Unit)
     val pages = TutorialPage.entries
     val isFirst = page.ordinal == 0
     val isLast = page.ordinal == pages.lastIndex
+
     BackHandler {
         onAction(if (isFirst) TutorialAction.Closed else TutorialAction.BackClicked)
     }
+
     val pagerState = rememberPagerState(initialPage = page.ordinal) { pages.size }
     // The ViewModel owns the page: follow it when Back or Next change it...
     LaunchedEffect(page) {
@@ -93,14 +95,23 @@ fun TutorialScreen(uiState: TutorialUiState, onAction: (TutorialAction) -> Unit)
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.settledPage }.collect { onAction(TutorialAction.PageShown(pages[it])) }
     }
+
     val colors = LocalAppColors.current
 
     Column(
-        modifier = Modifier.fillMaxSize().safeDrawingPadding().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .safeDrawingPadding()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Row(Modifier.widthIn(max = 560.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier
+                .widthIn(max = 560.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 stringResource(Res.string.tutorial_title),
                 fontSize = 24.sp,
@@ -108,23 +119,35 @@ fun TutorialScreen(uiState: TutorialUiState, onAction: (TutorialAction) -> Unit)
                 color = colors.text,
                 modifier = Modifier.weight(1f),
             )
+
             if (!isLast) {
                 TextButton(onClick = { onAction(TutorialAction.Closed) }) {
                     Text(stringResource(Res.string.tutorial_skip))
                 }
             }
         }
-        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f).fillMaxWidth()) { index ->
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.weight(1f).fillMaxWidth()
+        ) { index ->
             TutorialPageContent(pages[index], uiState.captureTargets[pages[index]].orEmpty())
         }
+
         PageDots(current = page.ordinal, count = pages.size)
-        Row(Modifier.widthIn(max = 560.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+
+        Row(
+            Modifier.widthIn(max = 560.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             if (!isFirst) {
                 OutlinedButton(onClick = { onAction(TutorialAction.BackClicked) }) {
                     Text(stringResource(Res.string.back))
                 }
             }
+
             Spacer(Modifier.weight(1f))
+
             Button(onClick = { onAction(TutorialAction.NextClicked) }) {
                 Text(stringResource(if (isLast) Res.string.tutorial_start else Res.string.tutorial_next))
             }
@@ -137,8 +160,10 @@ fun TutorialScreen(uiState: TutorialUiState, onAction: (TutorialAction) -> Unit)
 @Composable
 private fun TutorialPageContent(page: TutorialPage, captureTargets: Set<Square>) {
     val colors = LocalAppColors.current
+
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 4.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+            .padding(horizontal = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -162,7 +187,11 @@ private fun TutorialPageContent(page: TutorialPage, captureTargets: Set<Square>)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 offBoard.forEach { move ->
                     Text(
-                        stringResource(Res.string.bear_off_button, move.count, arrow(move.direction, flipped = false)),
+                        stringResource(
+                            Res.string.bear_off_button,
+                            move.count,
+                            arrow(move.direction, flipped = false)
+                        ),
                         color = colors.text,
                         modifier = Modifier
                             .border(1.dp, colors.outline, RoundedCornerShape(50))
@@ -171,9 +200,26 @@ private fun TutorialPageContent(page: TutorialPage, captureTargets: Set<Square>)
                 }
             }
         }
-        Column(Modifier.widthIn(max = 560.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(stringResource(page.title), fontSize = 20.sp, fontWeight = FontWeight.Bold, color = colors.text)
-            Text(stringResource(page.body), fontSize = 16.sp, lineHeight = 24.sp, color = colors.secondaryText)
+
+        Column(
+            modifier = Modifier
+                .widthIn(max = 560.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                stringResource(page.title),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.text
+            )
+
+            Text(
+                stringResource(page.body),
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                color = colors.secondaryText
+            )
         }
     }
 }
@@ -182,6 +228,7 @@ private fun TutorialPageContent(page: TutorialPage, captureTargets: Set<Square>)
 @Composable
 private fun pulse(): Float {
     if (LocalInspectionMode.current) return 1f
+
     val transition = rememberInfiniteTransition()
     val alpha = transition.animateFloat(
         initialValue = 0.2f,

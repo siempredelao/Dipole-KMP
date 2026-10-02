@@ -6,6 +6,7 @@ package gc.david.dipole.sound
  * these settings into audio.
  */
 enum class GameSound(val startHz: Double, val endHz: Double, val seconds: Double, val volume: Double) {
+
     /** A short wooden tick when checkers land. */
     Move(startHz = 900.0, endHz = 600.0, seconds = 0.06, volume = 0.5),
 

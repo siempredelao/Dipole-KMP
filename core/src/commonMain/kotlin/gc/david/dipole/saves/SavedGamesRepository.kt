@@ -3,6 +3,7 @@ package gc.david.dipole.saves
 import com.russhwolf.settings.Settings
 
 interface SavedGamesRepository {
+
     /** All saved games, newest first. */
     fun list(): List<SavedGame>
 
@@ -42,6 +43,7 @@ class SettingsSavedGamesRepository(
     private fun key(id: String) = "saved_game_$id"
 
     private companion object {
+
         const val IDS_KEY = "saved_game_ids"
     }
 }

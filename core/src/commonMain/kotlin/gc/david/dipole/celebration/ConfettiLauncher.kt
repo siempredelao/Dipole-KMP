@@ -36,6 +36,7 @@ class ConfettiLauncher(private val random: Random) {
     }
 
     companion object {
+
         /** How many confetti colours the theme provides; [ConfettiPiece.colorIndex] is below this. */
         const val COLOR_COUNT = 6
     }

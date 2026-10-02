@@ -27,9 +27,9 @@ import gc.david.dipole.resources.mode_two_players
 import gc.david.dipole.resources.mode_vs_computer
 import gc.david.dipole.resources.moves
 import gc.david.dipole.saves.SavedGame
-import kotlin.time.Instant
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Instant
 
 /** Lists the saved games, newest first. Tap one to load it. */
 @Composable
@@ -66,6 +66,7 @@ private fun SavedGameRow(game: SavedGame, onLoad: () -> Unit, onDelete: () -> Un
             Text(game.name, style = MaterialTheme.typography.bodyLarge)
             Text(details(game), style = MaterialTheme.typography.bodySmall)
         }
+
         TextButton(onClick = onDelete) { Text(stringResource(Res.string.delete)) }
     }
 }
@@ -79,5 +80,6 @@ private fun details(game: SavedGame): String {
     }
     val moveCount = pluralStringResource(Res.plurals.moves, game.moves.size, game.moves.size)
     val date = formatDate(Instant.fromEpochMilliseconds(game.savedAtEpochMillis))
+
     return "$mode · $moveCount · $date"
 }

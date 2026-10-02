@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -56,7 +56,11 @@ fun RulesScreen(onBack: () -> Unit, onShowTutorial: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(onClick = onBack) {
-                Icon(painterResource(Res.drawable.ic_arrow_back), stringResource(Res.string.back), tint = LocalAppColors.current.text)
+                Icon(
+                    painterResource(Res.drawable.ic_arrow_back),
+                    stringResource(Res.string.back),
+                    tint = LocalAppColors.current.text
+                )
             }
             Text(
                 stringResource(Res.string.rules_title),
@@ -66,6 +70,7 @@ fun RulesScreen(onBack: () -> Unit, onShowTutorial: () -> Unit) {
                 modifier = Modifier.padding(start = 8.dp),
             )
         }
+
         Text(
             stringResource(Res.string.rules),
             color = LocalAppColors.current.secondaryText,
@@ -73,9 +78,11 @@ fun RulesScreen(onBack: () -> Unit, onShowTutorial: () -> Unit) {
             lineHeight = 24.sp,
             modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
         )
+
         OutlinedButton(onClick = onShowTutorial) {
             Text(stringResource(Res.string.tutorial_show))
         }
+
         Credits(Modifier.widthIn(max = 560.dp).fillMaxWidth())
     }
 }
@@ -88,10 +95,13 @@ fun RulesScreen(onBack: () -> Unit, onShowTutorial: () -> Unit) {
 private fun Credits(modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
     val colors = LocalAppColors.current
+
     Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
         HorizontalDivider(color = colors.outline, modifier = Modifier.padding(bottom = 8.dp))
+
         Text(stringResource(Res.string.credits_designed_by), color = colors.text, fontSize = 14.sp)
         Text(COPYRIGHT, color = colors.secondaryText, fontSize = 14.sp)
+
         TextButton(onClick = { uriHandler.openUri(WEBSITE_URL) }) {
             Text(stringResource(Res.string.credits_more_games, WEBSITE_NAME))
         }

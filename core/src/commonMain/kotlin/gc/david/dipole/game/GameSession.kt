@@ -19,6 +19,7 @@ data class GameSession internal constructor(
     val moves: List<Move>,
     val positions: List<GameState>,
 ) {
+
     /** The current position. */
     val state: GameState get() = positions.last()
 

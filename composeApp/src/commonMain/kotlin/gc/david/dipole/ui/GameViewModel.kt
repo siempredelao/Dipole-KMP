@@ -14,7 +14,6 @@ import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGame
 import gc.david.dipole.saves.SavedGameFactory
 import gc.david.dipole.saves.SavedGamesRepository
-import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.time.Clock
 
 class GameViewModel(
     private val repository: SavedGamesRepository,
@@ -109,6 +109,7 @@ class GameViewModel(
     private fun onSquareTapped(action: GameAction.SquareTapped) {
         val current = _uiState.value
         val target = current.targets[action.square]
+
         when {
             target != null -> play(target)
             action.square in current.movable -> select(if (current.selected == action.square) null else action.square)
@@ -123,6 +124,7 @@ class GameViewModel(
 
     private fun toggleHints() {
         if (!_uiState.value.canHint) return
+
         updateUi { it.copy(hintsOn = !it.hintsOn, hint = null) }
         requestHint()
     }
@@ -133,6 +135,7 @@ class GameViewModel(
         val current = _uiState.value
         val square = current.selected
         if (!current.hintsOn || square == null) return
+
         val session = current.session
         hintJob = viewModelScope.launch {
             val hint = withContext(computeDispatcher) { hinter.hint(session.state, square) } ?: return@launch
@@ -146,6 +149,7 @@ class GameViewModel(
     private fun play(move: Move) {
         val session = _uiState.value.session
         if (GameSessions.isComputerTurn(session) || !DipoleRules.isLegal(session.state, move)) return
+
         val next = GameSessions.play(session, move)
         startSession(next, message = null)
         celebrateIfHumanWon(next)
@@ -155,6 +159,7 @@ class GameViewModel(
     private fun celebrateIfHumanWon(session: GameSession) {
         val winner = DipoleRules.winner(session.state) ?: return
         if (session.mode == GameMode.VsComputer && winner != session.humanSide) return
+
         updateUi { it.copy(celebration = it.celebration + 1, celebrating = true) }
     }
 
@@ -169,6 +174,7 @@ class GameViewModel(
             updateUi { it.copy(dialog = null, message = GameMessage.SaveUnreadable) }
             return
         }
+
         startSession(session, message = GameMessage.GameLoaded)
     }
 
@@ -201,6 +207,7 @@ class GameViewModel(
             val move = withContext(computeDispatcher) { computerPlayers.forDifficulty(session.difficulty).chooseMove(session.state) } ?: return@launch
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
+
             val next = GameSessions.play(session, move)
             updateUi { it.copy(session = next, selected = null, hintsOn = false, hint = null) }
             // The computer can lose on its own move, by moving its last checkers off the board.
@@ -218,6 +225,7 @@ class GameViewModel(
     }
 
     private companion object {
+
         const val COMPUTER_DELAY_MILLIS = 400L
     }
 }

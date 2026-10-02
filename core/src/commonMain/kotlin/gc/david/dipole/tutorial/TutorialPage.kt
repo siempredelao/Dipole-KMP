@@ -18,6 +18,7 @@ enum class TutorialPage(
     val examples: List<Move> = emptyList(),
     val hinted: Square? = null,
 ) {
+
     /** The board, the starting stacks and the goal. */
     Goal(DipoleRules.initial()),
 

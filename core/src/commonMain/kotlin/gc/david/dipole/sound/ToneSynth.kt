@@ -1,5 +1,6 @@
 package gc.david.dipole.sound
 
+import gc.david.dipole.sound.ToneSynth.SAMPLE_RATE
 import kotlin.math.PI
 import kotlin.math.exp
 import kotlin.math.roundToInt
@@ -7,12 +8,14 @@ import kotlin.math.sin
 
 /** Synthesizes the audio for a [GameSound]: a gliding sine tone with a quick decay. */
 object ToneSynth {
+
     const val SAMPLE_RATE = 44_100
 
     /** [sound] as 16-bit mono samples at [SAMPLE_RATE]. */
     fun samples(sound: GameSound): ShortArray {
         val count = (sound.seconds * SAMPLE_RATE).roundToInt()
         var phase = 0.0
+
         return ShortArray(count) { i ->
             val t = i.toDouble() / count
             val hz = sound.startHz + (sound.endHz - sound.startHz) * t
@@ -46,6 +49,7 @@ object ToneSynth {
         putString(36, "data")
         putInt(40, dataSize, 4)
         samples.forEachIndexed { i, sample -> putInt(44 + i * 2, sample.toInt(), 2) }
+
         return bytes
     }
 }

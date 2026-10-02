@@ -1,5 +1,6 @@
 package gc.david.dipole.celebration
 
+import gc.david.dipole.celebration.ConfettiPhysics.frame
 import kotlin.math.exp
 import kotlin.math.sin
 
@@ -8,7 +9,9 @@ import kotlin.math.sin
  * and lets tests ask for any moment directly.
  */
 object ConfettiPhysics {
+
     const val DURATION_SECONDS = 3.2f
+
     private const val FADE_SECONDS = 0.8f
 
     /** Screen heights per second squared. */

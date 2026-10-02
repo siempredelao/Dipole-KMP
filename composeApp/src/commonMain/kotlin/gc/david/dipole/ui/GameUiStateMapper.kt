@@ -16,6 +16,7 @@ object GameUiStateMapper {
         val winner = DipoleRules.winner(state)
         val fromSelected = uiState.selected?.let { DipoleRules.legalMovesFrom(state, it) }.orEmpty()
         val (onBoard, offBoard) = fromSelected.partition { it.to.isOnBoard }
+
         return uiState.copy(
             movable = if (computerThinking) emptySet() else DipoleRules.legalMoves(state).map { it.from }.toSet(),
             targets = onBoard.associateBy { it.to },

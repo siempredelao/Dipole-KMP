@@ -27,6 +27,7 @@ class ComputerPlayer(
     private val random: Random = Random.Default,
     private val timeSource: TimeSource = TimeSource.Monotonic,
 ) {
+
     fun chooseMove(state: GameState): Move? {
         val moves = ordered(state, DipoleRules.legalMoves(state))
         if (moves.isEmpty()) return null
@@ -134,6 +135,7 @@ class ComputerPlayer(
     private class OutOfTime : RuntimeException()
 
     companion object {
+
         private const val WIN = 100_000
         private const val MATERIAL_WEIGHT = 10
         private const val THREAT_WEIGHT = 8

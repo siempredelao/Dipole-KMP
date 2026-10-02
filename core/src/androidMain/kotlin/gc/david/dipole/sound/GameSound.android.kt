@@ -17,6 +17,7 @@ actual fun playSound(sound: GameSound) {
 
 private fun createTrack(sound: GameSound): AudioTrack {
     val samples = ToneSynth.samples(sound)
+
     val track = AudioTrack.Builder()
         .setAudioAttributes(
             AudioAttributes.Builder()
@@ -35,5 +36,6 @@ private fun createTrack(sound: GameSound): AudioTrack {
         .setBufferSizeInBytes(samples.size * 2)
         .build()
     track.write(samples, 0, samples.size)
+
     return track
 }

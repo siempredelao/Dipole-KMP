@@ -17,6 +17,7 @@ package gc.david.dipole.game
  * - A player wins when all of the opponent's checkers have been removed.
  */
 object DipoleRules {
+
     const val STARTING_STACK = 12
 
     // Both stacks sit just left of centre from White's point of view (per the official rules).
@@ -67,13 +68,16 @@ object DipoleRules {
 
     fun legalMoves(state: GameState): List<Move> {
         if (isOver(state)) return emptyList()
+
         return state.board.filterValues { it.owner == state.toMove }
             .flatMap { (square, stack) -> legalMovesFrom(state, square, stack) }
     }
 
     fun legalMovesFrom(state: GameState, square: Square): List<Move> {
         val stack = state.board[square] ?: return emptyList()
+
         if (stack.owner != state.toMove || isOver(state)) return emptyList()
+
         return legalMovesFrom(state, square, stack)
     }
 

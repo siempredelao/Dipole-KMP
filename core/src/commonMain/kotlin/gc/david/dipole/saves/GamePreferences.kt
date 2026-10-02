@@ -8,6 +8,7 @@ import gc.david.dipole.game.Player
 
 /** Choices remembered between launches. */
 interface GamePreferences {
+
     /** The difficulty last picked for a game against the computer. */
     var lastDifficulty: Difficulty
 
@@ -62,6 +63,7 @@ class SettingsGamePreferences(
         set(value) = settings.putBoolean(TUTORIAL_SEEN_KEY, value)
 
     private companion object {
+
         const val LAST_DIFFICULTY_KEY = "last_difficulty"
         const val LAST_SIDE_KEY = "last_side"
         const val SOUND_ON_KEY = "sound_on"

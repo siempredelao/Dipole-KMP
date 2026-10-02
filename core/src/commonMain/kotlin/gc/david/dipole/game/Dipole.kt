@@ -14,13 +14,16 @@ enum class Player {
 }
 
 data class Square(val row: Int, val col: Int) {
+
     val isOnBoard: Boolean get() = row in 0 until BOARD_SIZE && col in 0 until BOARD_SIZE
+
     val isDark: Boolean get() = (row + col) % 2 == 0
 
     override fun toString(): String = "${'a' + col}${row + 1}"
 }
 
 data class Stack(val owner: Player, val size: Int) {
+
     init {
         require(size > 0) { "A stack needs at least one checker" }
     }
@@ -44,14 +47,19 @@ enum class Direction(val dRow: Int, val dCol: Int) {
 }
 
 sealed interface MoveKind {
+
     data object Step : MoveKind
+
     data object Merge : MoveKind
+
     data class Capture(val captured: Int) : MoveKind
+
     data object BearOff : MoveKind
 }
 
 /** Moves [count] checkers from the top of the stack on [from] in [direction]. */
 data class Move(val from: Square, val direction: Direction, val count: Int) {
+
     val to: Square get() = Square(from.row + direction.dRow * count, from.col + direction.dCol * count)
 }
 

@@ -1,0 +1,1 @@
+Mark Steere's strategy game for two. Play the computer or a friend, offline.

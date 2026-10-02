@@ -1,0 +1,29 @@
+Dipole är ett strategispel för två spelare, skapat av Mark Steere. Reglerna är enkla, och varje drag räknas.
+
+Båda sidor börjar med en enda hög med 12 pjäser. När det är din tur flyttar du hela högen eller en del av den exakt lika många rutor som antalet pjäser du flyttar. Lägg dem på en egen hög, slå en motståndarhög som inte är större än pjäserna du flyttar, eller gå ut över brädets kant. Få bort alla motståndarens pjäser från spelet för att vinna.
+
+Spela som du vill
+• Mot datorn på Lätt, Medel eller Svår
+• Spela som Vit eller Svart
+• Två spelare på samma enhet
+
+Lär dig medan du spelar
+• En kort introduktion visar alla regler med exempel på brädet
+• Tryck på en hög för att se vart den kan gå, med slag markerade i rött
+• Kör du fast? Tips visar det bästa draget för högen du väljer
+• Ångra tar tillbaka ditt senaste drag
+• De fullständiga reglerna finns alltid nära till hands
+
+Gör det till ditt
+• Ljust eller mörkt läge, eller som på din enhet
+• Fem brädor: Trä, Turnering, Skiffer, Marmor och Hög kontrast, gjord för färgblinda och synsvaga
+• Ljud och vibration som går att stänga av
+
+Dessutom
+• Spara spel och fortsätt senare
+• Konfetti när du vinner
+• Fungerar offline
+• Inga annonser, inga konton, ingen datainsamling
+• På svenska, engelska, spanska, franska, italienska, portugisiska, tyska, polska, turkiska, danska och norska
+
+Dipole är skapat av Mark Steere. Hitta fler av hans spel på marksteeregames.com.

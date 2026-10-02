@@ -1,0 +1,29 @@
+Dipole to gra strategiczna dla dwóch graczy, którą zaprojektował Mark Steere. Zasady są proste, a każdy ruch ma znaczenie.
+
+Każda strona zaczyna z jednym stosem 12 pionków. W swoim ruchu przesuń cały stos lub jego część o dokładnie tyle pól, ile pionków przesuwasz. Połącz je z własnym stosem, zbij stos przeciwnika nie większy niż przesuwana grupa albo wyjdź poza krawędź planszy. Aby wygrać, wyeliminuj z gry wszystkie pionki przeciwnika.
+
+Graj po swojemu
+• Z komputerem na poziomie Łatwy, Średni lub Trudny
+• Graj białymi albo czarnymi
+• Dwóch graczy na jednym urządzeniu
+
+Ucz się, grając
+• Krótki samouczek pokazuje każdą zasadę na przykładach na planszy
+• Dotknij stosu, aby zobaczyć, dokąd może się ruszyć; bicia są zaznaczone na czerwono
+• Nie wiesz, co zrobić? Podpowiedź pokaże najlepszy ruch wybranego stosu
+• Cofnij odwołuje twój ostatni ruch
+• Pełne zasady zawsze pod ręką
+
+Dopasuj do siebie
+• Tryb jasny lub ciemny albo zgodny z urządzeniem
+• Pięć plansz: Drewno, Turniej, Łupek, Marmur i Wysoki kontrast, przygotowana z myślą o osobach z daltonizmem lub słabym wzrokiem
+• Dźwięk i wibracje, które można wyłączyć
+
+A także
+• Zapisuj gry i wracaj do nich później
+• Konfetti, gdy wygrasz
+• Działa offline
+• Bez reklam, bez kont, bez zbierania danych
+• Po polsku, angielsku, hiszpańsku, francusku, włosku, portugalsku, niemiecku, turecku, duńsku, norwesku i szwedzku
+
+Grę Dipole zaprojektował Mark Steere. Więcej jego gier znajdziesz na marksteeregames.com.

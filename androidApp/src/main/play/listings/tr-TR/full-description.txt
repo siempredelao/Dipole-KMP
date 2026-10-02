@@ -1,0 +1,29 @@
+Dipole, Mark Steere tarafından tasarlanmış iki kişilik bir strateji oyunudur. Kuralları basittir ve her hamle önemlidir.
+
+İki taraf da 12 taştan oluşan tek bir yığınla başlar. Sıra sendeyken bir yığının tamamını ya da bir kısmını, hareket ettirdiğin taş sayısı kadar kare ilerlet. Taşları kendi yığınınla birleştir, hareket ettirdiğin gruptan büyük olmayan bir rakip yığını al ya da tahtanın kenarından dışarı çık. Kazanmak için rakibin tüm taşlarını oyundan çıkar.
+
+İstediğin gibi oyna
+• Bilgisayara karşı: Kolay, Orta veya Zor
+• Beyaz ya da Siyah ile oyna
+• Aynı cihazda iki kişi
+
+Oynayarak öğren
+• Kısa bir eğitim, her kuralı tahta üzerinde örneklerle gösterir
+• Gidebileceği yerleri görmek için bir yığına dokun; almalar kırmızıyla gösterilir
+• Takıldın mı? İpucu, seçtiğin yığın için en iyi hamleyi gösterir
+• Geri al ile son hamleni geri alabilirsin
+• Tüm kurallar her zaman bir dokunuş uzağında
+
+Sana göre
+• Açık veya koyu mod ya da cihazının ayarı
+• Beş tahta: Ahşap, Turnuva, Arduvaz, Mermer ve renk körlüğü ya da az görme için tasarlanan Yüksek kontrast
+• Kapatılabilen ses ve titreşim
+
+Ayrıca
+• Oyunlarını kaydet, sonra kaldığın yerden devam et
+• Kazandığında konfeti
+• İnternetsiz çalışır
+• Reklam yok, hesap yok, veri toplama yok
+• Türkçe, İngilizce, İspanyolca, Fransızca, İtalyanca, Portekizce, Almanca, Lehçe, Danca, Norveççe ve İsveççe
+
+Dipole, Mark Steere tarafından tasarlandı. Diğer oyunlarını marksteeregames.com adresinde bulabilirsin.

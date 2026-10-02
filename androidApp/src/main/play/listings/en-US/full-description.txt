@@ -1,0 +1,29 @@
+Dipole is a strategy game for two players, designed by Mark Steere. The rules are simple, and every move counts.
+
+Each side starts with a single stack of 12 checkers. On your turn, move all or part of a stack exactly as many squares as the checkers you move. Land on one of your own stacks to merge, capture an enemy stack no bigger than your moving group, or move off the edge of the board. Take all of your opponent's checkers out of play to win.
+
+Play your way
+• Against the computer on Easy, Medium or Hard
+• Play as White or Black
+• Two players on one device
+
+Learn as you play
+• A short tutorial shows every rule with examples on the board
+• Tap a stack to see where it can go, with captures in red
+• Stuck? Hint shows the best move for the stack you pick
+• Undo takes back your last move
+• The full rules are always one tap away
+
+Make it yours
+• Light or dark mode, or follow your device
+• Five boards: Wood, Tournament, Slate, Marble and High contrast, made for color-blind and low-vision players
+• Sound and vibration, which you can turn off
+
+Also
+• Save games and continue them later
+• Confetti when you win
+• Works offline
+• No ads, no accounts, no data collected
+• In English, Spanish, French, Italian, Portuguese, German, Polish, Turkish, Danish, Norwegian and Swedish
+
+Dipole was designed by Mark Steere. Find more of his games at marksteeregames.com.

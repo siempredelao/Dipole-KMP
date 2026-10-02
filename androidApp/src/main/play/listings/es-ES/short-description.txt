@@ -1,0 +1,1 @@
+El juego de estrategia de Mark Steere. Juega contra el ordenador o un amigo.

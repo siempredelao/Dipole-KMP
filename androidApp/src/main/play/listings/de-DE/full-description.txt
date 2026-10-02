@@ -1,0 +1,29 @@
+Dipole ist ein Strategiespiel für zwei Personen, entworfen von Mark Steere. Die Regeln sind einfach, und jeder Zug zählt.
+
+Beide Seiten beginnen mit einem einzigen Stapel aus 12 Steinen. Ziehe in deinem Zug einen ganzen Stapel oder einen Teil davon genau so viele Felder weit, wie du Steine ziehst. Vereine sie mit einem eigenen Stapel, schlage einen gegnerischen Stapel, der nicht größer ist als deine gezogenen Steine, oder ziehe über den Brettrand hinaus. Nimm alle Steine deines Gegners aus dem Spiel, um zu gewinnen.
+
+Spiel, wie du willst
+• Gegen den Computer: Leicht, Mittel oder Schwer
+• Spiele mit Weiß oder Schwarz
+• Zu zweit auf einem Gerät
+
+Beim Spielen lernen
+• Eine kurze Anleitung zeigt jede Regel mit Beispielen auf dem Brett
+• Tippe auf einen Stapel, um zu sehen, wohin er ziehen kann; Schlagzüge sind rot
+• Nicht weiter? Der Tipp zeigt den besten Zug für den gewählten Stapel
+• Rückgängig nimmt deinen letzten Zug zurück
+• Die vollständigen Regeln sind immer schnell zur Hand
+
+Ganz nach deinem Geschmack
+• Heller oder dunkler Modus, oder wie auf deinem Gerät
+• Fünf Bretter: Holz, Turnier, Schiefer, Marmor und Hoher Kontrast, gedacht für Menschen mit Farbenblindheit oder Sehschwäche
+• Ton und Vibration, abschaltbar
+
+Außerdem
+• Speichere Spiele und setze sie später fort
+• Konfetti, wenn du gewinnst
+• Funktioniert offline
+• Keine Werbung, kein Konto, keine Datenerhebung
+• Auf Deutsch, Englisch, Spanisch, Französisch, Italienisch, Portugiesisch, Polnisch, Türkisch, Dänisch, Norwegisch und Schwedisch
+
+Dipole wurde von Mark Steere entworfen. Weitere Spiele von ihm findest du auf marksteeregames.com.

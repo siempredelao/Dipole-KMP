@@ -1,0 +1,29 @@
+Dipole é um jogo de estratégia para dois jogadores criado por Mark Steere. As regras são simples, e cada jogada conta.
+
+Cada lado começa com uma única pilha de 12 peças. Na sua vez, mova a pilha inteira ou parte dela exatamente tantas casas quanto o número de peças que você move. Junte as peças a outra pilha sua, capture uma pilha inimiga que não seja maior que o grupo que você move ou tire as peças pela borda do tabuleiro. Tire do jogo todas as peças do adversário para vencer.
+
+Jogue do seu jeito
+• Contra o computador no Fácil, Médio ou Difícil
+• Jogue com as brancas ou com as pretas
+• Dois jogadores no mesmo aparelho
+
+Aprenda jogando
+• Um tutorial curto mostra cada regra com exemplos no tabuleiro
+• Toque em uma pilha para ver aonde ela pode ir, com as capturas em vermelho
+• Travou? A Dica mostra a melhor jogada para a pilha escolhida
+• Desfazer volta a sua última jogada
+• As regras completas sempre a um toque
+
+Personalize
+• Modo claro ou escuro, ou o do aparelho
+• Cinco tabuleiros: Madeira, Torneio, Ardósia, Mármore e Alto contraste, pensado para pessoas daltônicas ou com baixa visão
+• Som e vibração, que você pode desligar
+
+E mais
+• Salve seus jogos e continue depois
+• Confete quando você vence
+• Funciona offline
+• Sem anúncios, sem contas e sem coleta de dados
+• Em português, inglês, espanhol, francês, italiano, alemão, polonês, turco, dinamarquês, norueguês e sueco
+
+Dipole foi criado por Mark Steere. Conheça outros jogos dele em marksteeregames.com.

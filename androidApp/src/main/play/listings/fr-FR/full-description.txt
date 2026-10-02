@@ -1,0 +1,29 @@
+Dipole est un jeu de stratégie pour deux joueurs, conçu par Mark Steere. Les règles sont simples, et chaque coup compte.
+
+Chaque camp commence avec une seule pile de 12 pions. À votre tour, déplacez tout ou partie d’une pile d’exactement autant de cases que de pions déplacés. Rejoignez l’une de vos piles, capturez une pile adverse pas plus grande que votre groupe, ou sortez par le bord du plateau. Sortez du jeu tous les pions adverses pour gagner.
+
+Jouez comme vous voulez
+• Contre l’ordinateur, en Facile, Moyen ou Difficile
+• Jouez les blancs ou les noirs
+• À deux sur le même appareil
+
+Apprenez en jouant
+• Un court tutoriel présente chaque règle avec des exemples sur le plateau
+• Touchez une pile pour voir où elle peut aller, captures en rouge
+• Bloqué ? L’indice montre le meilleur coup pour la pile choisie
+• Défaire annule votre dernier coup
+• Les règles complètes toujours à portée de main
+
+À votre goût
+• Mode clair ou sombre, ou celui de l’appareil
+• Cinq plateaux : Bois, Tournoi, Ardoise, Marbre et Contraste élevé, conçu pour les personnes daltoniennes ou malvoyantes
+• Son et vibration, désactivables
+
+Et aussi
+• Enregistrez vos parties et reprenez-les plus tard
+• Des confettis quand vous gagnez
+• Fonctionne hors connexion
+• Sans publicité, sans compte, sans collecte de données
+• En français, anglais, espagnol, italien, portugais, allemand, polonais, turc, danois, norvégien et suédois
+
+Dipole a été conçu par Mark Steere. Découvrez ses autres jeux sur marksteeregames.com.

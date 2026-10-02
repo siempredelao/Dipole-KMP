@@ -10,7 +10,7 @@ actual fun playSound(sound: GameSound) {
     runCatching {
         val clip = clips.getOrPut(sound) {
             AudioSystem.getClip().apply {
-                open(AudioSystem.getAudioInputStream(ByteArrayInputStream(sound.wavBytes())))
+                open(AudioSystem.getAudioInputStream(ByteArrayInputStream(ToneSynth.wavBytes(sound))))
             }
         }
         clip.stop()

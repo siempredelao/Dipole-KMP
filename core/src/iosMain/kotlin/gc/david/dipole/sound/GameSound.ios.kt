@@ -22,7 +22,7 @@ actual fun playSound(sound: GameSound) {
             sessionReady = true
         }
         val player = players.getOrPut(sound) {
-            AVAudioPlayer(data = sound.wavBytes().toNSData(), error = null).apply { prepareToPlay() }
+            AVAudioPlayer(data = ToneSynth.wavBytes(sound).toNSData(), error = null).apply { prepareToPlay() }
         }
         player.currentTime = 0.0
         player.play()

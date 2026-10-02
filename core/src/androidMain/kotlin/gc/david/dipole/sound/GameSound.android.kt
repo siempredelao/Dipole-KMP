@@ -16,7 +16,7 @@ actual fun playSound(sound: GameSound) {
 }
 
 private fun createTrack(sound: GameSound): AudioTrack {
-    val samples = sound.samples()
+    val samples = ToneSynth.samples(sound)
     val track = AudioTrack.Builder()
         .setAudioAttributes(
             AudioAttributes.Builder()
@@ -27,7 +27,7 @@ private fun createTrack(sound: GameSound): AudioTrack {
         .setAudioFormat(
             AudioFormat.Builder()
                 .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                .setSampleRate(SAMPLE_RATE)
+                .setSampleRate(ToneSynth.SAMPLE_RATE)
                 .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                 .build(),
         )

@@ -20,9 +20,10 @@ android {
         applicationId = "gc.david.dipole"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.android.versionCode.get().toInt()
+        versionName = libs.versions.android.versionName.get()
     }
+
     signingConfigs {
         if (keystorePropertiesFile.exists()) {
             create("release") {
@@ -33,6 +34,7 @@ android {
             }
         }
     }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.findByName("release")
@@ -42,9 +44,11 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     buildFeatures {
         compose = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

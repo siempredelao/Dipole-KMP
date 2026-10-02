@@ -35,7 +35,8 @@ import org.jetbrains.skia.Image
 /**
  * Renders the Google Play screenshots from the real screens, in every language the app has, for
  * phones and 7- and 10-inch tablets. Run it with `./gradlew :composeApp:storeScreenshots`; the PNGs
- * land in `composeApp/build/store-screenshots/<language>/<device>/`.
+ * land in `composeApp/build/store-screenshots/<language>/<device>/`, named like
+ * `es-ES-phone-01-game.png`.
  *
  * Text uses this computer's default font rather than Android's Roboto.
  */
@@ -47,7 +48,8 @@ fun main(args: Array<String>) {
         Locale.setDefault(Locale.forLanguageTag(locale))
         for (device in Device.entries) {
             for (shot in shots) {
-                val file = outDir.resolve("$language/${device.folder}/${shot.name}.png")
+                // Play rejects two uploads with the same file name, so each name carries its language and device.
+                val file = outDir.resolve("$language/${device.folder}/$language-${device.folder}-${shot.name}.png")
                 file.parentFile.mkdirs()
                 ImageIO.write(render(device, shot.content), "png", file)
             }

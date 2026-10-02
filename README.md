@@ -121,6 +121,7 @@ Publisher expects in case uploads are automated later:
 
 `./gradlew :composeApp:storeScreenshots` renders the screenshots from the real screens on the
 desktop JVM, in every language, for phones and for 7- and 10-inch tablets, into
-`composeApp/build/store-screenshots/<language>/<device>/`. The games they show are in
+`composeApp/build/store-screenshots/<language>/<device>/`, named like `es-ES-phone-01-game.png`
+because Play won't take two files with the same name. The games they show are in
 `composeApp/src/jvmTest/.../screenshots/StoreScreenshotStates.kt`, checked by
 `StoreScreenshotStatesTest`. Text is drawn with the computer's default font, not Android's.

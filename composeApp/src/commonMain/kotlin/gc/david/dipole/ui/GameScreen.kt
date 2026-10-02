@@ -59,11 +59,9 @@ import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
-import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Hint
 import gc.david.dipole.game.Move
-import gc.david.dipole.game.MoveKind
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
@@ -167,7 +165,7 @@ fun GameScreen(
                 fontSize = 14.sp,
             )
             Text(
-                statusText(session),
+                statusText(session, uiState.status),
                 color = appColors.text,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center,
@@ -176,7 +174,7 @@ fun GameScreen(
             // The human's side sits at the bottom: White, unless playing Black against the computer.
             val bottomPlayer = if (session.mode == GameMode.VsComputer) session.humanSide else Player.White
             val flipped = bottomPlayer == Player.Black
-            PlayerTray(state, bottomPlayer.opponent, trayModifier)
+            PlayerTray(uiState, bottomPlayer.opponent, trayModifier)
             Board(
                 state = state,
                 flipped = flipped,
@@ -184,15 +182,16 @@ fun GameScreen(
                 selected = uiState.selected,
                 movable = uiState.movable,
                 targets = uiState.targets,
+                captureTargets = uiState.captureTargets,
                 lastMove = session.lastMove,
                 hintedSquare = hintedMove?.to?.takeIf { it.isOnBoard },
                 hintAlpha = hintAlpha,
                 onSquareClick = { onAction(GameAction.SquareTapped(it)) },
                 modifier = Modifier.widthIn(max = 560.dp).fillMaxWidth(),
             )
-            PlayerTray(state, bottomPlayer, trayModifier)
+            PlayerTray(uiState, bottomPlayer, trayModifier)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = GameSessions.canUndo(session)) {
+                OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = uiState.canUndo) {
                     Text(stringResource(Res.string.undo))
                 }
                 val onHint = { onAction(GameAction.HintClicked) }
@@ -362,10 +361,9 @@ private fun hintText(uiState: GameUiState): StringResource? {
 }
 
 @Composable
-private fun statusText(session: GameSession): String {
-    val state = session.state
+private fun statusText(session: GameSession, status: GameStatus): String {
     val vsComputer = session.mode == GameMode.VsComputer
-    DipoleRules.winner(state)?.let { winner ->
+    status.winner?.let { winner ->
         val text = when {
             vsComputer && winner == session.humanSide -> Res.string.status_you_win
             vsComputer -> Res.string.status_computer_wins
@@ -375,14 +373,14 @@ private fun statusText(session: GameSession): String {
         return stringResource(text)
     }
     val turn = when {
-        GameSessions.isComputerTurn(session) -> Res.string.status_computer_thinking
+        status.computerThinking -> Res.string.status_computer_thinking
         vsComputer && session.humanSide == Player.White -> Res.string.status_your_move_white
         vsComputer -> Res.string.status_your_move_black
-        state.toMove == Player.White -> Res.string.status_white_to_move
+        session.state.toMove == Player.White -> Res.string.status_white_to_move
         else -> Res.string.status_black_to_move
     }
-    if (!GameSessions.opponentSatOut(session)) return stringResource(turn)
-    val satOut = when (state.toMove.opponent) {
+    val skipped = status.satOut ?: return stringResource(turn)
+    val satOut = when (skipped) {
         Player.White -> Res.string.status_white_sits_out
         Player.Black -> Res.string.status_black_sits_out
     }
@@ -391,11 +389,11 @@ private fun statusText(session: GameSession): String {
 
 /** A player's checkers on the board, next to the pile of their checkers removed from play. */
 @Composable
-private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Modifier) {
+private fun PlayerTray(uiState: GameUiState, player: Player, modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(16.dp).background(player.color, CircleShape).border(1.dp, appColors.outline, CircleShape))
         Text(
-            stringResource(Res.string.tray_on_board, stringResource(player.label), DipoleRules.checkersOf(state, player)),
+            stringResource(Res.string.tray_on_board, stringResource(player.label), uiState.checkersOnBoard.getValue(player)),
             color = appColors.text,
             modifier = Modifier.padding(start = 8.dp).weight(1f),
         )
@@ -405,7 +403,7 @@ private fun PlayerTray(state: GameState, player: Player, modifier: Modifier = Mo
             fontSize = 13.sp,
             modifier = Modifier.padding(end = 8.dp),
         )
-        RemovedPile(player, DipoleRules.removedCheckersOf(state, player))
+        RemovedPile(player, uiState.removedCheckers.getValue(player))
     }
 }
 
@@ -452,6 +450,7 @@ internal fun Board(
     selected: Square?,
     movable: Set<Square>,
     targets: Map<Square, Move>,
+    captureTargets: Set<Square>,
     lastMove: Move?,
     onSquareClick: ((Square) -> Unit)?,
     hintedSquare: Square? = null,
@@ -496,7 +495,7 @@ internal fun Board(
                                 )
                             }
                             if (target != null) {
-                                val capture = DipoleRules.kindOf(state, target) is MoveKind.Capture
+                                val capture = square in captureTargets
                                 val color = if (capture) colors.capture else colors.target
                                 Box(
                                     Modifier

@@ -43,9 +43,11 @@ class GameViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        GameUiState(
-            session = initialSession,
-            hasSavedGames = repository.list().isNotEmpty(),
+        GameUiStateMapper.map(
+            GameUiState(
+                session = initialSession,
+                hasSavedGames = repository.list().isNotEmpty(),
+            ),
         ),
     )
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
@@ -62,15 +64,15 @@ class GameViewModel(
         when (action) {
             is GameAction.SquareTapped -> onSquareTapped(action)
             is GameAction.BearOffChosen -> play(action.move)
-            GameAction.NewGameClicked -> _uiState.update { it.copy(menuOpen = false, dialog = GameDialog.NewGame) }
+            GameAction.NewGameClicked -> updateUi { it.copy(menuOpen = false, dialog = GameDialog.NewGame) }
             is GameAction.ModeChosen -> when (action.mode) {
                 GameMode.TwoPlayers -> startSession(GameSessions.new(GameMode.TwoPlayers), message = null)
-                GameMode.VsComputer -> _uiState.update {
+                GameMode.VsComputer -> updateUi {
                     it.copy(dialog = GameDialog.ChooseDifficulty(preferences.lastDifficulty, preferences.lastSide))
                 }
             }
-            is GameAction.SideChosen -> _uiState.update {
-                val dialog = it.dialog as? GameDialog.ChooseDifficulty ?: return@update it
+            is GameAction.SideChosen -> updateUi {
+                val dialog = it.dialog as? GameDialog.ChooseDifficulty ?: return@updateUi it
                 it.copy(dialog = dialog.copy(side = action.side))
             }
             is GameAction.DifficultyChosen -> {
@@ -79,28 +81,28 @@ class GameViewModel(
                 preferences.lastSide = side
                 startSession(GameSessions.new(GameMode.VsComputer, action.difficulty, humanSide = side), message = null)
             }
-            GameAction.BackToModeClicked -> _uiState.update { it.copy(dialog = GameDialog.NewGame) }
+            GameAction.BackToModeClicked -> updateUi { it.copy(dialog = GameDialog.NewGame) }
             GameAction.UndoClicked -> {
-                if (GameSessions.canUndo(_uiState.value.session)) startSession(GameSessions.undo(_uiState.value.session), message = null)
+                if (_uiState.value.canUndo) startSession(GameSessions.undo(_uiState.value.session), message = null)
             }
             GameAction.HintClicked -> toggleHints()
-            GameAction.MenuClicked -> _uiState.update { it.copy(menuOpen = true) }
-            GameAction.MenuDismissed -> _uiState.update { it.copy(menuOpen = false) }
-            GameAction.AppearanceClicked -> _uiState.update {
+            GameAction.MenuClicked -> updateUi { it.copy(menuOpen = true) }
+            GameAction.MenuDismissed -> updateUi { it.copy(menuOpen = false) }
+            GameAction.AppearanceClicked -> updateUi {
                 it.copy(menuOpen = false, dialog = GameDialog.Appearance)
             }
-            GameAction.SaveClicked -> _uiState.update {
+            GameAction.SaveClicked -> updateUi {
                 it.copy(menuOpen = false, dialog = GameDialog.Save(clock.now()))
             }
             is GameAction.SaveConfirmed -> save(action.name)
-            GameAction.LoadClicked -> _uiState.update {
+            GameAction.LoadClicked -> updateUi {
                 it.copy(menuOpen = false, dialog = GameDialog.Load(repository.list()))
             }
             is GameAction.SavedGameChosen -> load(action.game)
             is GameAction.SavedGameDeleted -> delete(action.game)
-            GameAction.DialogDismissed -> _uiState.update { it.copy(dialog = null) }
-            GameAction.MessageShown -> _uiState.update { it.copy(message = null) }
-            GameAction.CelebrationShown -> _uiState.update { it.copy(celebrating = false) }
+            GameAction.DialogDismissed -> updateUi { it.copy(dialog = null) }
+            GameAction.MessageShown -> updateUi { it.copy(message = null) }
+            GameAction.CelebrationShown -> updateUi { it.copy(celebrating = false) }
         }
     }
 
@@ -115,13 +117,13 @@ class GameViewModel(
     }
 
     private fun select(square: Square?) {
-        _uiState.update { it.copy(selected = square, hint = null) }
+        updateUi { it.copy(selected = square, hint = null) }
         requestHint()
     }
 
     private fun toggleHints() {
         if (!_uiState.value.canHint) return
-        _uiState.update { it.copy(hintsOn = !it.hintsOn, hint = null) }
+        updateUi { it.copy(hintsOn = !it.hintsOn, hint = null) }
         requestHint()
     }
 
@@ -137,7 +139,7 @@ class GameViewModel(
             // Only show it if the player is still looking at the same stack in the same position.
             val latest = _uiState.value
             if (latest.session !== session || latest.selected != square || !latest.hintsOn) return@launch
-            _uiState.update { it.copy(hint = hint) }
+            updateUi { it.copy(hint = hint) }
         }
     }
 
@@ -153,18 +155,18 @@ class GameViewModel(
     private fun celebrateIfHumanWon(session: GameSession) {
         val winner = DipoleRules.winner(session.state) ?: return
         if (session.mode == GameMode.VsComputer && winner != session.humanSide) return
-        _uiState.update { it.copy(celebration = it.celebration + 1, celebrating = true) }
+        updateUi { it.copy(celebration = it.celebration + 1, celebrating = true) }
     }
 
     private fun save(name: String) {
         repository.save(savedGames.create(_uiState.value.session, name))
-        _uiState.update { it.copy(dialog = null, message = GameMessage.GameSaved, hasSavedGames = true) }
+        updateUi { it.copy(dialog = null, message = GameMessage.GameSaved, hasSavedGames = true) }
     }
 
     private fun load(game: SavedGame) {
         val session = GameSessions.replay(game.mode, game.moves, game.difficulty, game.humanSide)
         if (session == null) {
-            _uiState.update { it.copy(dialog = null, message = GameMessage.SaveUnreadable) }
+            updateUi { it.copy(dialog = null, message = GameMessage.SaveUnreadable) }
             return
         }
         startSession(session, message = GameMessage.GameLoaded)
@@ -173,7 +175,7 @@ class GameViewModel(
     private fun delete(game: SavedGame) {
         repository.delete(game.id)
         val remaining = repository.list()
-        _uiState.update {
+        updateUi {
             it.copy(
                 dialog = if (remaining.isEmpty()) null else GameDialog.Load(remaining),
                 hasSavedGames = remaining.isNotEmpty(),
@@ -184,7 +186,7 @@ class GameViewModel(
     /** Switches to [session], closing any dialog and clearing the selection and hints. */
     private fun startSession(session: GameSession, message: GameMessage?) {
         hintJob?.cancel()
-        _uiState.update {
+        updateUi {
             it.copy(session = session, selected = null, dialog = null, message = message, hintsOn = false, hint = null)
         }
         playComputerIfItsTurn()
@@ -200,10 +202,18 @@ class GameViewModel(
             // Only apply the move if the game hasn't changed meanwhile (new game, load, ...).
             if (_uiState.value.session !== session) return@launch
             val next = GameSessions.play(session, move)
-            _uiState.update { it.copy(session = next, selected = null, hintsOn = false, hint = null) }
+            updateUi { it.copy(session = next, selected = null, hintsOn = false, hint = null) }
             // The computer can lose on its own move, by moving its last checkers off the board.
             celebrateIfHumanWon(next)
             playComputerIfItsTurn()
+        }
+    }
+
+    /** Updates the UI state, working out the derived fields again when the game or selection changed. */
+    private fun updateUi(transform: (GameUiState) -> GameUiState) {
+        _uiState.update { old ->
+            val new = transform(old)
+            if (new.session === old.session && new.selected == old.selected) new else GameUiStateMapper.map(new)
         }
     }
 

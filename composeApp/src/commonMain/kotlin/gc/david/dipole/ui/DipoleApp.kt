@@ -60,7 +60,7 @@ private fun DipoleNavigation() {
                 LaunchedEffect(uiState.finished) {
                     if (uiState.finished) navController.leaveTutorial()
                 }
-                TutorialScreen(uiState.page, viewModel::onAction)
+                TutorialScreen(uiState, viewModel::onAction)
             }
         }
     }

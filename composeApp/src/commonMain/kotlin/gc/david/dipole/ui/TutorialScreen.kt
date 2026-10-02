@@ -43,6 +43,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import gc.david.dipole.game.Square
 import gc.david.dipole.resources.Res
 import gc.david.dipole.resources.back
 import gc.david.dipole.resources.bear_off_button
@@ -70,12 +71,13 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * The tutorial wizard, showing [page]. Swiping or Back and Next move between pages; Skip and
- * Start playing close it.
+ * The tutorial wizard, showing the page in [uiState]. Swiping or Back and Next move between pages;
+ * Skip and Start playing close it.
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TutorialScreen(page: TutorialPage, onAction: (TutorialAction) -> Unit) {
+fun TutorialScreen(uiState: TutorialUiState, onAction: (TutorialAction) -> Unit) {
+    val page = uiState.page
     val pages = TutorialPage.entries
     val isFirst = page.ordinal == 0
     val isLast = page.ordinal == pages.lastIndex
@@ -113,7 +115,7 @@ fun TutorialScreen(page: TutorialPage, onAction: (TutorialAction) -> Unit) {
             }
         }
         HorizontalPager(state = pagerState, modifier = Modifier.weight(1f).fillMaxWidth()) { index ->
-            TutorialPageContent(pages[index])
+            TutorialPageContent(pages[index], uiState.captureTargets[pages[index]].orEmpty())
         }
         PageDots(current = page.ordinal, count = pages.size)
         Row(Modifier.widthIn(max = 560.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -133,7 +135,7 @@ fun TutorialScreen(page: TutorialPage, onAction: (TutorialAction) -> Unit) {
 /** One page: a still board diagram with the page's example moves, then its title and text. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TutorialPageContent(page: TutorialPage) {
+private fun TutorialPageContent(page: TutorialPage, captureTargets: Set<Square>) {
     val colors = LocalAppColors.current
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 4.dp),
@@ -147,6 +149,7 @@ private fun TutorialPageContent(page: TutorialPage) {
             selected = page.selected,
             movable = emptySet(),
             targets = page.examples.filter { it.to.isOnBoard }.associateBy { it.to },
+            captureTargets = captureTargets,
             lastMove = null,
             onSquareClick = null,
             hintedSquare = page.hinted,

@@ -115,5 +115,5 @@ private fun MidGameWith(mode: AppearanceMode, board: BoardTheme) {
 /** The game screen with default settings and no actions, for previews. */
 @Composable
 internal fun PreviewScreen(uiState: GameUiState) {
-    GameScreen(uiState, SettingsUiState(), onAction = {}, onSettingsAction = {}, onRulesClick = {})
+    GameScreen(GameUiStateMapper.map(uiState), SettingsUiState(), onAction = {}, onSettingsAction = {}, onRulesClick = {})
 }

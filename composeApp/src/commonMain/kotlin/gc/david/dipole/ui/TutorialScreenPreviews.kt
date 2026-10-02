@@ -8,7 +8,7 @@ import gc.david.dipole.tutorial.TutorialPage
 @Composable
 private fun TutorialPreview(page: TutorialPage, mode: AppearanceMode = AppearanceMode.Dark) {
     DipoleTheme(mode = mode) {
-        TutorialScreen(page, onAction = {})
+        TutorialScreen(TutorialUiState(page, captureTargets = TutorialViewModel.captureTargets()), onAction = {})
     }
 }
 

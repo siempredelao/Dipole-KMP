@@ -63,4 +63,11 @@ class TutorialViewModelTest {
         assertEquals(TutorialPage.Goal, vm.uiState.value.page)
         assertTrue(vm.uiState.value.finished)
     }
+
+    @Test
+    fun captureExamplesAreMarkedAsCaptures() {
+        val captureTargets = TutorialViewModel(preferences).uiState.value.captureTargets
+        assertEquals(TutorialPage.Captures.examples.map { it.to }.toSet(), captureTargets[TutorialPage.Captures])
+        assertEquals(emptySet(), captureTargets[TutorialPage.Moving])
+    }
 }

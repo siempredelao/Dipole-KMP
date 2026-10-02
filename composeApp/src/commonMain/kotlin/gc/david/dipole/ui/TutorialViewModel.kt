@@ -1,6 +1,9 @@
 package gc.david.dipole.ui
 
 import androidx.lifecycle.ViewModel
+import gc.david.dipole.game.DipoleRules
+import gc.david.dipole.game.MoveKind
+import gc.david.dipole.game.Square
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.tutorial.TutorialPage
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +15,8 @@ import kotlinx.coroutines.flow.update
 data class TutorialUiState(
     val page: TutorialPage = TutorialPage.entries.first(),
     val finished: Boolean = false,
+    /** For each page, the squares its example moves capture on, drawn as capture targets. */
+    val captureTargets: Map<TutorialPage, Set<Square>> = emptyMap(),
 )
 
 sealed interface TutorialAction {
@@ -26,7 +31,7 @@ sealed interface TutorialAction {
 
 class TutorialViewModel(private val preferences: GamePreferences) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(TutorialUiState())
+    private val _uiState = MutableStateFlow(TutorialUiState(captureTargets = captureTargets()))
     val uiState: StateFlow<TutorialUiState> = _uiState.asStateFlow()
 
     fun onAction(action: TutorialAction) {
@@ -53,5 +58,10 @@ class TutorialViewModel(private val preferences: GamePreferences) : ViewModel() 
     companion object {
         /** The very first launch opens the tutorial instead of the game. */
         fun opensOnLaunch(preferences: GamePreferences): Boolean = !preferences.tutorialSeen
+
+        /** Where each page's example moves capture, so the board can mark those targets. */
+        fun captureTargets(): Map<TutorialPage, Set<Square>> = TutorialPage.entries.associateWith { page ->
+            page.examples.filter { DipoleRules.kindOf(page.position, it) is MoveKind.Capture }.map { it.to }.toSet()
+        }
     }
 }

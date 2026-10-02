@@ -1,10 +1,8 @@
 package gc.david.dipole.ui
 
 import gc.david.dipole.game.Difficulty
-import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.GameSession
-import gc.david.dipole.game.GameSessions
 import gc.david.dipole.game.GameState
 import gc.david.dipole.game.Hint
 import gc.david.dipole.game.Move
@@ -13,7 +11,10 @@ import gc.david.dipole.game.Square
 import gc.david.dipole.saves.SavedGame
 import kotlin.time.Instant
 
-/** Everything [GameScreen] shows. */
+/**
+ * Everything [GameScreen] shows. The fields below [menuOpen] are worked out from the session and the
+ * selection by [GameUiStateMapper], so the screen only reads them.
+ */
 data class GameUiState(
     val session: GameSession,
     val selected: Square? = null,
@@ -31,24 +32,33 @@ data class GameUiState(
     val celebrating: Boolean = false,
     /** True while the settings menu (New game, Save, Load) is open. */
     val menuOpen: Boolean = false,
+    /** Squares holding a stack the player can move now. */
+    val movable: Set<Square> = emptySet(),
+    /** Moves from the selected stack that stay on the board, by destination square. */
+    val targets: Map<Square, Move> = emptyMap(),
+    /** The [targets] that capture an enemy stack. */
+    val captureTargets: Set<Square> = emptySet(),
+    /** Moves from the selected stack that leave the board. */
+    val bearOffs: List<Move> = emptyList(),
+    val canUndo: Boolean = false,
+    /** Hints are offered whenever a human is to move. */
+    val canHint: Boolean = false,
+    val status: GameStatus = GameStatus(),
+    /** Each player's checkers still on the board. */
+    val checkersOnBoard: Map<Player, Int> = emptyMap(),
+    /** Each player's checkers taken out of play, captured or moved off the board. */
+    val removedCheckers: Map<Player, Int> = emptyMap(),
 ) {
     val state: GameState get() = session.state
-
-    private val movesFromSelected: List<Move> get() = selected?.let { DipoleRules.legalMovesFrom(state, it) }.orEmpty()
-
-    /** Moves from the selected stack that stay on the board, by destination square. */
-    val targets: Map<Square, Move> get() = movesFromSelected.filter { it.to.isOnBoard }.associateBy { it.to }
-
-    /** Moves from the selected stack that leave the board. */
-    val bearOffs: List<Move> get() = movesFromSelected.filter { !it.to.isOnBoard }
-
-    /** Squares holding a stack the player can move now. */
-    val movable: Set<Square>
-        get() = if (GameSessions.isComputerTurn(session)) emptySet() else DipoleRules.legalMoves(state).map { it.from }.toSet()
-
-    /** Hints are offered whenever a human is to move. */
-    val canHint: Boolean get() = !GameSessions.isComputerTurn(session) && !DipoleRules.isOver(state)
 }
+
+/** What the status line reports, besides whose turn it is. */
+data class GameStatus(
+    val winner: Player? = null,
+    val computerThinking: Boolean = false,
+    /** The player who had no legal move and was skipped by the last move, if any. */
+    val satOut: Player? = null,
+)
 
 sealed interface GameDialog {
     data object NewGame : GameDialog

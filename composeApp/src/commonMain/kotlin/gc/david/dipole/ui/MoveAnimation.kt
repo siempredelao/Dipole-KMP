@@ -15,13 +15,20 @@ import gc.david.dipole.game.Move
 import gc.david.dipole.game.MoveKind
 import gc.david.dipole.game.Stack
 
-/** A move that was just played, animated from the position [before] it. */
-class MoveAnimation(val move: Move, val before: GameState) {
-    /** The checkers that travel: [Move.count] of them, from the moving stack. */
-    val mover: Stack = Stack(before.board.getValue(move.from).owner, move.count)
+/**
+ * A move that was just played, animated from the position [before] it: [mover] holds the checkers
+ * that travel, and [isCapture] fades out the stack they land on. A class rather than a data class,
+ * so playing the same move again (after an undo) still starts a new animation.
+ */
+class MoveAnimation(val move: Move, val before: GameState, val mover: Stack, val isCapture: Boolean)
 
-    val isCapture: Boolean = DipoleRules.kindOf(before, move) is MoveKind.Capture
-}
+/** The animation for [move] played from [before]. */
+fun animationOf(move: Move, before: GameState): MoveAnimation = MoveAnimation(
+    move = move,
+    before = before,
+    mover = Stack(before.board.getValue(move.from).owner, move.count),
+    isCapture = DipoleRules.kindOf(before, move) is MoveKind.Capture,
+)
 
 /** A [MoveAnimation] in flight, [progress] going from 0 (just left) to 1 (landed). */
 class Flight(val animation: MoveAnimation, val progress: Float)
@@ -64,5 +71,5 @@ private fun newMove(before: GameSession, after: GameSession): MoveAnimation? {
     val isNextMove = after.mode == before.mode &&
         after.moves.size == before.moves.size + 1 &&
         after.moves.subList(0, before.moves.size) == before.moves
-    return if (isNextMove) MoveAnimation(move, before.state) else null
+    return if (isNextMove) animationOf(move, before.state) else null
 }

@@ -27,7 +27,7 @@ import kotlin.random.Random
 /**
  * Throws confetti over the screen for a win. Each new [celebration] throws it once, as soon as the
  * winning move has landed, if [celebrating] says it hasn't been thrown yet; [onStart] then reports
- * it thrown (and plays the chime). It only draws, so taps go through to the game underneath.
+ * it thrown (and plays the chime) and [onFinished] reports it fallen. It only draws, so taps go through to the game underneath.
  *
  * [launcher] picks how the pieces fly; [previewSeconds] freezes the confetti at that moment, for
  * previews.
@@ -38,12 +38,14 @@ fun ConfettiOverlay(
     celebrating: Boolean,
     onStart: () -> Unit,
     modifier: Modifier = Modifier,
+    onFinished: () -> Unit = {},
     launcher: ConfettiLauncher = remember { ConfettiLauncher(Random.Default) },
     previewSeconds: Float? = null,
 ) {
     val confetti = remember(celebration) { launcher.burst() }
     var seconds by remember(celebration) { mutableFloatStateOf(previewSeconds ?: NOT_THROWN) }
     val currentOnStart by rememberUpdatedState(onStart)
+    val currentOnFinished by rememberUpdatedState(onFinished)
 
     LaunchedEffect(celebration) {
         if (!celebrating || previewSeconds != null) return@LaunchedEffect
@@ -53,6 +55,7 @@ fun ConfettiOverlay(
         while (seconds < ConfettiPhysics.DURATION_SECONDS) {
             seconds = withFrameNanos { (it - start) / 1_000_000_000f }
         }
+        currentOnFinished()
     }
 
     if (seconds == NOT_THROWN) return

@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import gc.david.dipole.di.appModules
+import gc.david.dipole.review.ReviewPrompter
 import gc.david.dipole.review.ReviewTracker
 import gc.david.dipole.saves.GamePreferences
 import org.koin.compose.KoinApplication
@@ -21,16 +22,18 @@ import org.koin.dsl.koinConfiguration
 /**
  * The app: starts Koin with [appModules], then the theme from the settings and navigation between
  * the game, the rules and the tutorial. Each screen gets its own ViewModel from Koin.
+ *
+ * [reviewPrompter] shows the store's review popup; platforms without a store keep the default.
  */
 @Composable
-fun DipoleApp() {
+fun DipoleApp(reviewPrompter: ReviewPrompter = ReviewPrompter.None) {
     KoinApplication(configuration = koinConfiguration { modules(appModules) }) {
-        DipoleNavigation()
+        DipoleNavigation(reviewPrompter)
     }
 }
 
 @Composable
-private fun DipoleNavigation() {
+private fun DipoleNavigation(reviewPrompter: ReviewPrompter) {
     val preferences = koinInject<GamePreferences>()
     val reviews = koinInject<ReviewTracker>()
     // Saveable, so a rotation doesn't count as another launch.
@@ -45,6 +48,12 @@ private fun DipoleNavigation() {
             composable<GameRoute> {
                 val viewModel = koinViewModel<GameViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
+                LaunchedEffect(uiState.askForReview) {
+                    if (!uiState.askForReview) return@LaunchedEffect
+                    // The tracker decides whether it's time to ask.
+                    reviews.onHappyMoment(reviewPrompter)
+                    viewModel.onAction(GameAction.ReviewAsked)
+                }
                 GameScreen(
                     uiState = uiState,
                     settings = settings,

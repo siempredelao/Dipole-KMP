@@ -30,6 +30,8 @@ data class GameUiState(
     val celebration: Int = 0,
     /** True from a human win until the screen starts its confetti, so it is thrown only once. */
     val celebrating: Boolean = false,
+    /** True once the confetti for a win against the computer has finished: a good moment to ask for a review. */
+    val askForReview: Boolean = false,
     /** True while the settings menu (New game, Save, Load) is open. */
     val menuOpen: Boolean = false,
     /** Squares holding a stack the player can move now. */
@@ -122,4 +124,10 @@ sealed interface GameAction {
     data object MessageShown : GameAction
 
     data object CelebrationShown : GameAction
+
+    /** The confetti has fallen. */
+    data object CelebrationFinished : GameAction
+
+    /** The review moment has been handed on. */
+    data object ReviewAsked : GameAction
 }

@@ -253,6 +253,7 @@ fun GameScreen(
                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
                 }
             },
+            onFinished = { onAction(GameAction.CelebrationFinished) },
         )
     }
 

@@ -106,6 +106,8 @@ class GameViewModel(
             GameAction.DialogDismissed -> updateUi { it.copy(dialog = null) }
             GameAction.MessageShown -> updateUi { it.copy(message = null) }
             GameAction.CelebrationShown -> updateUi { it.copy(celebrating = false) }
+            GameAction.CelebrationFinished -> updateUi { it.copy(askForReview = humanBeatTheComputer(it.session)) }
+            GameAction.ReviewAsked -> updateUi { it.copy(askForReview = false) }
         }
     }
 
@@ -173,6 +175,10 @@ class GameViewModel(
 
         updateUi { it.copy(celebration = it.celebration + 1, celebrating = true) }
     }
+
+    /** Only then: in a two-player game the winner may not be the device's owner. */
+    private fun humanBeatTheComputer(session: GameSession) =
+        session.mode == GameMode.VsComputer && DipoleRules.winner(session.state) == session.humanSide
 
     private fun save(name: String) {
         repository.save(savedGames.create(_uiState.value.session, name))

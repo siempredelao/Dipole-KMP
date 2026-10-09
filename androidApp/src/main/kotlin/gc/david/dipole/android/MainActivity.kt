@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import gc.david.dipole.review.PlayReviewPrompter
 import gc.david.dipole.ui.DipoleApp
 
 class MainActivity : ComponentActivity() {
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
         // No custom exit animation: Android 12+ draws the splash icon on its own surface, which
         // ignored our fade and vanished before the background, making the splash blink. The
         // system's own exit fades icon and background together.
-        setContent { DipoleApp() }
+        setContent { DipoleApp(reviewPrompter = PlayReviewPrompter(this)) }
     }
 
     private companion object {

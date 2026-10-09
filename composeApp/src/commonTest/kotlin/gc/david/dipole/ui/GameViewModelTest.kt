@@ -366,4 +366,28 @@ class GameViewModelTest {
         assertEquals(Player.White, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
     }
+
+    @Test
+    fun theEndOfTheConfettiAfterBeatingTheComputerIsAGoodMomentToAskForAReview() = runTest(dispatcher) {
+        val vm = viewModel(
+            endgame(GameMode.VsComputer, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
+        )
+        play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
+        assertFalse(vm.uiState.value.askForReview)
+
+        vm.onAction(GameAction.CelebrationFinished)
+        assertTrue(vm.uiState.value.askForReview)
+        vm.onAction(GameAction.ReviewAsked)
+        assertFalse(vm.uiState.value.askForReview)
+    }
+
+    @Test
+    fun aTwoPlayerWinIsNotAMomentToAskForAReview() = runTest(dispatcher) {
+        val vm = viewModel(
+            endgame(GameMode.TwoPlayers, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
+        )
+        play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
+        vm.onAction(GameAction.CelebrationFinished)
+        assertFalse(vm.uiState.value.askForReview)
+    }
 }

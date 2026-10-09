@@ -22,7 +22,8 @@ object GameUiStateMapper {
             targets = onBoard.associateBy { it.to },
             captureTargets = onBoard.filter { DipoleRules.kindOf(state, it) is MoveKind.Capture }.map { it.to }.toSet(),
             bearOffs = offBoard,
-            canUndo = GameSessions.canUndo(session),
+            // A finished game stays finished: Undo goes away with the win.
+            canUndo = winner == null && GameSessions.canUndo(session),
             canHint = !computerThinking && winner == null,
             status = GameStatus(
                 winner = winner,

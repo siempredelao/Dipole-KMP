@@ -73,6 +73,20 @@ class GameUiStateMapperTest {
     }
 
     @Test
+    fun aWinningMoveCannotBeUndone() {
+        val start = GameState(
+            board = mapOf(Square(2, 4) to Stack(Player.White, 3), Square(4, 4) to Stack(Player.Black, 2)),
+            toMove = Player.White,
+        )
+        val won = GameSessions.play(GameSessions.new(GameMode.TwoPlayers, initial = start), Move(Square(2, 4), Direction.North, 2))
+
+        val ui = GameUiStateMapper.map(GameUiState(won))
+
+        assertEquals(Player.White, ui.status.winner)
+        assertFalse(ui.canUndo)
+    }
+
+    @Test
     fun aSkippedPlayerIsReported() {
         // Black's lone checker on b2 is boxed in, so after White moves it is White's turn again.
         val start = GameState(

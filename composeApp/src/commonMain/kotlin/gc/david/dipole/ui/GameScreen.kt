@@ -196,8 +196,11 @@ fun GameScreen(
             PlayerTray(uiState, bottomPlayer, trayModifier)
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = uiState.canUndo) {
-                    Text(stringResource(Res.string.undo))
+                // Once someone has won there is nothing to take back, so Undo is hidden.
+                if (uiState.status.winner == null) {
+                    OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = uiState.canUndo) {
+                        Text(stringResource(Res.string.undo))
+                    }
                 }
                 val onHint = { onAction(GameAction.HintClicked) }
                 if (uiState.hintsOn) {

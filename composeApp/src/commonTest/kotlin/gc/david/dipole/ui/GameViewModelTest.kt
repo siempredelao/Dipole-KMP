@@ -328,16 +328,14 @@ class GameViewModelTest {
     }
 
     @Test
-    fun undoingAWinDoesNotCelebrateAgainUntilTheNextWin() = runTest(dispatcher) {
+    fun aWinCannotBeUndone() = runTest(dispatcher) {
         val win = Move(Square(2, 2), Direction.NorthEast, 1)
         val vm = viewModel(
             endgame(GameMode.TwoPlayers, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
         )
         play(vm, win)
         vm.onAction(GameAction.UndoClicked)
-        assertEquals(null, DipoleRules.winner(vm.uiState.value.state))
+        assertEquals(Player.White, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
-        play(vm, win)
-        assertEquals(2, vm.uiState.value.celebration)
     }
 }

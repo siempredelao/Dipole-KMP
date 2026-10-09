@@ -30,6 +30,7 @@
     <string name="tap_target_help">Dotknij podświetlonego pola. Liczba pokazuje, ile pionków się przesuwa.</string>
     <string name="settings">Ustawienia</string>
     <string name="sound_and_vibration">Dźwięk i wibracje</string>
+    <string name="rate_app">Oceń Dipole</string>
     <string name="appearance">Wygląd</string>
     <string name="appearance_mode">Tryb</string>
     <string name="mode_system">Systemowy</string>

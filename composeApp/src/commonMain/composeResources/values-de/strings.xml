@@ -30,6 +30,7 @@
     <string name="tap_target_help">Tippe auf ein markiertes Feld. Die Zahl zeigt, wie viele Steine ziehen.</string>
     <string name="settings">Einstellungen</string>
     <string name="sound_and_vibration">Ton und Vibration</string>
+    <string name="rate_app">Dipole bewerten</string>
     <string name="appearance">Darstellung</string>
     <string name="appearance_mode">Modus</string>
     <string name="mode_system">System</string>

@@ -30,6 +30,7 @@
     <string name="tap_target_help">Tryk på et markeret felt. Tallet viser, hvor mange brikker der flyttes.</string>
     <string name="settings">Indstillinger</string>
     <string name="sound_and_vibration">Lyd og vibration</string>
+    <string name="rate_app">Bedøm Dipole</string>
     <string name="appearance">Udseende</string>
     <string name="appearance_mode">Tilstand</string>
     <string name="mode_system">System</string>

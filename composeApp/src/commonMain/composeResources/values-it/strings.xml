@@ -30,6 +30,7 @@
     <string name="tap_target_help">Tocca una casella evidenziata. Il numero indica quante pedine si muovono.</string>
     <string name="settings">Impostazioni</string>
     <string name="sound_and_vibration">Suoni e vibrazione</string>
+    <string name="rate_app">Valuta Dipole</string>
     <string name="appearance">Aspetto</string>
     <string name="appearance_mode">Modalità</string>
     <string name="mode_system">Sistema</string>

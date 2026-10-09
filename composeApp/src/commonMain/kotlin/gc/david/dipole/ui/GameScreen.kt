@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -78,6 +79,7 @@ import gc.david.dipole.resources.ic_info
 import gc.david.dipole.resources.ic_settings
 import gc.david.dipole.resources.load_game_title
 import gc.david.dipole.resources.new_game
+import gc.david.dipole.resources.rate_app
 import gc.david.dipole.resources.rules_title
 import gc.david.dipole.resources.save_game_title
 import gc.david.dipole.resources.settings
@@ -97,6 +99,8 @@ import gc.david.dipole.resources.tap_target_help
 import gc.david.dipole.resources.tray_off_board
 import gc.david.dipole.resources.tray_on_board
 import gc.david.dipole.resources.undo
+import gc.david.dipole.review.StoreApp
+import gc.david.dipole.review.StoreLinks
 import gc.david.dipole.sound.GameSound
 import gc.david.dipole.sound.playSound
 import kotlinx.coroutines.delay
@@ -295,7 +299,10 @@ fun GameScreen(
 
 private const val MESSAGE_MILLIS = 2_000L
 
-/** The settings icon and its menu: New game, Save game, Load game, Appearance and the sound switch. */
+/**
+ * The settings icon and its menu: New game, Save game, Load game, Appearance, the sound switch and,
+ * where there is a store page, Rate Dipole.
+ */
 @Composable
 private fun SettingsMenu(
     uiState: GameUiState,
@@ -342,9 +349,26 @@ private fun SettingsMenu(
                 onClick = { onSettingsAction(SettingsAction.SoundToggled) },
                 trailingIcon = { Switch(checked = settings.soundOn, onCheckedChange = null) },
             )
+
+            val storePage = remember { StoreLinks.storePageUrl(DIPOLE_IN_STORES) }
+            if (storePage != null) {
+                val uriHandler = LocalUriHandler.current
+                HorizontalDivider()
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.rate_app)) },
+                    onClick = {
+                        onAction(GameAction.MenuDismissed)
+                        // The stores forbid opening their review popup from a button, so this opens the page.
+                        uriHandler.openUri(storePage)
+                    },
+                )
+            }
         }
     }
 }
+
+/** Dipole's IDs in the stores; add the App Store ID once the app is published there. */
+private val DIPOLE_IN_STORES = StoreApp(androidPackage = "gc.david.dipole")
 
 private const val BLINKS = 3
 private const val BLINK_HALF_MILLIS = 200

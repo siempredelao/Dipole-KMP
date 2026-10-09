@@ -4,6 +4,9 @@ import com.russhwolf.settings.Settings
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.ComputerPlayerFactory
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.review.ReviewStore
+import gc.david.dipole.review.ReviewTracker
+import gc.david.dipole.review.SettingsReviewStore
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGameFactory
 import gc.david.dipole.saves.SavedGamesRepository
@@ -26,13 +29,15 @@ val HINTER = named("hinter")
 /** Where the computer thinks, off the main thread. */
 val COMPUTE = named("compute")
 
-/** Storage: one [Settings] store shared by the preferences and the saved games. */
+/** Storage: one [Settings] store shared by the preferences, the saved games and the review counters. */
 val dataModule = module {
     single<Settings> { Settings() }
     single<GamePreferences> { SettingsGamePreferences(get()) }
     single<SavedGamesRepository> { SettingsSavedGamesRepository(get()) }
     single<Clock> { Clock.System }
     single { SavedGameFactory(Random.Default, get()) }
+    single<ReviewStore> { SettingsReviewStore(get()) }
+    single { ReviewTracker(get(), get()) }
 }
 
 val gameModule = module {
@@ -52,6 +57,7 @@ val viewModelModule = module {
             computerPlayers = get(),
             hinter = get(HINTER),
             clock = get(),
+            reviews = get(),
             computeDispatcher = get(COMPUTE),
         )
     }

@@ -14,6 +14,7 @@ import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGame
 import gc.david.dipole.saves.SavedGameFactory
 import gc.david.dipole.saves.SavedGamesRepository
+import gc.david.dipole.review.ReviewTracker
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -33,6 +34,8 @@ class GameViewModel(
     /** Works out hints; always the strongest player, whatever the game's difficulty. */
     private val hinter: ComputerPlayer,
     private val clock: Clock,
+    /** Counts finished games, for asking for a review at a good moment. */
+    private val reviews: ReviewTracker,
     private val computeDispatcher: CoroutineDispatcher,
     /** The game to open with; by default a new one against the computer with the last choices. */
     initialSession: GameSession = GameSessions.new(
@@ -152,7 +155,15 @@ class GameViewModel(
 
         val next = GameSessions.play(session, move)
         startSession(next, message = null)
-        celebrateIfHumanWon(next)
+        onMovePlayed(next)
+    }
+
+    /** A move led to [session]: if it ended the game, counts it and celebrates a human win. */
+    private fun onMovePlayed(session: GameSession) {
+        if (DipoleRules.winner(session.state) == null) return
+
+        reviews.onGameFinished()
+        celebrateIfHumanWon(session)
     }
 
     /** A human just won with the move that led to [session]: in two-player games, either player. */
@@ -211,7 +222,7 @@ class GameViewModel(
             val next = GameSessions.play(session, move)
             updateUi { it.copy(session = next, selected = null, hintsOn = false, hint = null) }
             // The computer can lose on its own move, by moving its last checkers off the board.
-            celebrateIfHumanWon(next)
+            onMovePlayed(next)
             playComputerIfItsTurn()
         }
     }

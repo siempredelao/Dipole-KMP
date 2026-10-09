@@ -2,6 +2,7 @@ package gc.david.dipole.di
 
 import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.Settings
+import gc.david.dipole.review.ReviewTracker
 import gc.david.dipole.saves.GamePreferences
 import gc.david.dipole.saves.SavedGameFactory
 import gc.david.dipole.saves.SavedGamesRepository
@@ -50,5 +51,6 @@ class AppModulesTest {
         assertSame(koin.get<GamePreferences>(), koin.get<GamePreferences>())
         assertSame(koin.get<SavedGamesRepository>(), koin.get<SavedGamesRepository>())
         assertSame(koin.get<SavedGameFactory>(), koin.get<SavedGameFactory>())
+        assertSame(koin.get<ReviewTracker>(), koin.get<ReviewTracker>())
     }
 }

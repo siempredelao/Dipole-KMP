@@ -1,5 +1,6 @@
 package gc.david.dipole.ui
 
+import com.russhwolf.settings.MapSettings
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.DipoleRules
@@ -12,6 +13,8 @@ import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
+import gc.david.dipole.review.ReviewTracker
+import gc.david.dipole.review.SettingsReviewStore
 import gc.david.dipole.saves.SavedGameFactory
 import kotlin.random.Random
 import kotlin.test.AfterTest
@@ -50,6 +53,7 @@ class GameViewModelTest {
     fun tearDown() = Dispatchers.resetMain()
 
     private val preferences = FakeGamePreferences()
+    private val reviewStore = SettingsReviewStore(MapSettings())
 
     private fun viewModel(initialSession: GameSession? = null) = GameViewModel(
         repository,
@@ -58,6 +62,7 @@ class GameViewModelTest {
         computerPlayers = { ComputerPlayer.forDifficulty(it) },
         hinter = ComputerPlayer(depth = 1),
         clock = clock,
+        reviews = ReviewTracker(reviewStore, clock),
         computeDispatcher = dispatcher,
         initialSession = initialSession
             ?: GameSessions.new(GameMode.VsComputer, preferences.lastDifficulty, humanSide = preferences.lastSide),
@@ -289,6 +294,7 @@ class GameViewModelTest {
         assertEquals(Player.White, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
         assertTrue(vm.uiState.value.celebrating)
+        assertEquals(1, reviewStore.stats.finishedGames)
         // Once the confetti has started it isn't thrown again, e.g. after visiting the rules.
         vm.onAction(GameAction.CelebrationShown)
         assertFalse(vm.uiState.value.celebrating)
@@ -304,6 +310,8 @@ class GameViewModelTest {
         assertEquals(Player.Black, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(0, vm.uiState.value.celebration)
         assertFalse(vm.uiState.value.celebrating)
+        // A loss still counts as a finished game.
+        assertEquals(1, reviewStore.stats.finishedGames)
     }
 
     @Test
@@ -325,6 +333,26 @@ class GameViewModelTest {
         play(vm, Move(Square(4, 4), Direction.SouthWest, 1))
         assertEquals(Player.Black, DipoleRules.winner(vm.uiState.value.state))
         assertEquals(1, vm.uiState.value.celebration)
+        assertEquals(1, reviewStore.stats.finishedGames)
+    }
+
+    @Test
+    fun movesThatDoNotEndTheGameAreNotCounted() = runTest(dispatcher) {
+        val vm = viewModel(GameSessions.new(GameMode.TwoPlayers))
+        play(vm, opening)
+        assertEquals(0, reviewStore.stats.finishedGames)
+    }
+
+    @Test
+    fun openingAFinishedGameDoesNotCountIt() = runTest(dispatcher) {
+        val win = Move(Square(2, 2), Direction.NorthEast, 1)
+        val finished = GameSessions.play(
+            endgame(GameMode.TwoPlayers, Player.White, Square(2, 2) to Stack(Player.White, 1), Square(3, 3) to Stack(Player.Black, 1)),
+            win,
+        )
+        viewModel(finished)
+        advanceUntilIdle()
+        assertEquals(0, reviewStore.stats.finishedGames)
     }
 
     @Test

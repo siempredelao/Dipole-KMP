@@ -5,11 +5,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import gc.david.dipole.di.appModules
+import gc.david.dipole.review.ReviewTracker
 import gc.david.dipole.saves.GamePreferences
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -30,6 +32,9 @@ fun DipoleApp() {
 @Composable
 private fun DipoleNavigation() {
     val preferences = koinInject<GamePreferences>()
+    val reviews = koinInject<ReviewTracker>()
+    // Saveable, so a rotation doesn't count as another launch.
+    rememberSaveable { reviews.onAppLaunched(); true }
     val settingsViewModel = koinViewModel<SettingsViewModel>()
     val settings by settingsViewModel.uiState.collectAsState()
     val navController = rememberNavController()

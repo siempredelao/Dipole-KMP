@@ -36,6 +36,9 @@ colour-blind and low-vision players.
   throws it, `ConfettiPhysics` moves it and `ui/ConfettiOverlay.kt` draws it.
 - `core/src/commonMain/.../tutorial` - the tutorial's pages and their example positions,
   shown on first launch and from the rules screen.
+- `review` - asks players to rate the app in the store (see [Ratings](#ratings)). It knows nothing
+  about Dipole: the app reports launches, finished games and wins, and `ReviewTracker` decides when
+  to ask. `composeApp` and `androidApp` depend on it; `core` doesn't.
 - `composeApp/src/commonMain/composeResources` - UI strings: English in `values`, translations in
   `values-<language>`.
 - `composeApp/src/commonMain/.../ui` - the shared Compose UI. `DipoleApp` navigates between three
@@ -69,6 +72,25 @@ check).
 - **ViewModels** decide when things happen (play, sound, the computer's turn, saving) and keep the
   UI state; the composables draw that state and report taps as actions.
 
+## Ratings
+
+When a player beats the computer and the confetti has fallen, the app asks the store for its review
+popup (Google Play's in-app review on Android, `SKStoreReviewController` on iOS), but only once
+`ReviewPolicy` allows it:
+
+- at least 5 finished games, 2 launches and 3 days since the first launch;
+- at least 30 days since the app last asked.
+
+The stores add their own limits (Google about once a month, Apple 3 times a year) and never say
+whether the popup appeared. The counters stay on the device, under `review_*` settings keys.
+"Rate Dipole" in the settings menu opens the store page instead, since the stores don't allow the
+popup behind a button; it shows on Android, and on iOS once `DIPOLE_IN_STORES` in `GameScreen.kt`
+has the App Store ID.
+
+To see the popup: on Android, install from a Play internal testing track or internal app sharing
+(builds from Android Studio never show it); on iOS, debug builds always show it and TestFlight never
+does. Lowering the constants in `ReviewPolicy` makes it come sooner while testing.
+
 ## Credits
 
 Dipole was designed by Mark Steere. Copyright © May 2007 by Mark Steere.
@@ -82,7 +104,7 @@ More of his games are at [marksteeregames.com](https://www.marksteeregames.com).
 
 | Platform | Command |
 |----------|---------|
-| Tests    | `./gradlew :composeApp:jvmTest` |
+| Tests    | `./gradlew :core:jvmTest :review:jvmTest :composeApp:jvmTest` |
 | Desktop  | `./gradlew :composeApp:run` |
 | Android  | `./gradlew :androidApp:installDebug` (or run `androidApp` from Android Studio) |
 | Web      | `./gradlew :composeApp:wasmJsBrowserDevelopmentRun` |

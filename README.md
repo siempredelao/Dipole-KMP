@@ -100,6 +100,12 @@ online or offline play, as long as the name and rules are kept and the game is a
 
 More of his games are at [marksteeregames.com](https://www.marksteeregames.com).
 
+## License
+
+The code is by David Aguiar Gonzalez and is licensed under the [Apache License 2.0](LICENSE). The
+game itself, its name and its rules belong to Mark Steere (see [Credits](#credits)); the license
+covers this implementation only.
+
 ## Running
 
 | Platform | Command |

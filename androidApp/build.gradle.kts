@@ -78,6 +78,7 @@ android {
 dependencies {
     implementation(projects.composeApp)
     implementation(projects.review)
+    implementation(projects.achievements)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
 }

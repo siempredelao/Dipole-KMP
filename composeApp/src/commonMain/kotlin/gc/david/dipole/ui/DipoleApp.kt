@@ -21,6 +21,7 @@
 package gc.david.dipole.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,6 +31,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import gc.david.dipole.achievements.AchievementTracker
+import gc.david.dipole.achievements.AchievementsClient
 import gc.david.dipole.di.appModules
 import gc.david.dipole.review.ReviewPrompter
 import gc.david.dipole.review.ReviewTracker
@@ -43,21 +46,30 @@ import org.koin.dsl.koinConfiguration
  * The app: starts Koin with [appModules], then the theme from the settings and navigation between
  * the game, the rules and the tutorial. Each screen gets its own ViewModel from Koin.
  *
- * [reviewPrompter] shows the store's review popup; platforms without a store keep the default.
+ * [reviewPrompter] shows the store's review popup and [achievements] reports to the platform's game
+ * service; platforms without them keep the defaults.
  */
 @Composable
-fun DipoleApp(reviewPrompter: ReviewPrompter = ReviewPrompter.None) {
+fun DipoleApp(
+    reviewPrompter: ReviewPrompter = ReviewPrompter.None,
+    achievements: AchievementsClient = AchievementsClient.None,
+) {
     KoinApplication(configuration = koinConfiguration { modules(appModules) }) {
-        DipoleNavigation(reviewPrompter)
+        DipoleNavigation(reviewPrompter, achievements)
     }
 }
 
 @Composable
-private fun DipoleNavigation(reviewPrompter: ReviewPrompter) {
+private fun DipoleNavigation(reviewPrompter: ReviewPrompter, achievements: AchievementsClient) {
     val preferences = koinInject<GamePreferences>()
     val reviews = koinInject<ReviewTracker>()
     // Saveable, so a rotation doesn't count as another launch.
     rememberSaveable { reviews.onAppLaunched(); true }
+    val achievementTracker = koinInject<AchievementTracker>()
+    DisposableEffect(achievements) {
+        achievementTracker.attach(achievements)
+        onDispose { achievementTracker.detach(achievements) }
+    }
     val settingsViewModel = koinViewModel<SettingsViewModel>()
     val settings by settingsViewModel.uiState.collectAsState()
     val navController = rememberNavController()

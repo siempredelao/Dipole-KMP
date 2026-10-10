@@ -39,6 +39,9 @@ colour-blind and low-vision players.
 - `review` - asks players to rate the app in the store (see [Ratings](#ratings)). It knows nothing
   about Dipole: the app reports launches, finished games and wins, and `ReviewTracker` decides when
   to ask. `composeApp` and `androidApp` depend on it; `core` doesn't.
+- `achievements` - the 13 achievements (see [Achievements](#achievements)): `AchievementRules` decides
+  what a finished game earns, `AchievementTracker` keeps the totals and reports them to Google Play
+  Games (`androidMain`) or Game Center (`iosMain`). It reads games from `core`; `core` doesn't know it.
 - `composeApp/src/commonMain/composeResources` - UI strings: English in `values`, translations in
   `values-<language>`.
 - `composeApp/src/commonMain/.../ui` - the shared Compose UI. `DipoleApp` navigates between three
@@ -91,6 +94,21 @@ To see the popup: on Android, install from a Play internal testing track or inte
 (builds from Android Studio never show it); on iOS, debug builds always show it and TestFlight never
 does. Lowering the constants in `ReviewPolicy` makes it come sooner while testing.
 
+## Achievements
+
+Dipole has 13 achievements, from finishing the tutorial to beating Hard 50 times, plus "AI
+impostor" for beating the computer with only the moves Hint suggested. `AchievementRules` defines
+them; their names and descriptions for the stores, in every language, are in
+`achievements/store-texts.md`. The app keeps what was earned on the device and sends it all again
+once the player is signed in, so nothing is lost while signed out.
+
+- **Android:** Google Play Games Services v2. Paste the `games-ids.xml` exported from Play Console
+  into `androidApp/src/main/res/values/`. While `game_services_project_id` is empty, the app leaves
+  Play Games off and hides the menu entry.
+- **iOS:** Game Center, with the capability in `iosApp/iosApp/iosApp.entitlements`. The App Store
+  Connect IDs are `gc.david.dipole.<key>`.
+- Desktop and web have no achievements.
+
 ## Credits
 
 Dipole was designed by Mark Steere. Copyright © May 2007 by Mark Steere.
@@ -110,7 +128,7 @@ covers this implementation only.
 
 | Platform | Command |
 |----------|---------|
-| Tests    | `./gradlew :core:jvmTest :review:jvmTest :composeApp:jvmTest` |
+| Tests    | `./gradlew :core:jvmTest :review:jvmTest :achievements:jvmTest :composeApp:jvmTest` |
 | Desktop  | `./gradlew :composeApp:run` |
 | Android  | `./gradlew :androidApp:installDebug` (or run `androidApp` from Android Studio) |
 | Web      | `./gradlew :composeApp:wasmJsBrowserDevelopmentRun` |

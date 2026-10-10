@@ -22,8 +22,9 @@ Dopasuj do siebie
 A także
 • Zapisuj gry i wracaj do nich później
 • Konfetti, gdy wygrasz
+• 13 osiągnięć do zdobycia w Grach Google Play
 • Działa offline
-• Bez reklam, bez kont, bez zbierania danych
+• Bez reklam, a aplikacja nie zbiera danych
 • Po polsku, angielsku, hiszpańsku, francusku, włosku, portugalsku, niemiecku, turecku, duńsku, norwesku i szwedzku
 
 Grę Dipole zaprojektował Mark Steere. Więcej jego gier znajdziesz na marksteeregames.com.

@@ -21,6 +21,7 @@
 package gc.david.dipole.ui
 
 import androidx.lifecycle.ViewModel
+import gc.david.dipole.achievements.AchievementTracker
 import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.MoveKind
 import gc.david.dipole.game.Square
@@ -52,7 +53,10 @@ sealed interface TutorialAction {
     data object Closed : TutorialAction
 }
 
-class TutorialViewModel(private val preferences: GamePreferences) : ViewModel() {
+class TutorialViewModel(
+    private val preferences: GamePreferences,
+    private val achievements: AchievementTracker,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TutorialUiState(captureTargets = captureTargets()))
 
@@ -76,6 +80,7 @@ class TutorialViewModel(private val preferences: GamePreferences) : ViewModel() 
     /** Once finished or skipped, the tutorial no longer opens on launch. */
     private fun finish() {
         preferences.tutorialSeen = true
+        achievements.onTutorialFinished()
         _uiState.update { it.copy(finished = true) }
     }
 

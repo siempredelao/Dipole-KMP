@@ -21,6 +21,9 @@
 package gc.david.dipole.di
 
 import com.russhwolf.settings.Settings
+import gc.david.dipole.achievements.AchievementStore
+import gc.david.dipole.achievements.AchievementTracker
+import gc.david.dipole.achievements.SettingsAchievementStore
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.ComputerPlayerFactory
 import gc.david.dipole.game.Difficulty
@@ -49,7 +52,7 @@ val HINTER = named("hinter")
 /** Where the computer thinks, off the main thread. */
 val COMPUTE = named("compute")
 
-/** Storage: one [Settings] store shared by the preferences, the saved games and the review counters. */
+/** Storage: one [Settings] store shared by the preferences, the saved games, the review counters and the achievements. */
 val dataModule = module {
     single<Settings> { Settings() }
     single<GamePreferences> { SettingsGamePreferences(get()) }
@@ -58,6 +61,8 @@ val dataModule = module {
     single { SavedGameFactory(Random.Default, get()) }
     single<ReviewStore> { SettingsReviewStore(get()) }
     single { ReviewTracker(get(), get()) }
+    single<AchievementStore> { SettingsAchievementStore(get()) }
+    single { AchievementTracker(get()) }
 }
 
 val gameModule = module {
@@ -68,7 +73,7 @@ val gameModule = module {
 
 val viewModelModule = module {
     viewModel { SettingsViewModel(get()) }
-    viewModel { TutorialViewModel(get()) }
+    viewModel { TutorialViewModel(get(), get()) }
     viewModel {
         GameViewModel(
             repository = get(),
@@ -78,6 +83,7 @@ val viewModelModule = module {
             hinter = get(HINTER),
             clock = get(),
             reviews = get(),
+            achievements = get(),
             computeDispatcher = get(COMPUTE),
         )
     }

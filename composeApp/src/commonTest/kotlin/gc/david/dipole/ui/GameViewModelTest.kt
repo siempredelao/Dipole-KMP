@@ -21,6 +21,9 @@
 package gc.david.dipole.ui
 
 import com.russhwolf.settings.MapSettings
+import gc.david.dipole.achievements.Achievement
+import gc.david.dipole.achievements.AchievementTracker
+import gc.david.dipole.achievements.SettingsAchievementStore
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.Difficulty
 import gc.david.dipole.game.DipoleRules
@@ -74,6 +77,7 @@ class GameViewModelTest {
 
     private val preferences = FakeGamePreferences()
     private val reviewStore = SettingsReviewStore(MapSettings())
+    private val achievementStore = SettingsAchievementStore(MapSettings())
 
     private fun viewModel(initialSession: GameSession? = null) = GameViewModel(
         repository,
@@ -83,6 +87,7 @@ class GameViewModelTest {
         hinter = ComputerPlayer(depth = 1),
         clock = clock,
         reviews = ReviewTracker(reviewStore, clock),
+        achievements = AchievementTracker(achievementStore),
         computeDispatcher = dispatcher,
         initialSession = initialSession
             ?: GameSessions.new(GameMode.VsComputer, preferences.lastDifficulty, humanSide = preferences.lastSide),
@@ -409,5 +414,37 @@ class GameViewModelTest {
         play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
         vm.onAction(GameAction.CelebrationFinished)
         assertFalse(vm.uiState.value.askForReview)
+    }
+
+    private fun oneMoveWinForWhite() = endgame(
+        GameMode.VsComputer,
+        Player.White,
+        Square(2, 2) to Stack(Player.White, 1),
+        Square(3, 3) to Stack(Player.Black, 1),
+    )
+
+    @Test
+    fun aFinishedGameIsReportedForAchievements() = runTest(dispatcher) {
+        val vm = viewModel(oneMoveWinForWhite())
+        play(vm, Move(Square(2, 2), Direction.NorthEast, 1))
+
+        assertTrue(Achievement.FirstVictory in achievementStore.earned)
+        assertFalse(Achievement.AiImpostor in achievementStore.earned)
+        assertEquals(1, achievementStore.totals.winsVsComputer)
+    }
+
+    @Test
+    fun winningWithTheHintedMoveEarnsAiImpostor() = runTest(dispatcher) {
+        val vm = viewModel(oneMoveWinForWhite())
+        vm.onAction(GameAction.HintClicked)
+        vm.onAction(GameAction.SquareTapped(Square(2, 2)))
+        advanceUntilIdle()
+        val hint = vm.uiState.value.hint!!
+        assertFalse(hint.betterMoveElsewhere)
+
+        vm.onAction(GameAction.SquareTapped(hint.move.to))
+        advanceUntilIdle()
+
+        assertTrue(Achievement.AiImpostor in achievementStore.earned)
     }
 }

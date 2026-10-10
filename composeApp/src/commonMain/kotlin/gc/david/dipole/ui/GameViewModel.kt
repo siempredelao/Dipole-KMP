@@ -22,6 +22,8 @@ package gc.david.dipole.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gc.david.dipole.achievements.AchievementTracker
+import gc.david.dipole.achievements.FinishedGame
 import gc.david.dipole.game.ComputerPlayer
 import gc.david.dipole.game.ComputerPlayerFactory
 import gc.david.dipole.game.DipoleRules
@@ -56,6 +58,8 @@ class GameViewModel(
     private val clock: Clock,
     /** Counts finished games, for asking for a review at a good moment. */
     private val reviews: ReviewTracker,
+    /** Works out and reports the achievements a finished game earns. */
+    private val achievements: AchievementTracker,
     private val computeDispatcher: CoroutineDispatcher,
     /** The game to open with; by default a new one against the computer with the last choices. */
     initialSession: GameSession = GameSessions.new(
@@ -76,6 +80,9 @@ class GameViewModel(
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     private var computerMove: Job? = null
+
+    /** How the current game is being played, for the achievements. */
+    private var tracking = GameTracking()
     private var hintJob: Job? = null
 
     init {
@@ -89,7 +96,7 @@ class GameViewModel(
             is GameAction.BearOffChosen -> play(action.move)
             GameAction.NewGameClicked -> updateUi { it.copy(menuOpen = false, dialog = GameDialog.NewGame) }
             is GameAction.ModeChosen -> when (action.mode) {
-                GameMode.TwoPlayers -> startSession(GameSessions.new(GameMode.TwoPlayers), message = null)
+                GameMode.TwoPlayers -> startNewGame(GameSessions.new(GameMode.TwoPlayers))
                 GameMode.VsComputer -> updateUi {
                     it.copy(dialog = GameDialog.ChooseDifficulty(preferences.lastDifficulty, preferences.lastSide))
                 }
@@ -102,11 +109,18 @@ class GameViewModel(
                 val side = (_uiState.value.dialog as? GameDialog.ChooseDifficulty)?.side ?: preferences.lastSide
                 preferences.lastDifficulty = action.difficulty
                 preferences.lastSide = side
-                startSession(GameSessions.new(GameMode.VsComputer, action.difficulty, humanSide = side), message = null)
+                startNewGame(GameSessions.new(GameMode.VsComputer, action.difficulty, humanSide = side))
             }
             GameAction.BackToModeClicked -> updateUi { it.copy(dialog = GameDialog.NewGame) }
             GameAction.UndoClicked -> {
-                if (_uiState.value.canUndo) startSession(GameSessions.undo(_uiState.value.session), message = null)
+                if (_uiState.value.canUndo) {
+                    val previous = GameSessions.undo(_uiState.value.session)
+                    tracking = tracking.copy(
+                        usedUndo = true,
+                        hintedMoves = tracking.hintedMoves.filterTo(mutableSetOf()) { it < previous.moves.size },
+                    )
+                    startSession(previous, message = null)
+                }
             }
             GameAction.HintClicked -> toggleHints()
             GameAction.MenuClicked -> updateUi { it.copy(menuOpen = true) }
@@ -151,6 +165,7 @@ class GameViewModel(
         if (!_uiState.value.canHint) return
 
         updateUi { it.copy(hintsOn = !it.hintsOn, hint = null) }
+        if (_uiState.value.hintsOn) tracking = tracking.copy(usedHint = true)
         requestHint()
     }
 
@@ -175,6 +190,10 @@ class GameViewModel(
         val session = _uiState.value.session
         if (GameSessions.isComputerTurn(session) || !DipoleRules.isLegal(session.state, move)) return
 
+        val hint = _uiState.value.hint
+        if (hint != null && hint.move == move && !hint.betterMoveElsewhere) {
+            tracking = tracking.copy(hintedMoves = tracking.hintedMoves + session.moves.size)
+        }
         val next = GameSessions.play(session, move)
         startSession(next, message = null)
         onMovePlayed(next)
@@ -185,6 +204,15 @@ class GameViewModel(
         if (DipoleRules.winner(session.state) == null) return
 
         reviews.onGameFinished()
+        achievements.onGameFinished(
+            FinishedGame(
+                session = session,
+                // A loaded game may have been helped before it was saved.
+                usedHint = tracking.usedHint || tracking.loaded,
+                usedUndo = tracking.usedUndo || tracking.loaded,
+                hintedMoves = if (tracking.loaded) emptySet() else tracking.hintedMoves,
+            ),
+        )
         celebrateIfHumanWon(session)
     }
 
@@ -212,7 +240,7 @@ class GameViewModel(
             return
         }
 
-        startSession(session, message = GameMessage.GameLoaded)
+        startNewGame(session, message = GameMessage.GameLoaded, loaded = true)
     }
 
     private fun delete(game: SavedGame) {
@@ -224,6 +252,12 @@ class GameViewModel(
                 hasSavedGames = remaining.isNotEmpty(),
             )
         }
+    }
+
+    /** Starts a different game than the current one, forgetting how the current one was played. */
+    private fun startNewGame(session: GameSession, message: GameMessage? = null, loaded: Boolean = false) {
+        tracking = GameTracking(loaded = loaded)
+        startSession(session, message)
     }
 
     /** Switches to [session], closing any dialog and clearing the selection and hints. */
@@ -260,6 +294,14 @@ class GameViewModel(
             if (new.session === old.session && new.selected == old.selected) new else GameUiStateMapper.map(new)
         }
     }
+
+    /** Whether Hint or Undo were used in this game, and which human moves were the hinted ones. */
+    private data class GameTracking(
+        val usedHint: Boolean = false,
+        val usedUndo: Boolean = false,
+        val hintedMoves: Set<Int> = emptySet(),
+        val loaded: Boolean = false,
+    )
 
     private companion object {
 

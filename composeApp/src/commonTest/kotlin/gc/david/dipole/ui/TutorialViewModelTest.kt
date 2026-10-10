@@ -20,6 +20,10 @@
 
 package gc.david.dipole.ui
 
+import com.russhwolf.settings.MapSettings
+import gc.david.dipole.achievements.Achievement
+import gc.david.dipole.achievements.AchievementTracker
+import gc.david.dipole.achievements.SettingsAchievementStore
 import gc.david.dipole.tutorial.TutorialPage
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,6 +33,8 @@ import kotlin.test.assertTrue
 class TutorialViewModelTest {
 
     private val preferences = FakeGamePreferences()
+    private val achievementStore = SettingsAchievementStore(MapSettings())
+    private val achievements = AchievementTracker(achievementStore)
 
     @Test
     fun theTutorialOpensOnTheFirstLaunchOnly() {
@@ -39,7 +45,7 @@ class TutorialViewModelTest {
 
     @Test
     fun nextAndBackMoveThroughThePages() {
-        val vm = TutorialViewModel(preferences)
+        val vm = TutorialViewModel(preferences, achievements)
         vm.onAction(TutorialAction.BackClicked)
         assertEquals(TutorialPage.Goal, vm.uiState.value.page)
         vm.onAction(TutorialAction.NextClicked)
@@ -54,16 +60,17 @@ class TutorialViewModelTest {
 
     @Test
     fun nextOnTheLastPageFinishesTheTutorial() {
-        val vm = TutorialViewModel(preferences)
+        val vm = TutorialViewModel(preferences, achievements)
         vm.onAction(TutorialAction.PageShown(TutorialPage.entries.last()))
         vm.onAction(TutorialAction.NextClicked)
         assertTrue(vm.uiState.value.finished)
+        assertTrue(Achievement.FirstSteps in achievementStore.earned)
         assertTrue(preferences.tutorialSeen)
     }
 
     @Test
     fun skippingMarksTheTutorialSeen() {
-        val vm = TutorialViewModel(preferences)
+        val vm = TutorialViewModel(preferences, achievements)
         vm.onAction(TutorialAction.Closed)
         assertTrue(vm.uiState.value.finished)
         assertTrue(preferences.tutorialSeen)
@@ -72,12 +79,12 @@ class TutorialViewModelTest {
     @Test
     fun reopeningStartsAtTheFirstPageEvenWhenSeen() {
         preferences.tutorialSeen = true
-        assertEquals(TutorialPage.Goal, TutorialViewModel(preferences).uiState.value.page)
+        assertEquals(TutorialPage.Goal, TutorialViewModel(preferences, achievements).uiState.value.page)
     }
 
     @Test
     fun aLateSwipeAfterFinishingChangesNothing() {
-        val vm = TutorialViewModel(preferences)
+        val vm = TutorialViewModel(preferences, achievements)
         vm.onAction(TutorialAction.Closed)
         vm.onAction(TutorialAction.PageShown(TutorialPage.Moving))
         assertEquals(TutorialPage.Goal, vm.uiState.value.page)
@@ -86,7 +93,7 @@ class TutorialViewModelTest {
 
     @Test
     fun captureExamplesAreMarkedAsCaptures() {
-        val captureTargets = TutorialViewModel(preferences).uiState.value.captureTargets
+        val captureTargets = TutorialViewModel(preferences, achievements).uiState.value.captureTargets
         assertEquals(TutorialPage.Captures.examples.map { it.to }.toSet(), captureTargets[TutorialPage.Captures])
         assertEquals(emptySet(), captureTargets[TutorialPage.Moving])
     }

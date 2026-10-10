@@ -66,6 +66,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core)
             implementation(projects.review)
+            implementation(projects.achievements)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)

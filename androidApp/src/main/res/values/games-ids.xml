@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2026 David Aguiar Gonzalez
+  ~
+  ~ Dipole, the game and its rules, was designed by Mark Steere
+  ~ (Copyright (c) May 2007 by Mark Steere, https://www.marksteeregames.com).
+  ~ This code, an implementation of the game, was developed by David Aguiar Gonzalez.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!--
+  Play Games Services IDs. Replace this file with the one Play Console exports
+  (Play Games Services > Achievements > Get resources), keeping these names. While the project ID
+  is empty the app doesn't use Play Games at all.
+  -->
+<resources>
+    <string name="game_services_project_id" translatable="false"></string>
+    <string name="achievement_first_steps" translatable="false"></string>
+    <string name="achievement_first_victory" translatable="false"></string>
+    <string name="achievement_friendly_match" translatable="false"></string>
+    <string name="achievement_rising_player" translatable="false"></string>
+    <string name="achievement_grandmaster" translatable="false"></string>
+    <string name="achievement_both_sides" translatable="false"></string>
+    <string name="achievement_flawless" translatable="false"></string>
+    <string name="achievement_no_help_needed" translatable="false"></string>
+    <string name="achievement_big_capture" translatable="false"></string>
+    <string name="achievement_swift_victory" translatable="false"></string>
+    <string name="achievement_regular" translatable="false"></string>
+    <string name="achievement_dipole_master" translatable="false"></string>
+    <string name="achievement_ai_impostor" translatable="false"></string>
+</resources>

@@ -49,6 +49,7 @@
     <string name="tap_target_help">Touchez une case en surbrillance. Le nombre indique combien de pions se déplacent.</string>
     <string name="settings">Paramètres</string>
     <string name="sound_and_vibration">Son et vibration</string>
+    <string name="achievements">Succès</string>
     <string name="rate_app">Noter Dipole</string>
     <string name="appearance">Apparence</string>
     <string name="appearance_mode">Mode</string>

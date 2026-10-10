@@ -49,6 +49,7 @@
     <string name="tap_target_help">Toca una casilla resaltada. El número indica cuántas fichas se mueven.</string>
     <string name="settings">Ajustes</string>
     <string name="sound_and_vibration">Sonido y vibración</string>
+    <string name="achievements">Logros</string>
     <string name="rate_app">Valorar Dipole</string>
     <string name="appearance">Apariencia</string>
     <string name="appearance_mode">Modo</string>

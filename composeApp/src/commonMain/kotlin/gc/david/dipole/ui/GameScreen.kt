@@ -87,6 +87,7 @@ import gc.david.dipole.game.Player
 import gc.david.dipole.game.Square
 import gc.david.dipole.game.Stack
 import gc.david.dipole.resources.Res
+import gc.david.dipole.resources.achievements
 import gc.david.dipole.resources.appearance
 import gc.david.dipole.resources.bear_off_button
 import gc.david.dipole.resources.bear_off_explanation
@@ -142,6 +143,8 @@ fun GameScreen(
     onAction: (GameAction) -> Unit,
     onSettingsAction: (SettingsAction) -> Unit,
     onRulesClick: () -> Unit,
+    /** Opens the platform's achievements screen; null where there is none, which hides the menu entry. */
+    onAchievementsClick: (() -> Unit)? = null,
 ) {
     val session = uiState.session
     val state = uiState.state
@@ -181,7 +184,7 @@ fun GameScreen(
                         )
                     }
                 }
-                SettingsMenu(uiState, settings, onAction, onSettingsAction, Modifier.align(Alignment.CenterEnd))
+                SettingsMenu(uiState, settings, onAction, onSettingsAction, onAchievementsClick, Modifier.align(Alignment.CenterEnd))
             }
             Text(
                 modeLabel(session.mode, session.difficulty),
@@ -321,7 +324,7 @@ private const val MESSAGE_MILLIS = 2_000L
 
 /**
  * The settings icon and its menu: New game, Save game, Load game, Appearance, the sound switch and,
- * where there is a store page, Rate Dipole.
+ * where the platform has them, Achievements and Rate Dipole.
  */
 @Composable
 private fun SettingsMenu(
@@ -329,6 +332,7 @@ private fun SettingsMenu(
     settings: SettingsUiState,
     onAction: (GameAction) -> Unit,
     onSettingsAction: (SettingsAction) -> Unit,
+    onAchievementsClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
@@ -371,9 +375,20 @@ private fun SettingsMenu(
             )
 
             val storePage = remember { StoreLinks.storePageUrl(DIPOLE_IN_STORES) }
+            if (onAchievementsClick != null || storePage != null) HorizontalDivider()
+
+            if (onAchievementsClick != null) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(Res.string.achievements)) },
+                    onClick = {
+                        onAction(GameAction.MenuDismissed)
+                        onAchievementsClick()
+                    },
+                )
+            }
+
             if (storePage != null) {
                 val uriHandler = LocalUriHandler.current
-                HorizontalDivider()
                 DropdownMenuItem(
                     text = { Text(stringResource(Res.string.rate_app)) },
                     onClick = {

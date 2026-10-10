@@ -49,6 +49,7 @@
     <string name="tap_target_help">Tap a highlighted square. The number shows how many checkers move.</string>
     <string name="settings">Settings</string>
     <string name="sound_and_vibration">Sound and vibration</string>
+    <string name="achievements">Achievements</string>
     <string name="rate_app">Rate Dipole</string>
     <string name="appearance">Appearance</string>
     <string name="appearance_mode">Mode</string>

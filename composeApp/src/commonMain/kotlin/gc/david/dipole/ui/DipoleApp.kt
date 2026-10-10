@@ -92,6 +92,7 @@ private fun DipoleNavigation(reviewPrompter: ReviewPrompter, achievements: Achie
                     onAction = viewModel::onAction,
                     onSettingsAction = settingsViewModel::onAction,
                     onRulesClick = { navController.navigate(RulesRoute) },
+                    onAchievementsClick = if (achievements.isAvailable) achievements::showAchievements else null,
                 )
             }
 

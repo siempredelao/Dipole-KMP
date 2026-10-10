@@ -50,5 +50,6 @@ dependencyResolutionManagement {
 
 include(":core")
 include(":review")
+include(":achievements")
 include(":composeApp")
 include(":androidApp")

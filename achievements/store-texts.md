@@ -18,7 +18,7 @@ Paste these into Play Console (Play Games Services → Achievements) and App Sto
 | `dipole_master` | Dipole master | `gc.david.dipole.dipole_master` | Incremental, 50 steps | 100 |
 | `ai_impostor` | AI impostor | `gc.david.dipole.ai_impostor` | Standard | 50 |
 
-Name the English achievements exactly as above: Play turns the name into the resource name ("AI impostor" → `achievement_ai_impostor`), which the app looks up. All are revealed (none hidden). On Apple, use the description for both the pre-earned and earned text, and points out of Apple's 1000.
+Play rejects commas in names and descriptions, so none of these texts use one. Name the English achievements exactly as above: Play turns the name into the resource name ("AI impostor" → `achievement_ai_impostor`), which the app looks up. All are revealed (none hidden). On Apple, use the description for both the pre-earned and earned text, and points out of Apple's 1000.
 
 ## en-US
 
@@ -120,13 +120,13 @@ Name the English achievements exactly as above: Play turns the name into the res
 | Aufsteiger | Besiege den Computer auf Mittel oder Schwer. |
 | Großmeister | Besiege den Computer auf Schwer. |
 | Beide Seiten | Besiege den Computer mit Schwarz. |
-| Makellos | Besiege den Computer, ohne einen einzigen Stein durch Schlagen zu verlieren. |
-| Ohne Hilfe | Besiege den Computer auf Schwer, ohne Tipp oder Rückgängig zu benutzen. |
+| Makellos | Besiege den Computer ohne einen einzigen Stein durch Schlagen zu verlieren. |
+| Ohne Hilfe | Besiege den Computer auf Schwer ohne Tipp oder Rückgängig zu benutzen. |
 | Großer Fang | Schlage einen Stapel mit 6 oder mehr Steinen in einem Zug. |
 | Blitzsieg | Besiege den Computer in höchstens 30 Zügen. |
 | Stammspieler | Besiege den Computer 10-mal. |
 | Dipole-Meister | Besiege den Computer 50-mal. |
-| KI-Hochstapler | Besiege den Computer nur mit den Zügen, die der Tipp vorschlägt. |
+| KI-Hochstapler | Besiege den Computer nur mit Zügen aus dem Tipp. |
 
 ## pl-PL
 
@@ -137,14 +137,14 @@ Name the English achievements exactly as above: Play turns the name into the res
 | Mecz towarzyski | Rozegraj do końca grę dla 2 graczy. |
 | Wschodząca gwiazda | Pokonaj komputer na poziomie średnim lub trudnym. |
 | Arcymistrz | Pokonaj komputer na poziomie trudnym. |
-| Obie strony | Pokonaj komputer, grając czarnymi. |
-| Bez skazy | Pokonaj komputer, nie tracąc przez bicie ani jednego pionka. |
+| Obie strony | Pokonaj komputer czarnymi pionkami. |
+| Bez skazy | Pokonaj komputer bez utraty choćby jednego pionka przez bicie. |
 | Bez pomocy | Pokonaj komputer na poziomie trudnym bez używania Podpowiedzi i Cofnij. |
 | Wielkie bicie | Zbij stos 6 lub więcej pionków jednym ruchem. |
 | Błyskawiczne zwycięstwo | Pokonaj komputer w 30 ruchach lub mniej. |
 | Stały bywalec | Pokonaj komputer 10 razy. |
 | Mistrz Dipole | Pokonaj komputer 50 razy. |
-| Oszust SI | Pokonaj komputer, wykonując tylko ruchy z Podpowiedzi. |
+| Oszust SI | Pokonaj komputer wyłącznie ruchami z Podpowiedzi. |
 
 ## tr-TR
 
@@ -180,7 +180,7 @@ Name the English achievements exactly as above: Play turns the name into the res
 | Lynsejr | Slå computeren på 30 træk eller færre. |
 | Stamgæst | Slå computeren 10 gange. |
 | Dipole-mester | Slå computeren 50 gange. |
-| AI-bedrager | Slå computeren kun med de træk, Tip foreslår. |
+| AI-bedrager | Slå computeren kun med træk fra Tip. |
 
 ## no-NO
 

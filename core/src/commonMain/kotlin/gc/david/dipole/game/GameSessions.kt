@@ -36,8 +36,9 @@ object GameSessions {
         moves: List<Move>,
         difficulty: Difficulty = Difficulty.Medium,
         humanSide: Player = Player.White,
+        initial: GameState = DipoleRules.initial(),
     ): GameSession? =
-        moves.fold(new(mode, difficulty, humanSide = humanSide)) { session, move ->
+        moves.fold(new(mode, difficulty, initial, humanSide)) { session, move ->
             if (!DipoleRules.isLegal(session.state, move)) return null
             play(session, move)
         }

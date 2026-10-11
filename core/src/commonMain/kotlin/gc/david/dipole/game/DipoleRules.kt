@@ -40,13 +40,17 @@ object DipoleRules {
 
     const val STARTING_STACK = 12
 
-    // Both stacks sit just left of centre from White's point of view (per the official rules).
-    val WHITE_START = Square(0, 2) // c1
+    // As in Mark Steere's rules sheet, confirmed by him on 11 October 2026.
+    val WHITE_START = Square(0, 4) // e1
     val BLACK_START = Square(7, 3) // d8
 
-    fun initial(): GameState = GameState(
+    /** Where White started in versions before 1.1, kept so games saved then still load. */
+    val OLD_WHITE_START = Square(0, 2) // c1
+
+    /** The starting position; [whiteStart] differs only for games saved with [OLD_WHITE_START]. */
+    fun initial(whiteStart: Square = WHITE_START): GameState = GameState(
         board = mapOf(
-            WHITE_START to Stack(Player.White, STARTING_STACK),
+            whiteStart to Stack(Player.White, STARTING_STACK),
             BLACK_START to Stack(Player.Black, STARTING_STACK),
         ),
         toMove = Player.White,

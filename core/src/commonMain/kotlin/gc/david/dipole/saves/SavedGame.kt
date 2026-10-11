@@ -21,9 +21,11 @@
 package gc.david.dipole.saves
 
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.Move
 import gc.david.dipole.game.Player
+import gc.david.dipole.game.Square
 
 /**
  * A game saved by the player. Only the moves are stored: loading replays them from the starting
@@ -41,4 +43,6 @@ data class SavedGame(
     val difficulty: Difficulty = Difficulty.Medium,
     /** The side the human plays; only meaningful in [GameMode.VsComputer]. */
     val humanSide: Player = Player.White,
+    /** Where White's stack started: [DipoleRules.OLD_WHITE_START] for games saved before 1.1. */
+    val whiteStart: Square = DipoleRules.WHITE_START,
 )

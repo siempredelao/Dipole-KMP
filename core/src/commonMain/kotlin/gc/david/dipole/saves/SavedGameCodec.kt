@@ -21,6 +21,7 @@
 package gc.david.dipole.saves
 
 import gc.david.dipole.game.Difficulty
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.Direction
 import gc.david.dipole.game.GameMode
 import gc.david.dipole.game.Move
@@ -30,11 +31,14 @@ import gc.david.dipole.saves.SavedGameCodec.encode
 
 /**
  * Turns a [SavedGame] into the text kept in storage and back. The text has one field per line:
- * header, mode, difficulty, side, date, name, moves. Older saves are read too.
+ * header, mode, difficulty, side, White's starting square, date, name, moves. Older saves are read too.
  */
 object SavedGameCodec {
 
-    private const val HEADER = "dipole-save 3"
+    private const val HEADER = "dipole-save 4"
+
+    /** Saves made before White's start moved from c1 to e1: no start line. */
+    private const val HEADER_V3 = "dipole-save 3"
 
     /** Saves made before the human could play Black: no side line, played as White. */
     private const val HEADER_V2 = "dipole-save 2"
@@ -47,6 +51,7 @@ object SavedGameCodec {
         game.mode.name,
         game.difficulty.name,
         game.humanSide.name,
+        "${game.whiteStart.row},${game.whiteStart.col}",
         game.savedAtEpochMillis.toString(),
         game.name,
         game.moves.joinToString(";") { "${it.from.row},${it.from.col},${it.direction.name},${it.count}" },
@@ -55,21 +60,32 @@ object SavedGameCodec {
     /** Parses what [encode] produced, or returns null if [text] isn't a valid save. */
     fun decode(id: String, text: String): SavedGame? {
         val lines = text.split("\n").toMutableList()
-        // Bring older formats up to the current one: header, mode, difficulty, side, date, name, moves.
+        // Bring older formats up to the current one: header, mode, difficulty, side, start, date, name, moves.
+        val oldStart = DipoleRules.OLD_WHITE_START.let { "${it.row},${it.col}" }
         when {
-            lines.size == 7 && lines[0] == HEADER -> Unit
-            lines.size == 6 && lines[0] == HEADER_V2 -> lines.add(3, Player.White.name)
-            lines.size == 5 && lines[0] == HEADER_V1 -> lines.addAll(2, listOf(Difficulty.Medium.name, Player.White.name))
+            lines.size == 8 && lines[0] == HEADER -> Unit
+            lines.size == 7 && lines[0] == HEADER_V3 -> lines.add(4, oldStart)
+            lines.size == 6 && lines[0] == HEADER_V2 -> lines.addAll(3, listOf(Player.White.name, oldStart))
+            lines.size == 5 && lines[0] == HEADER_V1 ->
+                lines.addAll(2, listOf(Difficulty.Medium.name, Player.White.name, oldStart))
             else -> return null
         }
 
         val mode = GameMode.entries.firstOrNull { it.name == lines[1] } ?: return null
         val difficulty = Difficulty.entries.firstOrNull { it.name == lines[2] } ?: return null
         val humanSide = Player.entries.firstOrNull { it.name == lines[3] } ?: return null
-        val savedAt = lines[4].toLongOrNull() ?: return null
-        val moves = if (lines[6].isEmpty()) emptyList() else lines[6].split(";").map { decodeMove(it) ?: return null }
+        val whiteStart = decodeSquare(lines[4]) ?: return null
+        val savedAt = lines[5].toLongOrNull() ?: return null
+        val moves = if (lines[7].isEmpty()) emptyList() else lines[7].split(";").map { decodeMove(it) ?: return null }
 
-        return SavedGame(id, lines[5], savedAt, mode, moves, difficulty, humanSide)
+        return SavedGame(id, lines[6], savedAt, mode, moves, difficulty, humanSide, whiteStart)
+    }
+
+    private fun decodeSquare(text: String): Square? {
+        val parts = text.split(",")
+        if (parts.size != 2) return null
+        val square = Square(parts[0].toIntOrNull() ?: return null, parts[1].toIntOrNull() ?: return null)
+        return square.takeIf { it.isOnBoard }
     }
 
     private fun decodeMove(text: String): Move? {

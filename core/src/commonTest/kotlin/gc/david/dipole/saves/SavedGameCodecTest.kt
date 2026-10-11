@@ -43,7 +43,7 @@ class SavedGameCodecTest {
     )
 
     /** Pins the stored format: changing it would make existing saves unreadable. */
-    private val stored = "dipole-save 3\nVsComputer\nHard\nBlack\n1790000000000\nMy game\n0,2,NorthEast,3;7,3,SouthWest,2"
+    private val stored = "dipole-save 4\nVsComputer\nHard\nBlack\n0,4\n1790000000000\nMy game\n0,4,NorthEast,3;7,3,SouthWest,2"
 
     @Test
     fun encodesTheCurrentFormat() {
@@ -53,6 +53,21 @@ class SavedGameCodecTest {
     @Test
     fun decodesTheCurrentFormat() {
         assertEquals(game, SavedGameCodec.decode(game.id, stored))
+    }
+
+    @Test
+    fun savesFromBeforeTheE1StartKeepTheC1Start() {
+        val v3 = "dipole-save 3\nVsComputer\nHard\nBlack\n1790000000000\nOld game\n0,2,NorthEast,3"
+        val saved = SavedGameCodec.decode("old", v3)
+        assertEquals(DipoleRules.OLD_WHITE_START, saved?.whiteStart)
+        assertEquals(Player.Black, saved?.humanSide)
+        assertEquals(listOf(Move(DipoleRules.OLD_WHITE_START, Direction.NorthEast, 3)), saved?.moves)
+    }
+
+    @Test
+    fun anOldStartRoundTrips() {
+        val old = game.copy(whiteStart = DipoleRules.OLD_WHITE_START)
+        assertEquals(old, SavedGameCodec.decode(old.id, SavedGameCodec.encode(old)))
     }
 
     @Test
@@ -77,7 +92,8 @@ class SavedGameCodecTest {
         assertEquals(Difficulty.Medium, saved?.difficulty)
         assertEquals(Player.White, saved?.humanSide)
         assertEquals("Old game", saved?.name)
-        assertEquals(listOf(Move(DipoleRules.WHITE_START, Direction.NorthEast, 3)), saved?.moves)
+        assertEquals(listOf(Move(DipoleRules.OLD_WHITE_START, Direction.NorthEast, 3)), saved?.moves)
+        assertEquals(DipoleRules.OLD_WHITE_START, saved?.whiteStart)
     }
 
     @Test
@@ -86,6 +102,7 @@ class SavedGameCodecTest {
         assertNull(SavedGameCodec.decode("x", "dipole-save 1\nChess\n0\nName\n"))
         assertNull(SavedGameCodec.decode("x", "dipole-save 2\nVsComputer\nImpossible\n0\nName\n"))
         assertNull(SavedGameCodec.decode("x", "dipole-save 3\nVsComputer\nHard\nRed\n0\nName\n"))
+        assertNull(SavedGameCodec.decode("x", "dipole-save 4\nVsComputer\nHard\nWhite\n9,9\n0\nName\n"))
         assertNull(SavedGameCodec.decode("x", "dipole-save 1\nTwoPlayers\n0\nName\n0,2,Up,3"))
     }
 }

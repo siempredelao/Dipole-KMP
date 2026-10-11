@@ -63,6 +63,15 @@ class SavedGameFactoryTest {
     }
 
     @Test
+    fun aGameFromAnOldSaveKeepsItsOldStartWhenSavedAgain() {
+        val oldStart = DipoleRules.initial(DipoleRules.OLD_WHITE_START)
+        val old = GameSessions.replay(GameMode.TwoPlayers, listOf(Move(DipoleRules.OLD_WHITE_START, Direction.NorthEast, 3)), initial = oldStart)!!
+        val saved = factory().create(old, "Old")
+        assertEquals(DipoleRules.OLD_WHITE_START, saved.whiteStart)
+        assertEquals(old, GameSessions.replay(saved.mode, saved.moves, initial = DipoleRules.initial(saved.whiteStart)))
+    }
+
+    @Test
     fun idsComeFromTheTimeAndTheRandomSource() {
         val expected = "1790000000000-${Random(7).nextInt(1_000_000)}"
         assertEquals(expected, factory(seed = 7).create(session, "A").id)

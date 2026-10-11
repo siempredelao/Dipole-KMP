@@ -234,7 +234,13 @@ class GameViewModel(
     }
 
     private fun load(game: SavedGame) {
-        val session = GameSessions.replay(game.mode, game.moves, game.difficulty, game.humanSide)
+        val session = GameSessions.replay(
+            game.mode,
+            game.moves,
+            game.difficulty,
+            game.humanSide,
+            DipoleRules.initial(game.whiteStart),
+        )
         if (session == null) {
             updateUi { it.copy(dialog = null, message = GameMessage.SaveUnreadable) }
             return

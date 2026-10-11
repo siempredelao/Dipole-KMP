@@ -20,7 +20,10 @@
 
 package gc.david.dipole.saves
 
+import gc.david.dipole.game.DipoleRules
 import gc.david.dipole.game.GameSession
+import gc.david.dipole.game.Player
+import gc.david.dipole.game.Square
 import kotlin.random.Random
 import kotlin.time.Clock
 
@@ -44,6 +47,14 @@ class SavedGameFactory(
             moves = session.moves,
             difficulty = session.difficulty,
             humanSide = session.humanSide,
+            whiteStart = whiteStartOf(session),
         )
     }
+
+    /** A game loaded from an old save keeps its old start, so it still loads once saved again. */
+    private fun whiteStartOf(session: GameSession): Square =
+        session.positions.first().board.entries
+            .singleOrNull { it.value.owner == Player.White }
+            ?.key
+            ?: DipoleRules.WHITE_START
 }

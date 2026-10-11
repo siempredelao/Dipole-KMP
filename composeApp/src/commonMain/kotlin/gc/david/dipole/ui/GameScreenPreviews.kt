@@ -46,7 +46,7 @@ private fun GameScreenPreview() {
 /** A position part way through a game, so the off-board stacks have checkers in them. */
 private val midGame = GameState(
     board = mapOf(
-        Square(0, 2) to Stack(Player.White, 5), // c1
+        Square(0, 4) to Stack(Player.White, 5), // e1
         Square(3, 5) to Stack(Player.White, 3), // f4
         Square(7, 3) to Stack(Player.Black, 4), // d8
         Square(4, 4) to Stack(Player.Black, 2), // e5

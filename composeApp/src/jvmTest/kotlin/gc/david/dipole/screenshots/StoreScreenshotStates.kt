@@ -39,13 +39,13 @@ import gc.david.dipole.ui.GameUiState
 internal object StoreScreenshotStates {
 
     /**
-     * A game against the computer with White to move. White has just played c1 to f4 and the
+     * A game against the computer with White to move. White has just played e1 to h4 and the
      * computer answered c7 to b6, so Undo is on and the last move is marked.
      */
     val midGame: GameSession = play(
         GameState(
             board = mapOf(
-                Square(0, 2) to Stack(Player.White, 8), // c1
+                Square(0, 4) to Stack(Player.White, 8), // e1
                 Square(2, 2) to Stack(Player.White, 4), // c3
                 Square(4, 4) to Stack(Player.Black, 2), // e5
                 Square(6, 2) to Stack(Player.Black, 1), // c7
@@ -53,7 +53,7 @@ internal object StoreScreenshotStates {
             ),
             toMove = Player.White,
         ),
-        Move(Square(0, 2), Direction.NorthEast, 3),
+        Move(Square(0, 4), Direction.NorthEast, 3),
         Move(Square(6, 2), Direction.SouthWest, 1),
     )
 

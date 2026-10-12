@@ -64,6 +64,7 @@
     <string name="board_high_contrast">High contrast</string>
     <string name="done">Done</string>
     <string name="new_game">New game</string>
+    <string name="play_again">New game?</string>
     <string name="undo">Undo</string>
     <string name="hint">Hint</string>
     <string name="save">Save</string>

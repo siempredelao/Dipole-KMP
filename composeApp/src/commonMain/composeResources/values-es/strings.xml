@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Alto contraste</string>
     <string name="done">Hecho</string>
     <string name="new_game">Nueva partida</string>
+    <string name="play_again">¿Nueva partida?</string>
     <string name="undo">Deshacer</string>
     <string name="hint">Pista</string>
     <string name="save">Guardar</string>

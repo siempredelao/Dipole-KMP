@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Hög kontrast</string>
     <string name="done">Klar</string>
     <string name="new_game">Nytt spel</string>
+    <string name="play_again">Nytt spel?</string>
     <string name="undo">Ångra</string>
     <string name="hint">Tips</string>
     <string name="save">Spara</string>

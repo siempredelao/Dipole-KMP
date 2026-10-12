@@ -100,6 +100,7 @@ import gc.david.dipole.resources.ic_info
 import gc.david.dipole.resources.ic_settings
 import gc.david.dipole.resources.load_game_title
 import gc.david.dipole.resources.new_game
+import gc.david.dipole.resources.play_again
 import gc.david.dipole.resources.rate_app
 import gc.david.dipole.resources.rules_title
 import gc.david.dipole.resources.save_game_title
@@ -223,19 +224,23 @@ fun GameScreen(
             PlayerTray(uiState, bottomPlayer, trayModifier)
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                // Once someone has won there is nothing to take back, so Undo is hidden.
-                if (uiState.status.winner == null) {
+                if (uiState.status.winner != null) {
+                    // Once someone has won there is nothing to take back or hint, so offer a new game instead.
+                    Button(onClick = { onAction(GameAction.NewGameClicked) }) {
+                        Text(stringResource(Res.string.play_again))
+                    }
+                } else {
                     OutlinedButton(onClick = { onAction(GameAction.UndoClicked) }, enabled = uiState.canUndo) {
                         Text(stringResource(Res.string.undo))
                     }
-                }
-                val onHint = { onAction(GameAction.HintClicked) }
-                if (uiState.hintsOn) {
-                    Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = appColors.hint)) {
-                        Text(stringResource(Res.string.hint))
+                    val onHint = { onAction(GameAction.HintClicked) }
+                    if (uiState.hintsOn) {
+                        Button(onClick = onHint, colors = ButtonDefaults.buttonColors(containerColor = appColors.hint)) {
+                            Text(stringResource(Res.string.hint))
+                        }
+                    } else {
+                        OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
                     }
-                } else {
-                    OutlinedButton(onClick = onHint, enabled = uiState.canHint) { Text(stringResource(Res.string.hint)) }
                 }
             }
             hintText(uiState)?.let { Text(stringResource(it), color = appColors.hint, textAlign = TextAlign.Center) }

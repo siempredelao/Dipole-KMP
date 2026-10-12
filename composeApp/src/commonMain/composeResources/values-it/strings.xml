@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Contrasto elevato</string>
     <string name="done">Fine</string>
     <string name="new_game">Nuova partita</string>
+    <string name="play_again">Nuova partita?</string>
     <string name="undo">Annulla mossa</string>
     <string name="hint">Suggerimento</string>
     <string name="save">Salva</string>

@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Høy kontrast</string>
     <string name="done">Ferdig</string>
     <string name="new_game">Nytt spill</string>
+    <string name="play_again">Nytt spill?</string>
     <string name="undo">Angre</string>
     <string name="hint">Hint</string>
     <string name="save">Lagre</string>

@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Høj kontrast</string>
     <string name="done">Færdig</string>
     <string name="new_game">Nyt spil</string>
+    <string name="play_again">Nyt spil?</string>
     <string name="undo">Fortryd</string>
     <string name="hint">Tip</string>
     <string name="save">Gem</string>

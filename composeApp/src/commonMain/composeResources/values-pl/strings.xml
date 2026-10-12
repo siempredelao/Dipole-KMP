@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Wysoki kontrast</string>
     <string name="done">Gotowe</string>
     <string name="new_game">Nowa gra</string>
+    <string name="play_again">Nowa gra?</string>
     <string name="undo">Cofnij</string>
     <string name="hint">Podpowiedź</string>
     <string name="save">Zapisz</string>

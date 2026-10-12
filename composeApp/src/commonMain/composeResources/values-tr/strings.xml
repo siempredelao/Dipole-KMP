@@ -64,6 +64,7 @@
     <string name="board_high_contrast">Yüksek kontrast</string>
     <string name="done">Tamam</string>
     <string name="new_game">Yeni oyun</string>
+    <string name="play_again">Yeni oyun?</string>
     <string name="undo">Geri al</string>
     <string name="hint">İpucu</string>
     <string name="save">Kaydet</string>

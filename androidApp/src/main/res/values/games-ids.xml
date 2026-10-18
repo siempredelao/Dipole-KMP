@@ -19,23 +19,23 @@
   ~ limitations under the License.
   -->
 <!--
-  Play Games Services IDs. Replace this file with the one Play Console exports
-  (Play Games Services > Achievements > Get resources), keeping these names. While the project ID
-  is empty the app doesn't use Play Games at all.
+  Play Games Services IDs, from Play Console (Play Games Services > Achievements > Get resources).
+  Play exports the project ID as "app_id"; it is game_services_project_id here, and the
+  achievement names must stay achievement_<key> because the app looks them up by name.
   -->
 <resources>
-    <string name="game_services_project_id" translatable="false"></string>
-    <string name="achievement_first_steps" translatable="false"></string>
-    <string name="achievement_first_victory" translatable="false"></string>
-    <string name="achievement_friendly_match" translatable="false"></string>
-    <string name="achievement_rising_player" translatable="false"></string>
-    <string name="achievement_grandmaster" translatable="false"></string>
-    <string name="achievement_both_sides" translatable="false"></string>
-    <string name="achievement_flawless" translatable="false"></string>
-    <string name="achievement_no_help_needed" translatable="false"></string>
-    <string name="achievement_big_capture" translatable="false"></string>
-    <string name="achievement_swift_victory" translatable="false"></string>
-    <string name="achievement_regular" translatable="false"></string>
-    <string name="achievement_dipole_master" translatable="false"></string>
-    <string name="achievement_ai_impostor" translatable="false"></string>
+    <string name="game_services_project_id" translatable="false">1084164154049</string>
+    <string name="achievement_first_steps" translatable="false">CgkIwcXg6cYfEAIQCQ</string>
+    <string name="achievement_first_victory" translatable="false">CgkIwcXg6cYfEAIQAA</string>
+    <string name="achievement_friendly_match" translatable="false">CgkIwcXg6cYfEAIQBA</string>
+    <string name="achievement_rising_player" translatable="false">CgkIwcXg6cYfEAIQBQ</string>
+    <string name="achievement_grandmaster" translatable="false">CgkIwcXg6cYfEAIQAg</string>
+    <string name="achievement_both_sides" translatable="false">CgkIwcXg6cYfEAIQBw</string>
+    <string name="achievement_flawless" translatable="false">CgkIwcXg6cYfEAIQBg</string>
+    <string name="achievement_no_help_needed" translatable="false">CgkIwcXg6cYfEAIQAQ</string>
+    <string name="achievement_big_capture" translatable="false">CgkIwcXg6cYfEAIQCA</string>
+    <string name="achievement_swift_victory" translatable="false">CgkIwcXg6cYfEAIQCg</string>
+    <string name="achievement_regular" translatable="false">CgkIwcXg6cYfEAIQAw</string>
+    <string name="achievement_dipole_master" translatable="false">CgkIwcXg6cYfEAIQDA</string>
+    <string name="achievement_ai_impostor" translatable="false">CgkIwcXg6cYfEAIQCw</string>
 </resources>

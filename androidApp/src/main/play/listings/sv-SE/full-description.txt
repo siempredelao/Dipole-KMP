@@ -24,7 +24,7 @@ Dessutom
 • Konfetti när du vinner
 • 13 prestationer att låsa upp med Google Play Spel
 • Fungerar offline
-• Inga annonser, och appen samlar inte in data
+• Inga annonser
 • På svenska, engelska, spanska, franska, italienska, portugisiska, tyska, polska, turkiska, danska och norska
 
 Dipole är skapat av Mark Steere. Hitta fler av hans spel på marksteeregames.com.

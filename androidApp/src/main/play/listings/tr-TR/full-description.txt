@@ -24,7 +24,7 @@ Ayrıca
 • Kazandığında konfeti
 • Google Play Oyunlar ile açılacak 13 başarı
 • İnternetsiz çalışır
-• Reklam yok ve uygulama veri toplamıyor
+• Reklam yok
 • Türkçe, İngilizce, İspanyolca, Fransızca, İtalyanca, Portekizce, Almanca, Lehçe, Danca, Norveççe ve İsveççe
 
 Dipole, Mark Steere tarafından tasarlandı. Diğer oyunlarını marksteeregames.com adresinde bulabilirsin.

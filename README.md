@@ -1,4 +1,4 @@
-# Dipole
+![Dipole](art/social-preview.png)
 
 A Kotlin/Compose Multiplatform version of [Dipole](https://www.marksteeregames.com/Dipole_rules.pdf),
 the stacking game by Mark Steere. It runs on Android, iOS, desktop (JVM) and the web (Wasm), all
